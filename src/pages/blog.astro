@@ -1,0 +1,53 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getBlogPosts } from '../lib/supabase';
+
+const posts = await getBlogPosts();
+
+const formatDate = (date: string) => new Date(date).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<MainLayout
+  title="Blog de Bienestar - IMHDXEIN | Artículos de Medicina Holística"
+  description="Conocimiento y reflexiones para tu camino hacia la salud integral. Artículos sobre chakras, acupuntura, aromaterapia y más terapias holísticas."
+>
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-chakra-heart/80 via-sage-900 to-deep-900"></div>
+    <div class="absolute inset-0 lotus-bg opacity-20"></div>
+    <div class="container-custom px-4 relative z-10">
+      <div class="max-w-3xl">
+        <span class="text-sage-300 text-sm font-semibold tracking-wider uppercase">Blog</span>
+        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">Artículos de <span class="chakra-gradient-text">bienestar</span></h1>
+        <p class="mt-6 text-sage-100 text-lg leading-relaxed">Conocimiento y reflexiones para tu camino hacia la salud integral.</p>
+      </div>
+    </div>
+  </section>
+  <div class="h-1.5 chakra-gradient"></div>
+
+  <section class="section-padding bg-white">
+    <div class="container-custom">
+      {posts.length === 0 ? (
+        <p class="text-center text-deep-400 py-12">Próximamente publicaremos artículos.</p>
+      ) : (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map((post) => (
+            <a href={`/blog/${post.slug}`} class="card group cursor-pointer">
+              <div class="h-56 overflow-hidden">
+                <img src={post.image_url} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 text-xs text-deep-400 mb-3">
+                  <span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {post.author}</span>
+                  <span class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> {formatDate(post.published_at)}</span>
+                </div>
+                <h2 class="font-heading font-bold text-deep-800 text-lg leading-snug group-hover:text-brand-600 transition-colors line-clamp-2">{post.title}</h2>
+                <p class="mt-3 text-deep-500 text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
+                <span class="mt-4 inline-flex items-center gap-1 text-brand-600 text-sm font-medium group-hover:gap-2 transition-all">Leer más <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</MainLayout>

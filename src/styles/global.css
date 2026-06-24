@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  --color-chakra-root: #C41E3A;
+  --color-chakra-sacral: #E8751A;
+  --color-chakra-solar: #D4A017;
+  --color-chakra-heart: #3A7D44;
+  --color-chakra-throat: #1E90C6;
+  --color-chakra-third: #4B0082;
+  --color-chakra-crown: #7B2D8E;
+
+  --color-brand-50: #FFF9E6;
+  --color-brand-100: #FFF0BF;
+  --color-brand-200: #FFE699;
+  --color-brand-300: #FFDB6F;
+  --color-brand-400: #FFD040;
+  --color-brand-500: #D4A017;
+  --color-brand-600: #B8880E;
+  --color-brand-700: #9C7000;
+  --color-brand-800: #805800;
+  --color-brand-900: #644000;
+
+  --color-sage-50: #F0F7F1;
+  --color-sage-100: #DCF0DF;
+  --color-sage-200: #B8E0BD;
+  --color-sage-300: #88CCA0;
+  --color-sage-400: #5BA878;
+  --color-sage-500: #3A7D44;
+  --color-sage-600: #2D6435;
+  --color-sage-700: #214B28;
+  --color-sage-800: #16331C;
+  --color-sage-900: #0B1B0F;
+
+  --color-spirit-50: #F5F0FF;
+  --color-spirit-100: #EDE5FF;
+  --color-spirit-200: #D4C4FF;
+  --color-spirit-300: #B99AFF;
+  --color-spirit-400: #9B6EFF;
+  --color-spirit-500: #7B2D8E;
+  --color-spirit-600: #6B1F80;
+  --color-spirit-700: #5A1570;
+  --color-spirit-800: #4A0C60;
+  --color-spirit-900: #3A0550;
+
+  --color-deep-50: #F5F3F0;
+  --color-deep-100: #E8E4DE;
+  --color-deep-200: #D1C9BD;
+  --color-deep-300: #B5AA99;
+  --color-deep-400: #9C8E7A;
+  --color-deep-500: #7A6F60;
+  --color-deep-600: #5D5445;
+  --color-deep-700: #403A30;
+  --color-deep-800: #2A2520;
+  --color-deep-900: #151210;
+
+  --font-heading: Georgia, Cambria, serif;
+  --font-body: Inter, system-ui, sans-serif;
+
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+  --animate-slide-up: slideUp 0.6s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-body text-deep-800 bg-white antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .chakra-gradient {
+    background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
+  }
+  .chakra-gradient-text {
+    background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass {
+    @apply bg-white/80 backdrop-blur-md;
+  }
+  .btn-primary {
+    @apply bg-brand-500 text-white px-6 py-3 rounded-lg font-semibold
+      hover:bg-brand-600 transition-all duration-300
+      shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+  }
+  .btn-secondary {
+    @apply bg-spirit-500 text-white px-6 py-3 rounded-lg font-semibold
+      hover:bg-spirit-600 transition-all duration-300
+      shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply border-2 border-brand-500 text-brand-600 px-6 py-3 rounded-lg font-semibold
+      hover:bg-brand-500 hover:text-white transition-all duration-300;
+  }
+  .section-padding {
+    @apply py-20 px-4 sm:px-6 lg:px-8;
+  }
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-deep-200
+      focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent
+      transition-all duration-200 bg-white;
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 { animation-delay: 0.1s; }
+  .animate-delay-200 { animation-delay: 0.2s; }
+  .animate-delay-300 { animation-delay: 0.3s; }
+  .animate-delay-400 { animation-delay: 0.4s; }
+  .animate-delay-500 { animation-delay: 0.5s; }
+  .animate-delay-600 { animation-delay: 0.6s; }
+  .animate-delay-700 { animation-delay: 0.7s; }
+}
+
+.lotus-bg {
+  background-image: url("https://imhdxein.org.mx/wp-content/uploads/2026/04/cropped-cropped-WEBDXEIN.png");
+  background-repeat: repeat;
+  background-size: auto;
+}

@@ -1,0 +1,35 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ProductShop from '../components/ProductShop.vue';
+import { getProducts } from '../lib/supabase';
+
+const products = await getProducts();
+---
+
+<MainLayout
+  title="Productos Holísticos - IMHDXEIN | Aceites, Flores de Bach, Velas y más"
+  description="Productos cuidadosamente seleccionados para complementar tu proceso de sanación holística. Aceites esenciales, Flores de Bach, velas aromáticas y más."
+>
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-spirit-800 via-chakra-crown to-deep-900"></div>
+    <div class="absolute inset-0 lotus-bg opacity-20"></div>
+    <div class="container-custom px-4 relative z-10">
+      <div class="max-w-3xl">
+        <span class="text-spirit-300 text-sm font-semibold tracking-wider uppercase">Tienda Holística</span>
+        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">Productos <span class="chakra-gradient-text">para tu bienestar</span></h1>
+        <p class="mt-6 text-deep-200 text-lg leading-relaxed">Productos cuidadosamente seleccionados para complementar tu proceso de sanación holística.</p>
+      </div>
+    </div>
+  </section>
+  <div class="h-1.5 chakra-gradient"></div>
+
+  {products.length > 0 ? (
+    <ProductShop client:load products={products} />
+  ) : (
+    <section class="section-padding bg-white">
+      <div class="container-custom">
+        <p class="text-center text-deep-400 py-12">Próximamente tendremos productos disponibles.</p>
+      </div>
+    </section>
+  )}
+</MainLayout>

@@ -1,0 +1,1 @@
+ALTER TABLE therapies ALTER COLUMN price DROP NOT NULL;

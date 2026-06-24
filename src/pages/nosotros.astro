@@ -1,0 +1,232 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getTherapists } from '../lib/supabase';
+
+const therapists = await getTherapists();
+
+const values = [
+  { title: 'Compasión', description: 'Tratamos a cada persona con empatía profunda, reconociendo su humanidad y su proceso único.', icon: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>' },
+  { title: 'Excelencia', description: 'Formación continua y rigor profesional en cada terapia que ofrecemos.', icon: '<path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/>' },
+  { title: 'Integralidad', description: 'Atendemos al ser completo — cuerpo, mente, emociones y espíritu — sin fragmentar.', icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+  { title: 'Tradición', description: 'Honramos las sabidurías milenarias integrándolas con la ciencia contemporánea.', icon: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>' },
+];
+---
+
+<MainLayout
+  title="Nosotros - IMHDXEIN | Instituto de Medicina Holística"
+  description="Conoce al equipo de IMHDXEIN. Médicos y terapeutas certificados dedicados a la sanación integral del ser. Medicina integrativa y holística en CDMX."
+>
+  <!-- Hero -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-sage-800 via-sage-900 to-deep-900"></div>
+    <div class="absolute inset-0 lotus-bg opacity-20"></div>
+    <div class="container-custom px-4 relative z-10">
+      <div class="max-w-3xl">
+        <span class="text-sage-300 text-sm font-semibold tracking-wider uppercase">Quiénes Somos</span>
+        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">
+          Un espacio de <span class="chakra-gradient-text">sanación integral</span>
+        </h1>
+        <p class="mt-6 text-sage-200 text-lg leading-relaxed">
+          IMHDXEIN nació de la convicción de que la verdadera salud surge cuando reconocemos la unidad del cuerpo, la mente y el espíritu. Somos un equipo de terapeutas comprometidos con tu transformación.
+        </p>
+      </div>
+    </div>
+  </section>
+  <div class="h-1.5 chakra-gradient"></div>
+
+  <!-- Mission & Vision -->
+  <section class="section-padding bg-white">
+    <div class="container-custom">
+      <div class="max-w-5xl mx-auto">
+
+        <!-- Encabezado -->
+        <div class="text-center mb-14">
+          <span class="text-brand-600 text-sm font-semibold tracking-wider uppercase">Nuestra razón de ser</span>
+          <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">Misión y <span class="chakra-gradient-text">Visión</span></h2>
+        </div>
+
+        <!-- Dos columnas -->
+        <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-deep-100">
+
+          <!-- Misión -->
+          <div class="pb-10 md:pb-0 md:pr-14">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl border border-brand-200 bg-brand-50 flex items-center justify-center shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-600">
+                  <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/>
+                  <path d="M12 8v4l3 3"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-heading font-bold text-deep-900">Nuestra Misión</h3>
+            </div>
+            <p class="text-deep-600 leading-relaxed">
+              Somos un instituto de medicina que brinda atención médica, psicoemocional, integrativa y holística a todos nuestros consultantes. Acompañamos a integrar y ayudar en el proceso de enfermedad, abordándose desde las cuatro dimensiones del ser: físico, emocional, mental y espiritual, a partir de la unificación de la ciencia con la espiritualidad, llevado a cabo con nuestro personal médico y terapeutas altamente capacitados y comprometidos con el humanismo y la salud integral de las personas.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              {['Físico', 'Emocional', 'Mental', 'Espiritual'].map(dim => (
+                <span class="text-xs font-medium text-brand-700 bg-brand-50 border border-brand-100 px-3 py-1 rounded-full">{dim}</span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Visión -->
+          <div class="pt-10 md:pt-0 md:pl-14">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl border border-sage-200 bg-sage-50 flex items-center justify-center shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sage-600">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-heading font-bold text-deep-900">Nuestra Visión</h3>
+            </div>
+            <p class="text-deep-600 leading-relaxed">
+              Ser un instituto de medicina integrativa y holística que colabore con la mejoría de la salud y optimice la calidad de vida de nuestros consultantes para su desarrollo pleno, y generar cambios de paradigmas en la atención y el abordaje de las enfermedades de la población.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              {['Salud Integral', 'Calidad de Vida', 'Nuevo Paradigma'].map(tag => (
+                <span class="text-xs font-medium text-sage-700 bg-sage-50 border border-sage-100 px-3 py-1 rounded-full">{tag}</span>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section-padding bg-brand-50">
+    <div class="container-custom">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-brand-600 text-sm font-semibold tracking-wider uppercase">Nuestros Valores</span>
+        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">Lo que nos <span class="chakra-gradient-text">guía</span></h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {values.map((v) => (
+          <div class="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-shadow">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-brand-400 to-spirit-500 flex items-center justify-center mb-4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={v.icon} />
+            </div>
+            <h3 class="font-heading font-semibold text-deep-800 text-lg">{v.title}</h3>
+            <p class="mt-2 text-deep-500 text-sm leading-relaxed">{v.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Director -->
+  <section class="section-padding bg-white">
+    <div class="container-custom">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-brand-600 text-sm font-semibold tracking-wider uppercase">Liderazgo</span>
+        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">Director y <span class="chakra-gradient-text">Fundador</span></h2>
+      </div>
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-gradient-to-br from-deep-50 to-brand-50 rounded-3xl overflow-hidden shadow-xl grid md:grid-cols-5 gap-0">
+
+          <!-- Foto -->
+          <div class="md:col-span-2 h-80 md:h-auto overflow-hidden">
+            <img
+              src="https://images.pexels.com/photos/5452268/pexels-photo-5452268.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Dr. Rodrigo Acevedo Hernández"
+              class="w-full h-full object-cover object-top"
+            />
+          </div>
+
+          <!-- Contenido -->
+          <div class="md:col-span-3 p-8 md:p-10 flex flex-col justify-center gap-6">
+
+            <!-- Nombre y cargo -->
+            <div>
+              <div class="inline-block bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+                Director y Fundador
+              </div>
+              <h3 class="font-heading text-2xl md:text-3xl font-bold text-deep-900">Dr. Rodrigo Acevedo Hernández</h3>
+              <p class="text-spirit-600 text-sm font-medium mt-1">Medicina Integrativa y Holística</p>
+            </div>
+
+            <!-- Credenciales académicas -->
+            <div class="space-y-3">
+              <p class="text-xs font-semibold text-deep-400 uppercase tracking-wider">Formación académica</p>
+
+              <div class="flex items-start gap-3">
+                <div class="mt-0.5 w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-600">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-deep-800">Especialidad en Medicina Integrada</p>
+                  <p class="text-xs text-deep-500">Hospital General de Occidente · Universidad de Guadalajara</p>
+                  <p class="text-xs text-brand-600 font-medium mt-0.5">Céd. Esp. 6909283</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="mt-0.5 w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sage-600">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-deep-800">Maestría en Nutrición Clínica</p>
+                  <p class="text-xs text-deep-500">Universidad del Valle de México</p>
+                  <p class="text-xs text-sage-600 font-medium mt-0.5">Céd. 13492288</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <div class="mt-0.5 w-8 h-8 rounded-lg bg-spirit-100 flex items-center justify-center shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-spirit-600">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-deep-800">Médico Cirujano</p>
+                  <p class="text-xs text-deep-500">Universidad Autónoma "Benito Juárez" de Oaxaca</p>
+                  <p class="text-xs text-spirit-600 font-medium mt-0.5">Céd. 4325592</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Especialidades complementarias -->
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-deep-100 text-deep-700 text-xs font-medium px-3 py-1 rounded-full">Máster en Terapias Holísticas</span>
+              <span class="bg-deep-100 text-deep-700 text-xs font-medium px-3 py-1 rounded-full">Consultor en Medicina Ayurvédica</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Therapists -->
+  <section class="section-padding bg-brand-50">
+    <div class="container-custom">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-sage-600 text-sm font-semibold tracking-wider uppercase">Nuestro Equipo</span>
+        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">Terapeutas <span class="chakra-gradient-text">certificados</span></h2>
+        <p class="mt-4 text-deep-500 leading-relaxed">Profesionales apasionados por la sanación integral, con formación de primer nivel y compromiso con tu bienestar.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {therapists.filter(t => t.order_index > 0).map((t) => (
+          <div class="card group bg-white">
+            <div class="h-56 overflow-hidden">
+              <img src={t.image_url} alt={t.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div class="p-6">
+              <h3 class="font-heading font-semibold text-deep-800 text-lg">{t.name}</h3>
+              <p class="text-brand-600 text-sm font-medium">{t.title}</p>
+              <p class="text-spirit-600 text-xs mt-1">{t.specialty}</p>
+              <p class="mt-3 text-deep-500 text-sm leading-relaxed line-clamp-3">{t.bio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</MainLayout>

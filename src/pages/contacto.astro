@@ -1,0 +1,28 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ContactForm from '../components/ContactForm.vue';
+import { getTherapies } from '../lib/supabase';
+
+const therapies = await getTherapies();
+const therapyOptions = therapies.map(t => ({ id: t.id, name: t.name, duration_minutes: t.duration_minutes }));
+---
+
+<MainLayout
+  title="Contacto - IMHDXEIN | Terapias Holísticas"
+  description="Envíanos un mensaje y nos comunicaremos contigo. Terapias holísticas en Ciudad de México. Acupuntura, Reiki, Flores de Bach y más."
+>
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-chakra-root/70 via-brand-900 to-deep-900"></div>
+    <div class="absolute inset-0 lotus-bg opacity-20"></div>
+    <div class="container-custom px-4 relative z-10">
+      <div class="max-w-3xl">
+        <span class="text-brand-300 text-sm font-semibold tracking-wider uppercase">Contacto</span>
+        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">Estamos aquí <span class="chakra-gradient-text">para ti</span></h1>
+        <p class="mt-6 text-deep-200 text-lg leading-relaxed">Envíanos un mensaje y nos comunicaremos contigo para acordar los detalles de tu cita.</p>
+      </div>
+    </div>
+  </section>
+  <div class="h-1.5 chakra-gradient"></div>
+
+  <ContactForm client:load therapies={therapyOptions} />
+</MainLayout>
