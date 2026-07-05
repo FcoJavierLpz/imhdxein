@@ -80,11 +80,11 @@ const handleContact = async () => {
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">+52 33 1842 2251</p></div>
             </a>
-            <a href="mailto:contacto@imhdxein.com" class="flex gap-4 group">
+            <a href="mailto:imhdxein@gmaill.com.com" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">contacto@imhdxein.com</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">imhdxein@gmaill.com.com</p></div>
             </a>
             <a href="#" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
