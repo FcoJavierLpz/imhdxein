@@ -13,16 +13,16 @@ const ICON_OPTIONS = [
 ];
 
 export default config({
-  storage:
-    process.env.NODE_ENV === 'production'
-      ? {
-          kind: 'github',
-          repo: {
-            owner: 'FcoJavierLpz',
-            name: 'imhdxein',
-          },
-        }
-      : { kind: 'local' },
+  storage: import.meta.env.DEV
+    ? { kind: 'local' }
+    : {
+        kind: 'github',
+        repo: {
+          owner: 'FcoJavierLpz',
+          name: 'imhdxein',
+        },
+      },
+
   ui: {
     brand: { name: 'IMHDXEIN CMS' },
   },
