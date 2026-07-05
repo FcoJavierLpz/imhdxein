@@ -80,17 +80,17 @@ const handleContact = async () => {
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">+52 33 1842 2251</p></div>
             </a>
-            <a href="mailto:imhdxein@gmaill.com.com" class="flex gap-4 group">
+            <a href="mailto:imhdxein@gmaill.com" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">imhdxein@gmaill.com.com</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">imhdxein@gmaill.com</p></div>
             </a>
             <a href="#" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">Calle Buenos Aires 2910, Colonia Providencia, Guadalajara Jalisco CP 66439</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">Calle Buenos Aires 2910, Col. Providencia, Guadalajara Jalisco CP 66439</p></div>
             </a>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
@@ -177,8 +177,8 @@ const handleContact = async () => {
     <div class="h-80 flex items-center justify-center">
       <div class="text-center">
         <svg class="text-brand-500 mx-auto mb-3" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-        <p class="text-deep-600 font-heading font-semibold text-lg">Calle Buenos Aires 2910, Colonia Providencia, Guadalajara Jalisco CP 66439</p>
-        <p class="text-deep-400">Colonia Providencia, Guadalajara Jalisco CP 66439</p>
+        <p class="text-deep-600 font-heading font-semibold text-lg">Calle Buenos Aires 2910, Col. Providencia CP 66439</p>
+        <p class="text-deep-400">Guadalajara Jalisco</p>
       </div>
     </div>
   </section>
