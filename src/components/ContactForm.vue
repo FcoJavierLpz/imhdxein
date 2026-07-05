@@ -96,14 +96,14 @@ const handleContact = async () => {
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 9:00 - 19:00 hrs | Sáb: 9:00 - 14:00 hrs</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
             </div>
           </div>
           <div class="mt-10 bg-gradient-to-br from-sage-50 to-brand-50 rounded-2xl p-6">
             <h3 class="font-heading font-semibold text-deep-800 mb-3">Chakras y Horarios</h3>
             <p class="text-deep-500 text-sm leading-relaxed">Cada día de la semana está alineado con un chakra diferente.</p>
             <div class="mt-4 flex gap-1">
-              <div v-for="(day, i) in ['L','M','M','J','V','S']" :key="i" class="flex-1 text-center">
+              <div v-for="(day, i) in ['L','M','M','J','V']" :key="i" class="flex-1 text-center">
                 <div :class="['w-8 h-8 mx-auto rounded-full flex items-center justify-center text-white text-xs font-bold', ['bg-chakra-root','bg-chakra-sacral','bg-chakra-solar','bg-chakra-heart','bg-chakra-throat','bg-chakra-third'][i]]">{{ day }}</div>
               </div>
             </div>
