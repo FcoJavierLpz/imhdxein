@@ -78,7 +78,7 @@ const handleContact = async () => {
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">+52 55 1234 5678</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">+52 33 1842 2251</p></div>
             </a>
             <a href="mailto:contacto@imhdxein.com" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
@@ -90,7 +90,7 @@ const handleContact = async () => {
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">Av. Insurgentes Sur 1234, Col. Del Valle, CDMX</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">Calle Buenos Aires 2910, Colonia Providencia, Guadalajara Jalisco CP 66439</p></div>
             </a>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
@@ -133,7 +133,7 @@ const handleContact = async () => {
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="appointmentForm.phone" placeholder="+52 55 1234 5678" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="appointmentForm.phone" placeholder="+52 33 1842 2251" /></div>
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
                   <select required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
@@ -177,8 +177,8 @@ const handleContact = async () => {
     <div class="h-80 flex items-center justify-center">
       <div class="text-center">
         <svg class="text-brand-500 mx-auto mb-3" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-        <p class="text-deep-600 font-heading font-semibold text-lg">Av. Insurgentes Sur 1234</p>
-        <p class="text-deep-400">Col. Del Valle, Ciudad de México</p>
+        <p class="text-deep-600 font-heading font-semibold text-lg">Calle Buenos Aires 2910, Colonia Providencia, Guadalajara Jalisco CP 66439</p>
+        <p class="text-deep-400">Colonia Providencia, Guadalajara Jalisco CP 66439</p>
       </div>
     </div>
   </section>
