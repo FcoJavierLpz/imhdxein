@@ -6,11 +6,11 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  image_url: string;
+  image?: string;
   category: string;
-  is_available: boolean;
-  order_index: number;
-  mercadolibre_url: string | null;
+  isAvailable: boolean;
+  orderIndex: number;
+  mercadolibreUrl: string | null;
 }
 
 const props = defineProps<{ products: Product[] }>();
@@ -51,9 +51,10 @@ const filtered = computed(() =>
           class="card group flex flex-col"
         >
           <!-- Imagen -->
-          <div class="h-52 overflow-hidden relative flex-shrink-0">
+          <div class="h-52 overflow-hidden relative flex-shrink-0 bg-deep-100">
             <img
-              :src="product.image_url"
+              v-if="product.image"
+              :src="product.image"
               :alt="product.name"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
@@ -62,7 +63,7 @@ const filtered = computed(() =>
               class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-semibold text-deep-800 shadow-sm"
             >${{ product.price }}</span>
             <span
-              v-if="!product.is_available"
+              v-if="!product.isAvailable"
               class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-semibold text-sm"
             >No disponible</span>
           </div>
@@ -75,8 +76,8 @@ const filtered = computed(() =>
 
             <!-- Botón Mercado Libre -->
             <a
-              v-if="product.mercadolibre_url && product.is_available"
-              :href="product.mercadolibre_url"
+              v-if="product.mercadolibreUrl && product.isAvailable"
+              :href="product.mercadolibreUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-200 hover:shadow-md active:scale-95"
@@ -87,7 +88,7 @@ const filtered = computed(() =>
               Ver en Mercado Libre
             </a>
             <span
-              v-else-if="!product.is_available"
+              v-else-if="!product.isAvailable"
               class="mt-4 w-full flex items-center justify-center gap-2 bg-deep-100 text-deep-400 rounded-xl py-2.5 text-sm font-medium cursor-not-allowed"
             >No disponible</span>
             <span

@@ -1,9 +1,20 @@
 ---
+export const prerender = true;
+
 import MainLayout from '../layouts/MainLayout.astro';
 import TherapySelector from '../components/TherapySelector.vue';
-import { getTherapies } from '../lib/supabase';
+import { getCollection } from 'astro:content';
 
-const therapies = await getTherapies();
+const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
+  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
+
+const therapies = therapyEntries.map((t) => ({
+  id: t.id,
+  slug: t.id,
+  ...t.data,
+  image: t.data.image.src,
+  price: t.data.price ?? null,
+}));
 ---
 
 <MainLayout

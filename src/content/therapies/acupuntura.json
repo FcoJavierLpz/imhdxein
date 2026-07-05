@@ -1,0 +1,10 @@
+{
+  "name": "Acupuntura",
+  "description": "Técnica milenaria de la medicina tradicional china que consiste en la inserción de agujas muy finas en puntos específicos del cuerpo.\n\nBeneficios:\n• Alivio del dolor crónico y agudo\n• Reducción del estrés y la ansiedad\n• Mejora de la calidad del sueño\n• Equilibrio energético general\n\nCada sesión es personalizada según tu condición particular y objetivos de sanación.",
+  "durationMinutes": 60,
+  "price": 750,
+  "icon": "Sparkles",
+  "image": "../../assets/images/therapies/image.png",
+  "isActive": true,
+  "orderIndex": 0
+}

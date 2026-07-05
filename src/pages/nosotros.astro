@@ -1,8 +1,17 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import { getTherapists } from '../lib/supabase';
+export const prerender = true;
 
-const therapists = await getTherapists();
+import MainLayout from '../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+const therapistEntries = (await getCollection('therapists', ({ data }) => data.isActive))
+  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
+
+const therapists = therapistEntries.map((t) => ({
+  id: t.id,
+  ...t.data,
+}));
 
 const values = [
   { title: 'Compasión', description: 'Tratamos a cada persona con empatía profunda, reconociendo su humanidad y su proceso único.', icon: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/>' },
@@ -212,10 +221,12 @@ const values = [
         <p class="mt-4 text-deep-500 leading-relaxed">Profesionales apasionados por la sanación integral, con formación de primer nivel y compromiso con tu bienestar.</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {therapists.filter(t => t.order_index > 0).map((t) => (
+        {therapists.filter(t => t.orderIndex > 0).map((t) => (
           <div class="card group bg-white">
-            <div class="h-56 overflow-hidden">
-              <img src={t.image_url} alt={t.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div class="h-56 overflow-hidden bg-deep-100">
+              {t.image && (
+                <Image src={t.image} alt={t.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              )}
             </div>
             <div class="p-6">
               <h3 class="font-heading font-semibold text-deep-800 text-lg">{t.name}</h3>

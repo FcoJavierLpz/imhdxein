@@ -1,9 +1,19 @@
 ---
+export const prerender = true;
+
 import MainLayout from '../layouts/MainLayout.astro';
 import ProductShop from '../components/ProductShop.vue';
-import { getProducts } from '../lib/supabase';
+import { getCollection } from 'astro:content';
 
-const products = await getProducts();
+const productEntries = (await getCollection('products'))
+  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
+
+const products = productEntries.map((p) => ({
+  id: p.id,
+  ...p.data,
+  image: p.data.image?.src,
+  mercadolibreUrl: p.data.mercadolibreUrl ?? null,
+}));
 ---
 
 <MainLayout

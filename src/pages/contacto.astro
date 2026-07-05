@@ -1,10 +1,18 @@
 ---
+export const prerender = true;
+
 import MainLayout from '../layouts/MainLayout.astro';
 import ContactForm from '../components/ContactForm.vue';
-import { getTherapies } from '../lib/supabase';
+import { getCollection } from 'astro:content';
 
-const therapies = await getTherapies();
-const therapyOptions = therapies.map(t => ({ id: t.id, name: t.name, duration_minutes: t.duration_minutes }));
+const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
+  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
+
+const therapyOptions = therapyEntries.map((t) => ({
+  id: t.id,
+  name: t.data.name,
+  durationMinutes: t.data.durationMinutes,
+}));
 ---
 
 <MainLayout

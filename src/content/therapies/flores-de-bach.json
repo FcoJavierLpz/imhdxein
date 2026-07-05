@@ -1,0 +1,10 @@
+{
+  "name": "Flores de Bach",
+  "description": "Sistema terapéutico floral desarrollado por el Dr. Edward Bach que utiliza esencias de flores silvestres para equilibrar los estados emocionales.\n\nBeneficios:\n• Manejo del estrés y las emociones difíciles\n• Apoyo en procesos de duelo o cambio\n• Complemento ideal a otros tratamientos\n• Sin efectos secundarios ni contraindicaciones\n\nSe elabora una fórmula personalizada de acuerdo a tu estado emocional actual.",
+  "durationMinutes": 45,
+  "price": 550,
+  "icon": "Flower2",
+  "image": "../../assets/images/therapies/image.png",
+  "isActive": true,
+  "orderIndex": 1
+}

@@ -23,7 +23,7 @@
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
                 <div class="flex items-center gap-2 text-xs text-deep-400 mt-0.5">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>{{ therapy.duration_minutes }} min</span>
+                  <span>{{ therapy.durationMinutes }} min</span>
                 </div>
               </div>
             </button>
@@ -33,12 +33,12 @@
         <div class="lg:col-span-2">
           <div v-if="selected" class="animate-fade-in">
             <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
-              <img :src="selected.image_url" :alt="selected.name" class="w-full h-72 md:h-80 object-cover" />
+              <img :src="selected.image" :alt="selected.name" class="w-full h-72 md:h-80 object-cover" />
             </div>
             <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">{{ selected.name }}</h2>
             <div class="mt-4 flex items-center gap-6 text-deep-500">
-              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.duration_minutes }} minutos</span>
-              <span v-if="selected.price !== null" class="flex items-center gap-2 text-sm font-semibold text-deep-800">
+              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
+              <span v-if="selected.price && selected.price > 0" class="flex items-center gap-2 text-sm font-semibold text-deep-800">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 {{ selected.price }} MXN
               </span>
@@ -76,10 +76,10 @@ interface Therapy {
   name: string;
   slug: string;
   description: string;
-  duration_minutes: number;
+  durationMinutes: number;
   price: number | null;
   icon: string;
-  image_url: string;
+  image: string;
 }
 
 const props = defineProps<{ therapies: Therapy[] }>();

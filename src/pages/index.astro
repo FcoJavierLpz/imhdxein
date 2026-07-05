@@ -1,10 +1,29 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import TestimonialCarousel from '../components/TestimonialCarousel.vue';
-import { getTherapies, getTestimonials } from '../lib/supabase';
+export const prerender = true;
 
-const therapies = await getTherapies();
-const testimonials = await getTestimonials();
+import MainLayout from '../layouts/MainLayout.astro';
+
+import TestimonialCarousel from '../components/TestimonialCarousel.vue';
+import { getCollection } from 'astro:content';
+
+const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
+  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
+const therapies = therapyEntries.map((t) => ({
+  id: t.id,
+  slug: t.id,
+  ...t.data,
+  price: t.data.price ?? null,
+}));
+
+const testimonialEntries = await getCollection('testimonials', ({ data }) => data.isVisible);
+const testimonials = testimonialEntries.map((t) => ({
+  id: t.id,
+  name: t.data.name,
+  text: t.data.text,
+  rating: t.data.rating,
+  therapy: t.data.therapy,
+}));
+
 
 const chakraColors = [
   'from-chakra-root to-chakra-sacral',
@@ -93,7 +112,7 @@ const iconSvg = (name: string) => {
             <div class="mt-4 flex items-center justify-center gap-3 text-xs text-deep-400 flex-wrap">
               <span class="flex items-center gap-1">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {therapy.duration_minutes} min
+                {therapy.durationMinutes} min
               </span>
               {therapy.price !== null ? (
                 <span class="flex items-center gap-1 font-medium text-deep-600">

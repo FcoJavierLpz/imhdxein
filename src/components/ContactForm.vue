@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { supabase } from '../lib/supabase';
 
-interface Therapy { id: string; name: string; duration_minutes: number; }
+interface Therapy { id: string; name: string; durationMinutes: number; }
 
 const props = defineProps<{ therapies: Therapy[] }>();
 
@@ -137,7 +137,7 @@ const handleContact = async () => {
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
                   <select required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
-                    <option v-for="t in therapies" :key="t.id" :value="t.id">{{ t.name }} ({{ t.duration_minutes }} min)</option>
+                    <option v-for="t in therapies" :key="t.id" :value="t.id">{{ t.name }} ({{ t.durationMinutes }} min)</option>
                   </select>
                 </div>
               </div>
