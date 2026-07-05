@@ -1,0 +1,9 @@
+{
+  "name": "Flores de Bach ",
+  "description": "Fórmula personalizada de acuerdo al protocolo clinico-medico del IMH \"Dxein\" \nSe requiere lectura de las flores por parte del paciente para hacer el análisis correspondiente. De inicio se trabaja seis emociones. Una vez enviado los resultados  se elabora el producto.",
+  "price": 600,
+  "image": "../../assets/images/products/Flores-de-bach/image.jpeg",
+  "category": "Flores de Bach",
+  "isAvailable": true,
+  "orderIndex": 2
+}
