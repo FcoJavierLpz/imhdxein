@@ -16,13 +16,11 @@ export default config({
   storage: import.meta.env.DEV
     ? { kind: 'local' }
     : {
-        kind: 'github',
-        repo: {
-          owner: 'FcoJavierLpz',
-          name: 'imhdxein',
-        },
+        kind: 'cloud',
       },
-
+  cloud: {
+    project: 'imhdxein/imhdxein',
+  },
   ui: {
     brand: { name: 'IMHDXEIN CMS' },
   },
