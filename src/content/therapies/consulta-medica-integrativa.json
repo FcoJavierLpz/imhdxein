@@ -1,0 +1,9 @@
+{
+  "name": "Consulta Medica Integrativa",
+  "description": "Abordaje médico clínico, con enfoque integrativo  y holistico  de todas las enfermedades  en niños, jovenes, adultos y personas mayores.\nSe integra un diagnostico y se plantea un protocolo  integral, diseñando un  plan que se adecue  al proceso del padecimiento",
+  "durationMinutes": 60,
+  "price": 1200,
+  "icon": "Sparkles",
+  "isActive": true,
+  "orderIndex": 1
+}
