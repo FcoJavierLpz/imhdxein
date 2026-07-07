@@ -114,9 +114,8 @@ const iconSvg = (name: string) => {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 {therapy.durationMinutes} min
               </span>
-              {therapy.price !== null ? (
-                <span class="flex items-center gap-1 font-medium text-deep-600">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              {therapy.price !== null && therapy.price > 0 ? (
+                <span class="font-medium text-deep-600">
                   ${therapy.price}
                 </span>
               ) : (
