@@ -10,13 +10,14 @@ const therapies = defineCollection({
     durationMinutes: z.number(),
     price: z.number().nullable().optional(),
     icon: z.string(),
-    image: image(),
+    image: image().optional(),
     isActive: z.boolean(),
     orderIndex: z.number(),
   }),
 });
 
 const products = defineCollection({
+
   loader: glob({ pattern: '*.json', base: './src/content/products' }),
   schema: ({ image }) => z.object({
     name: z.string(),

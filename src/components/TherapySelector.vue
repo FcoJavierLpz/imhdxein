@@ -32,9 +32,10 @@
 
         <div class="lg:col-span-2">
           <div v-if="selected" class="animate-fade-in">
-            <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
+            <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8">
               <img :src="selected.image" :alt="selected.name" class="w-full h-72 md:h-80 object-cover" />
             </div>
+
             <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">{{ selected.name }}</h2>
             <div class="mt-4 flex items-center gap-6 text-deep-500">
               <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
@@ -79,8 +80,9 @@ interface Therapy {
   durationMinutes: number;
   price: number | null;
   icon: string;
-  image: string;
+  image?: string;
 }
+
 
 const props = defineProps<{ therapies: Therapy[] }>();
 

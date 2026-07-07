@@ -12,7 +12,8 @@ const therapies = therapyEntries.map((t) => ({
   id: t.id,
   slug: t.id,
   ...t.data,
-  image: t.data.image.src,
+  image: t.data.image?.src,
+
   price: t.data.price ?? null,
 }));
 ---
