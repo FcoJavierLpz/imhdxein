@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { supabase } from '../lib/supabase';
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -7,6 +7,7 @@ interface Therapy { id: string; name: string; durationMinutes: number; }
 const props = defineProps<{ therapies: Therapy[] }>();
 
 const activeTab = ref<'appointment' | 'contact'>('appointment');
+
 const appointmentSubmitted = ref(false);
 const contactSubmitted = ref(false);
 const appointmentError = ref('');
@@ -18,6 +19,19 @@ const contactForm = ref({ full_name: '', email: '', phone: '', subject: '', mess
 
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePhone = (phone: string) => /^[0-9\s\-\+\(\)]{10,}$/.test(phone);
+
+onMounted(() => {
+  const params = new URLSearchParams(window.location.search);
+  const therapyId = params.get('therapy');
+  if (!therapyId) return;
+
+  const therapyExists = props.therapies.some((t) => t.id === therapyId);
+  if (therapyExists) {
+    appointmentForm.value.therapy_id = therapyId;
+    activeTab.value = 'appointment';
+  }
+});
+
 
 const handleAppointment = async () => {
   appointmentError.value = '';
@@ -103,7 +117,7 @@ const handleContact = async () => {
             <h3 class="font-heading font-semibold text-deep-800 mb-3">Chakras y Horarios</h3>
             <p class="text-deep-500 text-sm leading-relaxed">Cada día de la semana está alineado con un chakra diferente.</p>
             <div class="mt-4 flex gap-1">
-              <div v-for="(day, i) in ['L','M','M','J','V']" :key="i" class="flex-1 text-center">
+              <div v-for="(day, i) in ['L','M','M','J','V','S']" :key="i" class="flex-1 text-center">
                 <div :class="['w-8 h-8 mx-auto rounded-full flex items-center justify-center text-white text-xs font-bold', ['bg-chakra-root','bg-chakra-sacral','bg-chakra-solar','bg-chakra-heart','bg-chakra-throat','bg-chakra-third'][i]]">{{ day }}</div>
               </div>
             </div>
