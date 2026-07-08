@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 interface Therapy {
   id: string;
@@ -91,6 +91,17 @@ const selected = ref<Therapy | null>(props.therapies[0] || null);
 const select = (therapy: Therapy) => {
   selected.value = therapy;
 };
+
+onMounted(() => {
+  const hash = window.location.hash?.replace('#', '');
+  if (!hash) return;
+
+  const therapyFromHash = props.therapies.find((t) => t.slug === hash);
+  if (therapyFromHash) {
+    selected.value = therapyFromHash;
+  }
+});
+
 
 const icons: Record<string, string> = {
   Sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
