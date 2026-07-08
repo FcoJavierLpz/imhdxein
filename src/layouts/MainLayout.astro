@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import '../styles/global.css';
 
 export interface Props {
@@ -11,6 +12,9 @@ export interface Props {
 }
 
 const { title, description, image } = Astro.props;
+
+// Número global de contacto
+const WHATSAPP_PHONE = '523318422251';
 ---
 
 <Layout title={title} description={description} image={image}>
@@ -21,4 +25,13 @@ const { title, description, image } = Astro.props;
     </main>
     <Footer />
   </div>
+
+  <!--
+    Botón flotante global de WhatsApp.
+  -->
+  <WhatsAppButton
+    phone={WHATSAPP_PHONE}
+    message="Hola!, me gustaría obtener más información sobre sus terapias y productos."
+  />
 </Layout>
+

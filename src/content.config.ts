@@ -27,9 +27,9 @@ const products = defineCollection({
     category: z.string(),
     isAvailable: z.boolean(),
     orderIndex: z.number(),
-    mercadolibreUrl: z.string().nullable().optional(),
   }),
 });
+
 
 const therapists = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/therapists' }),

@@ -12,8 +12,8 @@ const products = productEntries.map((p) => ({
   id: p.id,
   ...p.data,
   image: p.data.image?.src,
-  mercadolibreUrl: p.data.mercadolibreUrl ?? null,
 }));
+
 ---
 
 <MainLayout
@@ -34,8 +34,10 @@ const products = productEntries.map((p) => ({
   <div class="h-1.5 chakra-gradient"></div>
 
   {products.length > 0 ? (
-    <ProductShop client:load products={products} />
+    <ProductShop client:visible products={products} />
   ) : (
+
+
     <section class="section-padding bg-white">
       <div class="container-custom">
         <p class="text-center text-deep-400 py-12">Próximamente tendremos productos disponibles.</p>

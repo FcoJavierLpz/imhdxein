@@ -104,14 +104,11 @@ export default config({
           label: 'Orden',
           defaultValue: 0,
         }),
-        mercadolibreUrl: fields.url({
-          label: 'URL de Mercado Libre',
-          description: 'Opcional. Deja vacío si aún no está en venta.',
-        }),
       },
     }),
 
     therapists: collection({
+
       label: 'Terapeutas',
       slugField: 'name',
       path: 'src/content/therapists/*',
