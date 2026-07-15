@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { actions, isInputError } from 'astro:actions';
 import { supabase } from '../lib/supabase';
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -17,8 +18,13 @@ const contactLoading = ref(false);
 const appointmentForm = ref({ full_name: '', email: '', phone: '', therapy_id: '', message: '' });
 const contactForm = ref({ full_name: '', email: '', phone: '', subject: '', message: '' });
 
+// Honeypot anti-spam: campo oculto que solo un bot llenaría.
+// Si llega con contenido, el servidor descarta la solicitud silenciosamente.
+const appointmentHoneypot = ref('');
+
 const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validatePhone = (phone: string) => /^[0-9\s\-\+\(\)]{10,}$/.test(phone);
+
 
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
@@ -40,21 +46,34 @@ const handleAppointment = async () => {
   if (appointmentForm.value.phone && !validatePhone(appointmentForm.value.phone)) { appointmentError.value = 'Por favor ingresa un teléfono válido'; return; }
 
   appointmentLoading.value = true;
-  const { error } = await supabase.from('appointments').insert({
-    full_name: appointmentForm.value.full_name.trim(),
+
+  const { data, error } = await actions.appointments.submit({
+    fullName: appointmentForm.value.full_name.trim(),
     email: appointmentForm.value.email.trim(),
     phone: appointmentForm.value.phone.trim(),
-    therapy_id: appointmentForm.value.therapy_id || null,
+    therapyId: appointmentForm.value.therapy_id || undefined,
     message: appointmentForm.value.message.trim(),
+    website: appointmentHoneypot.value,
   });
+
   appointmentLoading.value = false;
-  if (!error) {
+
+  if (data?.success) {
     appointmentSubmitted.value = true;
     appointmentForm.value = { full_name: '', email: '', phone: '', therapy_id: '', message: '' };
-  } else {
-    appointmentError.value = 'Error al enviar la solicitud. Por favor intenta de nuevo.';
+    appointmentHoneypot.value = '';
+    return;
   }
+
+  if (error && isInputError(error)) {
+    const firstFieldError = Object.values(error.fields).flat()[0];
+    appointmentError.value = firstFieldError ?? 'Revisa los datos ingresados e intenta de nuevo.';
+    return;
+  }
+
+  appointmentError.value = 'Error al enviar la solicitud. Por favor intenta de nuevo.';
 };
+
 
 const handleContact = async () => {
   contactError.value = '';
@@ -142,8 +161,26 @@ const handleContact = async () => {
               <button @click="appointmentSubmitted = false" class="btn-outline mt-6">Enviar otra solicitud</button>
             </div>
             <form v-else class="space-y-5" @submit.prevent="handleAppointment">
+              <!--
+                Honeypot anti-spam: campo invisible para humanos (fuera del
+                viewport, sin afectar el layout) pero visible para bots que
+                completan todos los inputs de un formulario automáticamente.
+                Si llega con contenido, el servidor descarta la solicitud.
+              -->
+              <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+                <label for="website">No llenar este campo</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                  v-model="appointmentHoneypot"
+                />
+              </div>
               <div class="grid sm:grid-cols-2 gap-5">
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
+
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
