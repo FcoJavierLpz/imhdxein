@@ -42,7 +42,7 @@ const appointmentInputSchema = z.object({
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
-const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL ?? 'imhdxein@gmaill.com';
+const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL ?? 'imhdxein@gmail.com';
 const EMAIL_FROM = 'Instituto Holístico Dxein <contacto@imhdxein.org.mx>';
 
 const resolveTherapyName = async (therapyId: string | null): Promise<string | null> => {
