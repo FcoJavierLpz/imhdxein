@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { actions, isInputError } from 'astro:actions';
-import { supabase } from '../lib/supabase';
+
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
 
@@ -83,21 +83,32 @@ const handleContact = async () => {
   if (!contactForm.value.message.trim() || contactForm.value.message.length < 10) { contactError.value = 'Por favor ingresa un mensaje válido (mínimo 10 caracteres)'; return; }
 
   contactLoading.value = true;
-  const { error } = await supabase.from('contact_messages').insert({
-    full_name: contactForm.value.full_name.trim(),
+
+  const { data, error } = await actions.contact.submit({
+    fullName: contactForm.value.full_name.trim(),
     email: contactForm.value.email.trim(),
     phone: contactForm.value.phone.trim(),
     subject: contactForm.value.subject.trim(),
     message: contactForm.value.message.trim(),
   });
+
   contactLoading.value = false;
-  if (!error) {
+
+  if (data?.success) {
     contactSubmitted.value = true;
     contactForm.value = { full_name: '', email: '', phone: '', subject: '', message: '' };
-  } else {
-    contactError.value = 'Error al enviar el mensaje. Por favor intenta de nuevo.';
+    return;
   }
+
+  if (error && isInputError(error)) {
+    const firstFieldError = Object.values(error.fields).flat()[0];
+    contactError.value = firstFieldError ?? 'Revisa los datos ingresados e intenta de nuevo.';
+    return;
+  }
+
+  contactError.value = 'Error al enviar el mensaje. Por favor intenta de nuevo.';
 };
+
 </script>
 
 <template>
