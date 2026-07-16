@@ -4,7 +4,7 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-import rodrigoImg from '../assets/images/rodrigo.jpg';
+import rodrigoImg from '../assets/images/rodrigo.webp';
 
 const therapistEntries = (await getCollection('therapists', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
@@ -137,7 +137,7 @@ const values = [
         <div class="bg-gradient-to-br from-deep-50 to-brand-50 rounded-3xl overflow-hidden shadow-xl grid md:grid-cols-5 gap-0">
 
           <!-- Foto -->
-          <div class="md:col-span-2 h-80 md:h-full md:max-h-[600px] overflow-hidden">
+          <div class="md:col-span-2 h-80 md:h-auto overflow-hidden">
             <Image
               src={rodrigoImg}
               alt="Dr. Rodrigo Acevedo Hernández"

@@ -65,7 +65,7 @@
     <button @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
     </button>
-    <button @click="next" class="absolute right-20 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
+    <button @click="next" class="absolute right-4 xl:right-20 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
     </button>
 
@@ -75,6 +75,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+
+import imgAmanecer from '../assets/images/hero/amanecer-nueva-oportunidad.webp';
+import imgPoderSanacion from '../assets/images/hero/poder-sanacion.webp';
+import imgEncuentraNorte from '../assets/images/hero/encuentra-tu-norte.webp';
 
 const slides = [
   { 
@@ -86,23 +90,23 @@ const slides = [
   },
   { 
     type: 'image', 
-    image: '/images/hero/amanecer-nueva-oportunidad.png',
+    image: imgAmanecer.src,
     title: 'Cada amanecer es', 
     subtitle: 'una oportunidad', 
     description: 'El universo nos otorga cambios de paradigmas. El camino del guerrero es la acción.',
-    alt: '',
+    alt: 'Amanecer brumoso en la montaña representando un nuevo comienzo',
   },
   { 
     type: 'image', 
-    image: '/images/hero/poder-sanacion.png', 
+    image: imgPoderSanacion.src, 
     title: 'El poder de sanar', 
     subtitle: 'está en ti', 
     description: 'Somos los únicos capaces de iniciar el camino hacia el cambio verdadero.',
-    alt: '',
+    alt: 'Persona meditando frente a un paisaje montañoso al amanecer',
   },
   { 
     type: 'image', 
-    image: '/images/hero/encuentra-tu-norte.png',
+    image: imgEncuentraNorte.src,
     alt: 'Mujer de pie en la cima de una montaña contemplando un amanecer neblinoso, junto a una brújula dorada antigua y una geoda de cuarzo que simbolizan la guía y la sanación espiritual.',
     title: 'Recupera tu equilibrio', 
     subtitle: 'original', 
