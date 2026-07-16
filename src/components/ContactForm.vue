@@ -189,6 +189,8 @@ const handleContact = async () => {
                 v-for="(c, i) in chakraDays"
                 :key="i"
                 class="flex-1 flex flex-col items-center gap-1 group focus:outline-none"
+                @mouseenter="activeChakra = i"
+                @mouseleave="activeChakra = null"
                 @click="activeChakra = activeChakra === i ? null : i"
               >
                 <div
@@ -198,6 +200,7 @@ const handleContact = async () => {
                 <span class="text-[9px] text-deep-400 leading-none hidden sm:block">{{ c.day.slice(0, 3) }}</span>
               </button>
             </div>
+
             <!-- Detail panel -->
             <Transition name="chakra-detail">
               <div
