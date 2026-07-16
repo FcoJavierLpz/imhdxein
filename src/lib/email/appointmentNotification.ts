@@ -50,9 +50,15 @@ export const buildAppointmentSubject = (data: AppointmentNotificationData): stri
 export const buildAppointmentHtml = (data: AppointmentNotificationData): string => {
   const rows = [
     renderInfoRow('Nombre', escapeHtml(data.fullName)),
-    renderInfoRow('Correo', `<a href="mailto:${escapeHtml(data.email)}" style="color:${BRAND_GOLD}; text-decoration:none;">${escapeHtml(data.email)}</a>`),
+    renderInfoRow(
+      'Correo',
+      `<a href="mailto:${escapeHtml(data.email)}" style="color:${BRAND_GOLD}; text-decoration:none;">${escapeHtml(data.email)}</a>`
+    ),
     data.phone
-      ? renderInfoRow('Teléfono', `<a href="tel:${escapeHtml(data.phone)}" style="color:${BRAND_GOLD}; text-decoration:none;">${escapeHtml(data.phone)}</a>`)
+      ? renderInfoRow(
+          'Teléfono',
+          `<a href="tel:${escapeHtml(data.phone)}" style="color:${BRAND_GOLD}; text-decoration:none;">${escapeHtml(data.phone)}</a>`
+        )
       : '',
     data.therapyName ? renderInfoRow('Terapia', escapeHtml(data.therapyName)) : '',
     renderInfoRow('Recibido', formatDate(data.createdAt)),
@@ -131,6 +137,93 @@ export const buildAppointmentText = (data: AppointmentNotificationData): string 
     data.therapyName ? `Terapia: ${data.therapyName}` : null,
     `Recibido: ${formatDate(data.createdAt)}`,
     data.message ? `\nMensaje:\n${data.message}` : null,
+  ].filter(Boolean);
+
+  return lines.join('\n');
+};
+
+/**
+ * Copia de cortesía enviada al paciente confirmando la recepción de su solicitud.
+ */
+export const buildPatientConfirmationSubject = (): string =>
+  `Hemos recibido tu solicitud — Instituto Holístico`;
+
+export const buildPatientConfirmationHtml = (data: AppointmentNotificationData): string => {
+  const firstName = escapeHtml(data.fullName.split(' ')[0] ?? '');
+
+  const rows = [
+    renderInfoRow('Nombre', escapeHtml(data.fullName)),
+    data.therapyName ? renderInfoRow('Terapia', escapeHtml(data.therapyName)) : '',
+    renderInfoRow('Enviado', formatDate(data.createdAt)),
+  ].join('');
+
+  return `
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${buildPatientConfirmationSubject()}</title>
+
+  </head>
+  <body style="margin:0; padding:0; background-color:#faf7f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#faf7f0; padding: 32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px; background-color:#ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(31, 41, 55, 0.08);">
+            <tr>
+              <td style="background: linear-gradient(135deg, ${BRAND_GOLD}, #b8860b); padding: 28px 32px;">
+                <p style="margin:0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.85); font-weight: 600;">
+                  IMHDXEIN
+                </p>
+                <h1 style="margin: 6px 0 0; font-size: 20px; color: #ffffff; font-weight: 700;">
+                  ¡Gracias por contactarnos, ${firstName}!
+                </h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 28px 32px;">
+                <p style="margin: 0 0 20px; font-size: 14px; color: ${DEEP_500}; line-height: 1.6;">
+                  Hemos recibido con éxito tu solicitud${data.therapyName ? ` para <strong style="color:${DEEP_900};">${escapeHtml(data.therapyName)}</strong>` : ''}. Nuestro equipo la revisará y se pondrá en contacto contigo muy pronto para coordinar los siguientes pasos.
+                </p>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  ${rows}
+                </table>
+                <div style="margin-top: 24px;">
+                  <p style="margin: 0; font-size: 14px; color: ${DEEP_500}; line-height: 1.6;">
+                    Si tienes alguna duda mientras tanto, no dudes en responder a este correo. Será un gusto acompañarte en tu proceso de bienestar.
+                  </p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 18px 32px; background-color:#faf7f0; text-align:center;">
+                <p style="margin:0; font-size: 11px; color: ${DEEP_500};">
+                  Este correo fue generado automáticamente por el formulario de contacto de imhdxein.com
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+`;
+};
+
+export const buildPatientConfirmationText = (data: AppointmentNotificationData): string => {
+  const firstName = data.fullName.split(' ')[0] ?? '';
+  const lines = [
+    `¡Gracias por contactarnos, ${firstName}!`,
+    '',
+    `Hemos recibido con éxito tu solicitud${data.therapyName ? ` para ${data.therapyName}` : ''}. Nuestro equipo la revisará y se pondrá en contacto contigo muy pronto para coordinar los siguientes pasos.`,
+    '',
+    `Nombre: ${data.fullName}`,
+    data.therapyName ? `Terapia: ${data.therapyName}` : null,
+    `Enviado: ${formatDate(data.createdAt)}`,
+    '',
+    'Si tienes alguna duda mientras tanto, no dudes en responder a este correo.',
   ].filter(Boolean);
 
   return lines.join('\n');

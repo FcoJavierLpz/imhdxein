@@ -1,13 +1,16 @@
-import { getEntry } from 'astro:content';
 import { ActionError, defineAction } from 'astro:actions';
+import { getEntry } from 'astro:content';
 import { z } from 'astro/zod';
 import { Resend } from 'resend';
-import { supabaseAdmin } from '../lib/supabaseAdmin';
 import {
   buildAppointmentHtml,
   buildAppointmentSubject,
   buildAppointmentText,
+  buildPatientConfirmationHtml,
+  buildPatientConfirmationSubject,
+  buildPatientConfirmationText,
 } from '../lib/email/appointmentNotification';
+import { supabaseAdmin } from '../lib/supabaseAdmin';
 
 const appointmentInputSchema = z.object({
   fullName: z
@@ -42,8 +45,8 @@ const appointmentInputSchema = z.object({
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
-const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL ?? 'imhdxein@gmail.com';
-const EMAIL_FROM = 'Instituto Holístico Dxein <contacto@imhdxein.org.mx>';
+const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL;
+const EMAIL_FROM = 'Instituto Holístico <notificaciones@imhdxein.org.mx>';
 
 const resolveTherapyName = async (therapyId: string | null): Promise<string | null> => {
   if (!therapyId) return null;
@@ -83,6 +86,36 @@ const sendAdminNotification = async (data: {
   }
 };
 
+const sendPatientConfirmation = async (data: {
+  fullName: string;
+  email: string;
+  phone: string | null;
+  therapyName: string | null;
+  message: string | null;
+  createdAt: Date;
+}) => {
+  try {
+    const { error } = await resend.emails.send({
+      from: EMAIL_FROM,
+      to: data.email,
+      subject: buildPatientConfirmationSubject(),
+      html: buildPatientConfirmationHtml(data),
+
+      text: buildPatientConfirmationText(data),
+    });
+
+    if (error) {
+      console.error(
+        '[appointments.submit] Resend rechazó el envío de la copia de cortesía:',
+        error
+      );
+    }
+  } catch (error) {
+    // La cita ya quedó registrada en Supabase; un fallo de correo no debe
+    // impedir que el usuario reciba confirmación de éxito. Solo se loguea.
+    console.error('[appointments.submit] Error inesperado al enviar la copia de cortesía:', error);
+  }
+};
 
 export const appointments = {
   submit: defineAction({
@@ -113,14 +146,26 @@ export const appointments = {
         });
       }
 
-      await sendAdminNotification({
-        fullName: input.fullName,
-        email: input.email,
-        phone: input.phone,
-        therapyName,
-        message: input.message,
-        createdAt: new Date(),
-      });
+      const createdAt = new Date();
+
+      await Promise.all([
+        sendAdminNotification({
+          fullName: input.fullName,
+          email: input.email,
+          phone: input.phone,
+          therapyName,
+          message: input.message,
+          createdAt,
+        }),
+        sendPatientConfirmation({
+          fullName: input.fullName,
+          email: input.email,
+          phone: input.phone,
+          therapyName,
+          message: input.message,
+          createdAt,
+        }),
+      ]);
 
       return { success: true } as const;
     },
