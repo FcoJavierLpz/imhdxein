@@ -218,14 +218,15 @@ const handleContact = async () => {
             </div>
             <form v-else class="space-y-5" @submit.prevent="handleContact">
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="contactForm.full_name" /></div>
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="contactForm.email" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="contactForm.phone" /></div>
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input type="text" required class="input-field" v-model="contactForm.subject" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="contactForm.phone" placeholder="+52 33 1842 2251" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
               </div>
-              <div><label class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea required class="input-field" rows="5" v-model="contactForm.message"></textarea></div>
+              <div><label class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
+
               <div v-if="contactError" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ contactError }}</div>
               <button type="submit" :disabled="contactLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ contactLoading ? 'Enviando...' : 'Enviar Mensaje' }}</button>
             </form>
