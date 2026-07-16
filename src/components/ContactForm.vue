@@ -8,6 +8,40 @@ interface Therapy { id: string; name: string; durationMinutes: number; }
 const props = defineProps<{ therapies: Therapy[] }>();
 
 const activeTab = ref<'appointment' | 'contact'>('appointment');
+const activeChakra = ref<number | null>(null);
+
+const chakraDays = [
+  {
+    letter: 'L', day: 'Lunes', chakra: 'Chakra Raíz (Muladhara)',
+    color: '#C41E3A',
+    description: 'Energía de la tierra, estabilidad y fundamentos. Ideal para iniciar procesos de arraigo, trabajo con el cuerpo físico y terapias que buscan seguridad y sostén.',
+  },
+  {
+    letter: 'M', day: 'Martes', chakra: 'Chakra Sacro (Svadhisthana)',
+    color: '#E8751A',
+    description: 'Energía creativa, emocional y relacional. Propicio para sesiones de liberación emocional, fertilidad, creatividad y vínculos afectivos.',
+  },
+  {
+    letter: 'M', day: 'Miércoles', chakra: 'Chakra Solar (Manipura)',
+    color: '#D4A017',
+    description: 'Energía de la voluntad y el poder personal. Día para trabajar la autoestima, la digestión, el sistema nervioso y la toma de decisiones desde el centro.',
+  },
+  {
+    letter: 'J', day: 'Jueves', chakra: 'Chakra Corazón (Anahata)',
+    color: '#3A7D44',
+    description: 'Energía del amor incondicional y la compasión. Óptimo para sanar duelos, relaciones, el sistema inmune y abrir el corazón a nuevas posibilidades.',
+  },
+  {
+    letter: 'V', day: 'Viernes', chakra: 'Chakra Garganta (Vishuddha)',
+    color: '#1E90C6',
+    description: 'Energía de la expresión y la verdad. Indicado para trabajar la comunicación, la tiroides, la voz interior y la capacidad de decir lo que el alma necesita.',
+  },
+  {
+    letter: 'S', day: 'Sábado', chakra: 'Chakra Corona (Sahasrara)',
+    color: '#7B2D8E',
+    description: 'Energía de la conciencia expandida y la conexión espiritual. El mejor día para meditaciones profundas, integración espiritual y estados de paz superior.',
+  },
+];
 
 const appointmentSubmitted = ref(false);
 const contactSubmitted = ref(false);
@@ -143,15 +177,46 @@ const handleContact = async () => {
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
             </div>
           </div>
-          <div class="mt-10 bg-gradient-to-br from-sage-50 to-brand-50 rounded-2xl p-6">
-            <h3 class="font-heading font-semibold text-deep-800 mb-3">Chakras y Horarios</h3>
-            <p class="text-deep-500 text-sm leading-relaxed">Cada día de la semana está alineado con un chakra diferente.</p>
-            <div class="mt-4 flex gap-1">
-              <div v-for="(day, i) in ['L','M','M','J','V','S']" :key="i" class="flex-1 text-center">
-                <div :class="['w-8 h-8 mx-auto rounded-full flex items-center justify-center text-white text-xs font-bold', ['bg-chakra-root','bg-chakra-sacral','bg-chakra-solar','bg-chakra-heart','bg-chakra-throat','bg-chakra-third'][i]]">{{ day }}</div>
-              </div>
+                    <div class="mt-10 bg-gradient-to-br from-sage-50 to-brand-50 rounded-2xl p-6">
+            <h3 class="font-heading font-semibold text-deep-800 mb-1">Chakras y Días de Atención</h3>
+            <p class="text-deep-500 text-sm leading-relaxed mb-4">
+              En la tradición védica cada día de la semana está regido por una energía sutil distinta.
+              Nuestro instituto alinea su agenda con esta sabiduría para que puedas elegir el día
+              más armónico según el trabajo interior que deseas iniciar.
+            </p>
+            <div class="flex gap-1.5">
+              <button
+                v-for="(c, i) in chakraDays"
+                :key="i"
+                class="flex-1 flex flex-col items-center gap-1 group focus:outline-none"
+                @click="activeChakra = activeChakra === i ? null : i"
+              >
+                <div
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
+                  :style="`background-color: ${c.color}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
+                >{{ c.letter }}</div>
+                <span class="text-[9px] text-deep-400 leading-none hidden sm:block">{{ c.day.slice(0, 3) }}</span>
+              </button>
             </div>
+            <!-- Detail panel -->
+            <Transition name="chakra-detail">
+              <div
+                v-if="activeChakra !== null"
+                class="mt-4 rounded-xl p-4 text-sm leading-relaxed border-l-4 bg-white/60"
+                :style="`border-color: ${chakraDays[activeChakra].color}`"
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <span
+                    class="w-5 h-5 rounded-full inline-block flex-shrink-0"
+                    :style="`background-color: ${chakraDays[activeChakra].color}`"
+                  ></span>
+                  <span class="font-semibold text-deep-800">{{ chakraDays[activeChakra].day }} — {{ chakraDays[activeChakra].chakra }}</span>
+                </div>
+                <p class="text-deep-500">{{ chakraDays[activeChakra].description }}</p>
+              </div>
+            </Transition>
           </div>
+
         </div>
 
         <div class="lg:col-span-2">
@@ -236,3 +301,15 @@ const handleContact = async () => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.chakra-detail-enter-active,
+.chakra-detail-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.chakra-detail-enter-from,
+.chakra-detail-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+</style>
