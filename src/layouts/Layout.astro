@@ -5,15 +5,17 @@ export interface Props {
   image?: string;
 }
 
+const siteName = "IMHDXEIN - Instituto de Medicina Holística Dxein";
+
 const {
-  title = "IMHDXEIN - Instituto de Medicina Holística | Terapias, Productos y Citas",
-  description = "IMHDXEIN - Instituto de Medicina Holística. Alineación de Chakras, Flores de Bach, Aromaterapia y más. Agenda tu cita hoy.",
+  title = `${siteName} | Terapias, Productos y Citas`,
+  description = `${siteName}. Alineación de Chakras, Flores de Bach, Aromaterapia y más. Agenda tu cita hoy.`,
   image = "https://imhdxein.org.mx/og-image.jpg",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const siteName = "IMHDXEIN";
 ---
+
 
 <!doctype html>
 <html lang="es">
@@ -53,9 +55,10 @@ const siteName = "IMHDXEIN";
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "MedicalOrganization",
-      "name": "IMHDXEIN",
+      "name": "IMHDXEIN - Instituto de Medicina Holística Dxein",
       "description": "Instituto de Medicina Holística. Alineación de Chakras, Acupuntura, Flores de Bach y más.",
-      "url": "https://imhdxein.com",
+      "url": "https://imhdxein.org.mx",
+      "logo": "https://imhdxein.org.mx/logoimhdxein.png",
       "telephone": "+52 33 1842 2251",
       "email": "imhdxein@gmail.com",
       "address": {
