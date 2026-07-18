@@ -80,7 +80,7 @@ export const buildContactConfirmationHtml = (data: ContactNotificationData): str
             <tr>
               <td style="padding: 28px 32px;">
                 <p style="margin: 0 0 20px; font-size: 14px; color: ${DEEP_500}; line-height: 1.6;">
-                  Hemos recibido con éxito tu mensaje. Nuestro equipo lo revisará y te responderemos en un plazo de 24 horas.
+                  Hemos recibido con éxito tu mensaje. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.
                 </p>
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   ${rows}
@@ -117,7 +117,7 @@ export const buildContactConfirmationText = (data: ContactNotificationData): str
   const lines = [
     `¡Gracias por contactarnos, ${firstName}!`,
     '',
-    'Hemos recibido con éxito tu mensaje. Nuestro equipo lo revisará y te responderemos en un plazo de 24 horas.',
+    'Hemos recibido con éxito tu mensaje. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.',
     '',
     `Nombre: ${data.fullName}`,
     `Asunto: ${data.subject}`,

@@ -281,7 +281,7 @@ const handleContact = async () => {
             <div v-if="contactSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
               <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
               <h3 class="text-2xl font-heading font-bold text-deep-900">Mensaje Enviado</h3>
-              <p class="mt-3 text-deep-500">Te responderemos en un plazo de 24 horas.</p>
+              <p class="mt-3 text-deep-500">Recibido. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.</p>
               <button @click="contactSubmitted = false" class="btn-outline mt-6">Enviar otro mensaje</button>
             </div>
             <form v-else class="space-y-5" @submit.prevent="handleContact">
