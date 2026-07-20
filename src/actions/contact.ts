@@ -36,6 +36,7 @@ const contactInputSchema = z.object({
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const EMAIL_FROM = 'Instituto Holístico <notificaciones@imhdxein.org.mx>';
+const EMAIL_REPLY_TO = 'imhdxein@gmail.com';
 
 /**
  * Enmascara un correo electrónico para poder loguearlo sin exponer el dato
@@ -64,6 +65,7 @@ const sendContactConfirmation = async (data: {
       subject: buildContactConfirmationSubject(),
       html: buildContactConfirmationHtml(data),
       text: buildContactConfirmationText(data),
+      replyTo: EMAIL_REPLY_TO,
     });
 
     if (error) {

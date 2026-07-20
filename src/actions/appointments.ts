@@ -47,6 +47,7 @@ const appointmentInputSchema = z.object({
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL;
 const EMAIL_FROM = 'Instituto Holístico <notificaciones@imhdxein.org.mx>';
+const EMAIL_REPLY_TO = 'imhdxein@gmail.com';
 
 const resolveTherapyName = async (therapyId: string | null): Promise<string | null> => {
   if (!therapyId) return null;
@@ -100,8 +101,8 @@ const sendPatientConfirmation = async (data: {
       to: data.email,
       subject: buildPatientConfirmationSubject(),
       html: buildPatientConfirmationHtml(data),
-
       text: buildPatientConfirmationText(data),
+      replyTo: EMAIL_REPLY_TO,
     });
 
     if (error) {
