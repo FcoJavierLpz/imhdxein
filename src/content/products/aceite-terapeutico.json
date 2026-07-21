@@ -1,0 +1,9 @@
+{
+  "name": "Aceite terapeútico",
+  "description": "Aceite Esencial: Líquido ( fragancia u olor ) que se extrae de ciertas plantas, flores, corteza, mediante vapor o prensado. Los aceites esenciales contienen sustancias químicas naturales que le dan su \"esencia\" (olor y sabor específicos) a las plantas. Los aceites esenciales es la base de la  aromaterapia.  \nLa aromaterapia es el uso de los aceites esenciales para mejorar el equilibrio de la mente, el cuerpo y el espíritu. Se usan para  todo tipo de enfermedades.  La aromaterapia a menudo se usa con otros tratamientos complementarios, como la terapia de masaje y la acupuntura,  así como también con los tratamientos médicos estándar para el control de los síntomas.\n\nPara la aromaterapia, se usan muchos aceites esenciales como  la lavanda, el romero, la menta, el limón, el jengibre, el cedro. Cada aceite esencial de una planta  poseé  propiedades  bioquímicas, energéticas, espirituales   particulares que la hacen única  y determina  el uso que se le dá en cada pacientes. Nuestro equipo de terapeutas  analiza esos datos y se prepara de acuerdo a una  evaluación  integral, por eso es muy importante  que vaya de la mano con el protocolo de Flores de Bach para tener mayor impacto en el bienestar   del paciente.\n\nLos compuestos químicos de los aceites esenciales a veces cambian con el paso del tiempo. Muchos aceites esenciales no tienen una fecha de caducidad y en general no se necesita la aprobación de la FDA  para su uso clinico. ",
+  "price": 250,
+  "image": "../../assets/images/products/aceite-terapeutico/image.png",
+  "category": "General",
+  "isAvailable": true,
+  "orderIndex": 2
+}
