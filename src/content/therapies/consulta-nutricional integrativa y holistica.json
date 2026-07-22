@@ -1,0 +1,10 @@
+{
+  "name": "Consulta Nutricional ",
+  "description": "Evaluación nutricional clinica  e integrativa y holistica, con enfoque nutricional ayurvédico de acuerdo al tipo de Dosha.\nExamen  antropometrico completa con impedanciometria para  valorar composición corporal y llevar un seguimiento puntual del avance  y los objetivos terapeúticos de cada  cliente.\nSe realiza  el diagnostico clinico- integrativo y holistico y se plantea un protocolo para  los objetvos que se establezcan de acuerdo a las necesidades de cada consultante. ",
+  "durationMinutes": 60,
+  "price": 1200,
+  "icon": "Sparkles",
+  "image": "../../assets/images/therapies/consulta-nutricional integrativa y holistica/image.png",
+  "isActive": true,
+  "orderIndex": 2
+}
