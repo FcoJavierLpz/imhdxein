@@ -82,8 +82,33 @@ const doshaInviteUrl = computed(() => {
   return `/test-dosha?${params.toString()}`;
 });
 
+// Selector único del contenedor del formulario, usado como destino del
+// auto-scroll cuando el usuario llega redirigido desde el catálogo.
+const REQUEST_FORM_SELECTOR = '#request-form-container';
+
+// El layout se apila (mobile) por debajo del breakpoint `lg` de Tailwind (1024px).
+// Usamos 1023px para detectar con precisión cuándo el formulario NO es visible
+// simultáneamente con la información, evitando saltos innecesarios en escritorio.
+const isStackedLayout = () =>
+  typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches;
+
+// Ejecuta un scroll suave y automatizado hacia el formulario, únicamente en
+// viewports donde el layout está apilado (mobile/tablet). Se aplica un retraso
+// corto para asegurar que Vue haya terminado de re-renderizar (cambio de tab)
+// y el navegador haya completado el cálculo de posiciones del DOM.
+const scrollToRequestFormIfStacked = () => {
+  if (!isStackedLayout()) return;
+
+  window.setTimeout(() => {
+    const formEl = document.querySelector(REQUEST_FORM_SELECTOR);
+    formEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 250);
+};
+
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
+
+  let shouldScrollToForm = false;
 
   const therapyId = params.get('therapy');
   if (therapyId) {
@@ -91,6 +116,7 @@ onMounted(() => {
     if (therapyExists) {
       appointmentForm.value.therapy_id = therapyId;
       activeTab.value = 'appointment';
+      shouldScrollToForm = true;
     }
   }
 
@@ -99,6 +125,11 @@ onMounted(() => {
     contactOrigin.value = 'consulta_general';
     contactForm.value.subject = 'Consulta General y de Diagnóstico';
     activeTab.value = 'contact';
+    shouldScrollToForm = true;
+  }
+
+  if (shouldScrollToForm) {
+    scrollToRequestFormIfStacked();
   }
 });
 
@@ -256,7 +287,7 @@ const handleContact = async () => {
 
         </div>
 
-        <div class="lg:col-span-2">
+        <div id="request-form-container" class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
             <button @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
