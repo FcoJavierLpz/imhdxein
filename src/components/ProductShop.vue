@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { CONTACT_WHATSAPP_PHONE } from '../constants/contact';
 
 interface Product {
   id: string;
@@ -12,15 +13,9 @@ interface Product {
   orderIndex: number;
 }
 
-const props = withDefaults(
-  defineProps<{
-    products: Product[];
-    whatsappPhone?: string;
-  }>(),
-  {
-    whatsappPhone: '523318422251',
-  }
-);
+const props = defineProps<{
+  products: Product[];
+}>();
 
 const categories = [...new Set(props.products.map(p => p.category))];
 const activeCategory = ref('Todos');
@@ -39,7 +34,7 @@ const whatsappLink = (product: Product) => {
   const text =
     `Hola!, me interesa el producto *${product.name}* ` +
     `(Precio: $${product.price} MXN). ¿Me podrían dar más información para solicitarlo?`;
-  return `https://wa.me/${props.whatsappPhone}?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
 };
 </script>
 

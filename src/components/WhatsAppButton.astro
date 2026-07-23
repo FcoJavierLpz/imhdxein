@@ -1,19 +1,16 @@
 ---
+import { CONTACT_WHATSAPP_PHONE } from '../constants/contact';
+
 export interface Props {
-  /** Número de teléfono en formato internacional, solo dígitos (sin +, espacios ni guiones). Ej: "5233XXXXXXXX" */
-  phone: string;
   /** Mensaje precargado que aparecerá en el chat de WhatsApp */
   message?: string;
 }
 
 const {
-  phone,
   message = "Hola!, me gustaría obtener más información sobre sus terapias y productos.",
 } = Astro.props;
 
-// wa.me solo acepta dígitos en el número (sin '+', espacios ni guiones)
-const cleanPhone = phone.replace(/\D/g, "");
-const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 ---
 
 <a

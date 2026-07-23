@@ -17,13 +17,7 @@ const therapies = therapyEntries.map((t) => ({
 
   price: t.data.price ?? null,
 }));
-
-// Número global de contacto por WhatsApp, usado como CTA principal del
-// Banner de Ayuda flotante (misma lógica de negocio que MainLayout.astro).
-const WHATSAPP_PHONE = '523318422251';
-
 ---
-
 
 <MainLayout
   title="Terapias Holísticas - IMHDXEIN | Alineación de Chakras, Flores de Bach y más"
@@ -59,7 +53,7 @@ const WHATSAPP_PHONE = '523318422251';
     el antiguo Triage estático). Se hidrata con client:idle para no
     penalizar el LCP del Hero ni el del catálogo de terapias.
   -->
-  <TherapyHelpBanner client:idle whatsappPhone={WHATSAPP_PHONE} />
+  <TherapyHelpBanner client:idle />
 </MainLayout>
 
 

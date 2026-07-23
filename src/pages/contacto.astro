@@ -4,6 +4,12 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import ContactForm from '../components/ContactForm.vue';
 import { getCollection } from 'astro:content';
+import {
+  CONTACT_ADDRESS_CITY,
+  CONTACT_ADDRESS_NEIGHBORHOOD,
+  CONTACT_ADDRESS_STREET,
+  CONTACT_ADDRESS_ZIP,
+} from '../constants/contact';
 
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
@@ -74,8 +80,8 @@ const therapyOptions = therapyEntries.map((t) => ({
               </div>
               <div>
                 <p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p>
-                <p class="text-deep-800 font-heading font-semibold">Calle Buenos Aires 2910, Col. Providencia</p>
-                <p class="text-deep-500 text-sm">CP 66439, Guadalajara, Jalisco</p>
+                <p class="text-deep-800 font-heading font-semibold">{CONTACT_ADDRESS_STREET}, {CONTACT_ADDRESS_NEIGHBORHOOD}</p>
+                <p class="text-deep-500 text-sm">CP {CONTACT_ADDRESS_ZIP}, {CONTACT_ADDRESS_CITY}</p>
               </div>
             </div>
             <a

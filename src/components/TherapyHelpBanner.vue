@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { CONTACT_WHATSAPP_PHONE } from '../constants/contact';
 
 // Banner flotante de conversión no intrusiva para /terapias: reemplaza al
 // antiguo Triage Interactivo estático. Aparece tras un pequeño tiempo en
 // página o tras un scroll moderado (lo que ocurra primero), una vez que el
 // usuario ya tuvo oportunidad de explorar el catálogo de terapias.
-const props = defineProps<{ whatsappPhone: string }>();
 
 const STORAGE_KEY = 'therapy-help-banner-dismissed';
 const APPEAR_DELAY_MS = 7000;
@@ -69,10 +69,9 @@ onBeforeUnmount(() => {
 });
 
 const whatsappHref = computed(() => {
-  const cleanPhone = props.whatsappPhone.replace(/\D/g, '');
   const message =
     'Hola! 🌿 No estoy seguro/a de qué terapia elegir, ¿me pueden ayudar a orientar mi proceso de sanación?';
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 });
 
 // Puerta de entrada de diagnóstico inicial: redirige directamente al

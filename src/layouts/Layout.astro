@@ -1,4 +1,14 @@
 ---
+import {
+  CONTACT_ADDRESS_CITY,
+  CONTACT_ADDRESS_COUNTRY_CODE,
+  CONTACT_ADDRESS_NEIGHBORHOOD,
+  CONTACT_ADDRESS_STREET,
+  CONTACT_ADDRESS_ZIP,
+  CONTACT_EMAIL,
+  CONTACT_PHONE_E164,
+} from '../constants/contact';
+
 export interface Props {
   title?: string;
   description?: string;
@@ -59,13 +69,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       "description": "Instituto de Medicina Holística. Alineación de Chakras, Acupuntura, Flores de Bach y más.",
       "url": "https://imhdxein.org.mx",
       "logo": "https://imhdxein.org.mx/logoimhdxein.png",
-      "telephone": "+52 33 1842 2251",
-      "email": "imhdxein@gmail.com",
+      "telephone": CONTACT_PHONE_E164,
+      "email": CONTACT_EMAIL,
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Calle Buenos Aires 2910, Colonia Providencia, CP 66439",
-        "addressLocality": "Guadalajara Jalisco",
-        "addressCountry": "MX"
+        "streetAddress": `${CONTACT_ADDRESS_STREET}, ${CONTACT_ADDRESS_NEIGHBORHOOD}, CP ${CONTACT_ADDRESS_ZIP}`,
+        "addressLocality": CONTACT_ADDRESS_CITY,
+        "addressCountry": CONTACT_ADDRESS_COUNTRY_CODE
       }
     })} />
   </head>

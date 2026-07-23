@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { actions, isInputError } from 'astro:actions';
+import {
+  CONTACT_ADDRESS_FULL,
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_TEL_HREF,
+} from '../constants/contact';
 
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -217,23 +224,23 @@ const handleContact = async () => {
         <div class="lg:col-span-1">
           <h2 class="text-2xl font-heading font-bold text-deep-900 mb-6">Información</h2>
           <div class="space-y-6">
-            <a href="tel:+523318422251" class="flex gap-4 group">
+            <a :href="CONTACT_PHONE_TEL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">+52 33 1842 2251</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
             </a>
-            <a href="mailto:imhdxein@gmail.com" class="flex gap-4 group">
+            <a :href="CONTACT_EMAIL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">imhdxein@gmail.com</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
             </a>
             <a href="#" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">Calle Buenos Aires 2910, Col. Providencia, Guadalajara Jalisco CP 66439</p></div>
+              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
             </a>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
@@ -349,7 +356,7 @@ const handleContact = async () => {
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="appointmentForm.phone" placeholder="+52 33 1842 2251" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="appointmentForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
                   <select required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
@@ -396,7 +403,7 @@ const handleContact = async () => {
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="contactForm.phone" placeholder="+52 33 1842 2251" /></div>
+                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="contactForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
               </div>
               <div><label class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
