@@ -1,9 +1,10 @@
 ---
 export const prerender = true;
 
-import MainLayout from '../layouts/MainLayout.astro';
-import TherapySelector from '../components/TherapySelector.vue';
 import { getCollection } from 'astro:content';
+import TherapySelector from '../components/TherapySelector.vue';
+import TherapyHelpBanner from '../components/TherapyHelpBanner.vue';
+import MainLayout from '../layouts/MainLayout.astro';
 
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
@@ -16,7 +17,13 @@ const therapies = therapyEntries.map((t) => ({
 
   price: t.data.price ?? null,
 }));
+
+// Número global de contacto por WhatsApp, usado como CTA principal del
+// Banner de Ayuda flotante (misma lógica de negocio que MainLayout.astro).
+const WHATSAPP_PHONE = '523318422251';
+
 ---
+
 
 <MainLayout
   title="Terapias Holísticas - IMHDXEIN | Alineación de Chakras, Flores de Bach y más"
@@ -36,6 +43,7 @@ const therapies = therapyEntries.map((t) => ({
   <div class="h-1.5 chakra-gradient"></div>
 
   {therapies.length > 0 ? (
+
     <TherapySelector client:load therapies={therapies} />
   ) : (
     <section class="section-padding bg-white">
@@ -44,4 +52,15 @@ const therapies = therapyEntries.map((t) => ({
       </div>
     </section>
   )}
+
+  <!--
+    Banner de Ayuda flotante: conversión no intrusiva. Aparece tras un
+    tiempo/scroll moderado en la página (no domina el above-the-fold como
+    el antiguo Triage estático). Se hidrata con client:idle para no
+    penalizar el LCP del Hero ni el del catálogo de terapias.
+  -->
+  <TherapyHelpBanner client:idle whatsappPhone={WHATSAPP_PHONE} />
 </MainLayout>
+
+
+

@@ -5,8 +5,10 @@ const navLinks = [
   { href: '/terapias', label: 'Terapias' },
   { href: '/productos', label: 'Productos' },
   { href: '/blog', label: 'Blog' },
+  { href: '/test-dosha', label: 'Test Dosha' },
   { href: '/contacto', label: 'Contacto' },
 ];
+
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));

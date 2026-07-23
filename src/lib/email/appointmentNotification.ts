@@ -3,6 +3,9 @@
  * Sigue la línea de diseño del sitio (dorado #D4A017 / tonos "deep").
  */
 
+import type { Dosha } from '../dosha/questions';
+import { buildDoshaStatusHtml, buildDoshaStatusText } from './doshaNotification';
+
 export interface AppointmentNotificationData {
   fullName: string;
   email: string;
@@ -10,6 +13,12 @@ export interface AppointmentNotificationData {
   therapyName: string | null;
   message: string | null;
   createdAt: Date;
+  /**
+   * Resultado del Test de Dosha si el paciente ya lo completó con este
+   * mismo correo (consultado en `dosha_results` al momento de generar
+   * la notificación). `null` si aún no lo ha realizado.
+   */
+  doshaResult?: Dosha | null;
 }
 
 const BRAND_GOLD = '#D4A017';
@@ -104,6 +113,7 @@ export const buildAppointmentHtml = (data: AppointmentNotificationData): string 
                 </div>`
                     : ''
                 }
+                ${buildDoshaStatusHtml(data.doshaResult ?? null)}
                 <div style="margin-top: 28px; text-align: center;">
                   <a href="mailto:${escapeHtml(data.email)}" style="display:inline-block; background-color: ${BRAND_GOLD}; color:#ffffff; text-decoration:none; font-size: 14px; font-weight: 600; padding: 12px 24px; border-radius: 999px;">
                     Responder a ${escapeHtml(data.fullName.split(' ')[0] ?? '')}
@@ -137,6 +147,8 @@ export const buildAppointmentText = (data: AppointmentNotificationData): string 
     data.therapyName ? `Terapia: ${data.therapyName}` : null,
     `Recibido: ${formatDate(data.createdAt)}`,
     data.message ? `\nMensaje:\n${data.message}` : null,
+    '',
+    buildDoshaStatusText(data.doshaResult ?? null),
   ].filter(Boolean);
 
   return lines.join('\n');

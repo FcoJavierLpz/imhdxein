@@ -32,6 +32,9 @@ const contactInputSchema = z.object({
     .trim()
     .min(10, 'Ingresa un mensaje válido (mínimo 10 caracteres)')
     .max(2000, 'El mensaje es demasiado largo'),
+  // Escenario 3 del Test de Dosha: campo oculto que marca que este mensaje
+  // proviene de la tarjeta "Consulta General y de Diagnóstico" en Terapias.
+  origin: z.enum(['contacto', 'consulta_general']).optional().default('contacto'),
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
@@ -96,6 +99,7 @@ export const contact = {
           phone: input.phone ? '(provisto)' : null,
           subject: input.subject,
           messageLength: input.message.length,
+          origin: input.origin,
         });
 
         // Log de verificación de configuración: confirma si la API key de
@@ -105,13 +109,18 @@ export const contact = {
           !!import.meta.env.RESEND_API_KEY
         );
 
-        const { error: insertError } = await supabaseAdmin.from('contact_messages').insert({
-          full_name: input.fullName,
-          email: input.email,
-          phone: input.phone,
-          subject: input.subject,
-          message: input.message,
-        });
+        const { data: inserted, error: insertError } = await supabaseAdmin
+          .from('contact_messages')
+          .insert({
+            full_name: input.fullName,
+            email: input.email,
+            phone: input.phone,
+            subject: input.subject,
+            message: input.message,
+            origin: input.origin,
+          })
+          .select('id')
+          .single();
 
         if (insertError) {
           console.error('[contact.submit] Error al insertar en Supabase:', insertError);
@@ -129,7 +138,7 @@ export const contact = {
           createdAt: new Date(),
         });
 
-        return { success: true } as const;
+        return { success: true, contactMessageId: inserted?.id ?? null } as const;
       } catch (err) {
         console.error('[contact.submit] Error inesperado en el handler:', err);
         throw err;

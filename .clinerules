@@ -1,0 +1,32 @@
+# Ignore Patterns
+# Excluir directorios pesados y de configuración
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.git/
+.vscode/
+
+# Excluir archivos de entorno y bases de datos locales
+.env
+.env.*
+*.db
+*.sqlite
+
+# Excluir archivos de logs y dependencias compiladas
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+logs/
+
+# Excluir archivos multimedia grandes (opcional, depende de la tarea)
+assets/images/*
+public/fonts/*
+
+# Instrucciones para el comportamiento de Cline
+You are an expert Senior Full Stack Developer.
+When working on this project:
+1. Focus ONLY on the src/ directory for code implementation.
+2. Do not read or modify configuration files unless explicitly asked.
+3. Before editing any file, analyze the relevant existing code to ensure consistency.

@@ -1,0 +1,29 @@
+---
+export const prerender = true;
+
+import DoshaQuiz from '../components/DoshaQuiz.vue';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Test de Dosha Gratuito - IMHDXEIN | Descubre tu constitución Ayurvédica"
+  description="Responde nuestro Test de Dosha gratuito y descubre en minutos si tu constitución es Vata, Pitta o Kapha. Recibe recomendaciones personalizadas para tu bienestar."
+>
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-spirit-800 via-brand-900 to-deep-900"></div>
+    <div class="absolute inset-0 lotus-bg opacity-20"></div>
+    <div class="container-custom px-4 relative z-10 text-center">
+      <span class="text-brand-300 text-sm font-semibold tracking-wider uppercase">100% Gratuito</span>
+      <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">
+        Test de <span class="chakra-gradient-text">Dosha</span>
+      </h1>
+      <p class="mt-6 text-brand-100 text-lg leading-relaxed max-w-2xl mx-auto">
+        Descubre tu constitución Ayurvédica (Prakriti) y recibe recomendaciones personalizadas
+        para equilibrar cuerpo, mente y energía.
+      </p>
+    </div>
+  </section>
+  <div class="h-1.5 chakra-gradient"></div>
+
+  <DoshaQuiz client:load />
+</MainLayout>

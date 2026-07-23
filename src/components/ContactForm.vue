@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { actions, isInputError } from 'astro:actions';
 
 
@@ -56,21 +56,52 @@ const contactForm = ref({ full_name: '', email: '', phone: '', subject: '', mess
 // Si llega con contenido, el servidor descarta la solicitud silenciosamente.
 const appointmentHoneypot = ref('');
 
-const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const validatePhone = (phone: string) => /^[0-9\s\-\+\(\)]{10,}$/.test(phone);
+// Escenario 3 del Test de Dosha ("Paciente Perdido"): cuando el usuario
+// llega desde la tarjeta "Consulta General y de Diagnóstico" en Terapias,
+// se marca el origen del mensaje para que el equipo comercial lo identifique.
+const contactOrigin = ref<'contacto' | 'consulta_general'>('contacto');
 
+// IDs devueltos por el servidor tras guardar la cita/mensaje, usados para
+// invitar al Test de Dosha pasando la referencia de forma oculta (Escenarios 1 y 3).
+const lastAppointmentId = ref<string | null>(null);
+const lastContactMessageId = ref<string | null>(null);
+
+const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validatePhone = (phone: string) => /^[0-9\s\-+()]{10,}$/.test(phone);
+
+const doshaInviteUrl = computed(() => {
+  const params = new URLSearchParams();
+  if (lastAppointmentId.value) params.set('appointmentId', lastAppointmentId.value);
+  if (lastContactMessageId.value) params.set('contactId', lastContactMessageId.value);
+
+  const email = lastAppointmentId.value ? appointmentForm.value.email : contactForm.value.email;
+  const name = lastAppointmentId.value ? appointmentForm.value.full_name : contactForm.value.full_name;
+  if (email) params.set('email', email);
+  if (name) params.set('name', name);
+
+  return `/test-dosha?${params.toString()}`;
+});
 
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
-  const therapyId = params.get('therapy');
-  if (!therapyId) return;
 
-  const therapyExists = props.therapies.some((t) => t.id === therapyId);
-  if (therapyExists) {
-    appointmentForm.value.therapy_id = therapyId;
-    activeTab.value = 'appointment';
+  const therapyId = params.get('therapy');
+  if (therapyId) {
+    const therapyExists = props.therapies.some((t) => t.id === therapyId);
+    if (therapyExists) {
+      appointmentForm.value.therapy_id = therapyId;
+      activeTab.value = 'appointment';
+    }
+  }
+
+  // Escenario 3: entrada desde la tarjeta "Consulta General" en Terapias.
+  if (params.get('origin') === 'consulta_general') {
+    contactOrigin.value = 'consulta_general';
+    contactForm.value.subject = 'Consulta General y de Diagnóstico';
+    activeTab.value = 'contact';
   }
 });
+
 
 
 const handleAppointment = async () => {
@@ -93,11 +124,12 @@ const handleAppointment = async () => {
   appointmentLoading.value = false;
 
   if (data?.success) {
+    lastAppointmentId.value = data.appointmentId ?? null;
     appointmentSubmitted.value = true;
-    appointmentForm.value = { full_name: '', email: '', phone: '', therapy_id: '', message: '' };
     appointmentHoneypot.value = '';
     return;
   }
+
 
   if (error && isInputError(error)) {
     const firstFieldError = Object.values(error.fields).flat()[0];
@@ -124,15 +156,17 @@ const handleContact = async () => {
     phone: contactForm.value.phone.trim(),
     subject: contactForm.value.subject.trim(),
     message: contactForm.value.message.trim(),
+    origin: contactOrigin.value,
   });
 
   contactLoading.value = false;
 
   if (data?.success) {
+    lastContactMessageId.value = data.contactMessageId ?? null;
     contactSubmitted.value = true;
-    contactForm.value = { full_name: '', email: '', phone: '', subject: '', message: '' };
     return;
   }
+
 
   if (error && isInputError(error)) {
     const firstFieldError = Object.values(error.fields).flat()[0];
@@ -225,20 +259,41 @@ const handleContact = async () => {
         <div class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
             <button @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Información
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
             </button>
             <button @click="activeTab = 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
             </button>
+
           </div>
 
           <div v-if="activeTab === 'appointment'">
             <div v-if="appointmentSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
               <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
-              <h3 class="text-2xl font-heading font-bold text-deep-900">Solicitud Enviada</h3>
+              <h3 class="text-2xl font-heading font-bold text-deep-900">¡Cita agendada!</h3>
               <p class="mt-3 text-deep-500">Tu solicitud ha sido enviada. Nos pondremos en contacto contigo para acordar la fecha y hora de tu cita.</p>
-              <button @click="appointmentSubmitted = false" class="btn-outline mt-6">Enviar otra solicitud</button>
+
+              <!-- Escenario 1 del Test de Dosha: invitación tras agendar cita. -->
+              <div class="mt-8 bg-gradient-to-br from-brand-50 to-spirit-50 rounded-2xl p-6 text-left">
+                <p class="font-heading font-semibold text-deep-800">🌿 Te invitamos a realizar tu Test Dosha gratuito</p>
+                <p class="mt-2 text-sm text-deep-500 leading-relaxed">
+                  Evalúa tu situación actual antes de la cita: descubre tu constitución Ayurvédica
+                  (Vata, Pitta o Kapha) para que el especialista pueda ofrecerte un enfoque más personalizado..
+                </p>
+                <a :href="doshaInviteUrl" class="btn-primary inline-flex items-center gap-2 mt-4">
+                  Hacer el Test Dosha
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              </div>
+
+              <button
+                @click="appointmentSubmitted = false; appointmentForm = { full_name: '', email: '', phone: '', therapy_id: '', message: '' };"
+                class="btn-outline mt-6"
+              >
+                Enviar otra solicitud
+              </button>
             </div>
+
             <form v-else class="space-y-5" @submit.prevent="handleAppointment">
               <!--
                 Honeypot anti-spam: campo invisible para humanos (fuera del
@@ -282,8 +337,28 @@ const handleContact = async () => {
               <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
               <h3 class="text-2xl font-heading font-bold text-deep-900">Mensaje Enviado</h3>
               <p class="mt-3 text-deep-500">Recibido. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.</p>
-              <button @click="contactSubmitted = false" class="btn-outline mt-6">Enviar otro mensaje</button>
+
+              <!-- Escenario 3 del Test de Dosha: invitación tras "Consulta General". -->
+              <div v-if="contactOrigin === 'consulta_general'" class="mt-8 bg-gradient-to-br from-brand-50 to-spirit-50 rounded-2xl p-6 text-left">
+                <p class="font-heading font-semibold text-deep-800">🌿 Te invitamos a realizar tu Test Dosha gratuito</p>
+                <p class="mt-2 text-sm text-deep-500 leading-relaxed">
+                  Evalúa tu situación actual antes de la cita: descubre tu constitución Ayurvédica
+                  (Vata, Pitta o Kapha) así tu especialista podrá orientar mejor la Consulta General y de Diagnóstico hacia lo que realmente necesitas.
+                </p>
+                <a :href="doshaInviteUrl" class="btn-primary inline-flex items-center gap-2 mt-4">
+                  Hacer el Test Dosha
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              </div>
+
+              <button
+                @click="contactSubmitted = false; contactForm = { full_name: '', email: '', phone: '', subject: '', message: '' };"
+                class="btn-outline mt-6"
+              >
+                Enviar otro mensaje
+              </button>
             </div>
+
             <form v-else class="space-y-5" @submit.prevent="handleContact">
               <div class="grid sm:grid-cols-2 gap-5">
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
