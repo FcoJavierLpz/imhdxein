@@ -30,3 +30,6 @@ When working on this project:
 1. Focus ONLY on the src/ directory for code implementation.
 2. Do not read or modify configuration files unless explicitly asked.
 3. Before editing any file, analyze the relevant existing code to ensure consistency.
+4. Do not start, spin up, or run local development servers, and do not execute automated test suites or verification commands.
+5. **Protocolo de Impacto Colateral (Regla de Oro):** Antes de entregar código o completar cualquier modificación estructural o de diseño, el agente tiene la obligación estricta de auditar los elementos adyacentes (textos, títulos, espaciados, componentes dependientes o CTAs) que se vean afectados directa o indirectamente por el cambio. Si un texto o sección queda descontextualizado u obsoleto, el agente debe sugerir y aplicar automáticamente los cambios necesarios para homogeneizar la interfaz y mantener absoluta coherencia lógica y visual.
+6. **Manejo de Formato y Bucles de Archivos:** No intentes solucionar discrepancias menores de formato, espacios en blanco, saltos de línea o líneas en blanco cambiantes mediante reescrituras repetitivas o `write_to_file` completos del archivo. Si el contenido sustancial (código/texto) es correcto, ignora diferencias cosméticas de autoinformateadores locales para evitar bucles de edición inútiles.

@@ -5,18 +5,10 @@ import MainLayout from '../layouts/MainLayout.astro';
 
 import TestimonialCarousel from '../components/TestimonialCarousel.vue';
 import HeroSlider from '../components/HeroSlider.vue';
+import ExpandableCard from '../components/ExpandableCard.vue';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import acercaImg from '../assets/images/acerca.webp';
-
-const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
-  .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
-const therapies = therapyEntries.map((t) => ({
-  id: t.id,
-  slug: t.id,
-  ...t.data,
-  price: t.data.price ?? null,
-}));
 
 const testimonialEntries = await getCollection('testimonials', ({ data }) => data.isVisible);
 const testimonials = testimonialEntries.map((t) => ({
@@ -26,7 +18,6 @@ const testimonials = testimonialEntries.map((t) => ({
   rating: t.data.rating,
   therapy: t.data.therapy,
 }));
-
 
 const chakraColors = [
   'from-chakra-root to-chakra-sacral',
@@ -53,6 +44,34 @@ const iconSvg = (name: string) => {
   };
   return icons[name] || icons.Sparkles;
 };
+
+// Puerta de entrada de diagnóstico inicial dentro del catálogo de terapias:
+// misma consulta que utiliza TherapyHelpBanner.vue en /terapias, para
+// mantener consistencia en todo el sitio.
+const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
+
+const workSteps = [
+  {
+    title: 'Consulta de diagnóstico integral',
+    description: 'Escuchamos tu historia clínica completa, incluyendo tratamientos y medicamentos actuales, sin juzgar ni pedirte que cambies nada todavía.',
+    icon: 'CircleDot',
+  },
+  {
+    title: 'Plan personalizado',
+    description: 'Diseñamos un protocolo que se adapta a tu caso y complementa tu tratamiento médico vigente, nunca al revés.',
+    icon: 'Sparkles',
+  },
+  {
+    title: 'Acompañamiento en las 4 dimensiones',
+    description: 'Trabajamos tu bienestar físico, psicológico, emocional y espiritual de forma coordinada con tu equipo médico.',
+    icon: 'Flower2',
+  },
+  {
+    title: 'Seguimiento continuo',
+    description: 'Ajustamos el proceso contigo en el tiempo, evaluando avances de forma conjunta y humana.',
+    icon: 'Hand',
+  },
+];
 ---
 
 <MainLayout>
@@ -61,53 +80,7 @@ const iconSvg = (name: string) => {
 
   <div class="h-1.5 chakra-gradient"></div>
 
-  <!-- Services Preview -->
-  <section class="section-padding bg-white">
-    <div class="container-custom">
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Nuestras Terapias</span>
-        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
-          Caminos hacia tu <span class="chakra-gradient-text">bienestar</span>
-        </h2>
-        <p class="mt-4 text-deep-500 leading-relaxed">
-          Cada terapia es un viaje personalizado hacia el equilibrio. Descubre la modalidad que resuena con tu ser.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {therapies.slice(0, 9).map((therapy, i) => (
-          <a href={`/terapias#${therapy.slug}`} class="card group p-6 text-center">
-            <div class={`w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br ${chakraColors[i]} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={iconSvg(therapy.icon)} />
-            </div>
-            <h3 class="font-heading font-semibold text-deep-800 text-lg">{therapy.name}</h3>
-            <p class="mt-2 text-deep-500 text-sm leading-relaxed line-clamp-3">{therapy.description}</p>
-            <div class="mt-4 flex items-center justify-center gap-3 text-xs text-deep-400 flex-wrap">
-              <span class="flex items-center gap-1">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {therapy.durationMinutes} min
-              </span>
-              {therapy.price !== null && therapy.price > 0 ? (
-                <span class="font-medium text-deep-600">
-                  ${therapy.price}
-                </span>
-              ) : (
-                <span class="text-brand-500 font-medium">Consultar</span>
-              )}
-            </div>
-          </a>
-        ))}
-      </div>
-
-      <div class="text-center mt-10">
-        <a href="/terapias" class="btn-outline inline-flex items-center gap-2">
-          Ver todas las terapias <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- About preview -->
+  <!-- About / Filosofía: primera sección post-Hero para construir confianza -->
   <section class="section-padding bg-sage-50 relative overflow-hidden">
     <div class="absolute top-0 left-0 right-0 h-1 chakra-gradient"></div>
     <div class="container-custom">
@@ -140,6 +113,82 @@ const iconSvg = (name: string) => {
           </div>
         </div>
       </div>
+
+      <!-- Reassurance strip: disipación de fricción / mensaje anti-objeción -->
+      <div class="mt-16 grid sm:grid-cols-3 gap-6 items-stretch">
+        <div class="philosophy-card group flex flex-col h-full">
+          <div class="philosophy-card__icon philosophy-card__icon--spirit">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg>
+          </div>
+          <span class="philosophy-card__eyebrow">Equilibrio</span>
+          <h3 class="philosophy-card__title">Ciencia + Espiritualidad</h3>
+          <div class="flex-1">
+            <ExpandableCard
+              client:visible
+              excerpt="Unificamos el rigor de la medicina científica con la sabiduría milenaria de las tradiciones holísticas y ayurvédicas."
+              rest="Cada diagnóstico se apoya en evidencia clínica y, al mismo tiempo, honra la dimensión energética y emocional del paciente para una sanación verdaderamente integral."
+            />
+          </div>
+        </div>
+
+        <div class="philosophy-card philosophy-card--featured group flex flex-col h-full">
+          <div class="philosophy-card__icon philosophy-card__icon--brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21h-1a3 3 0 0 1-3-3v-1"/><path d="M14 3h1a3 3 0 0 1 3 3v1"/><path d="m17 11 2 2-2 2"/><path d="m7 13-2-2 2-2"/><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+          </div>
+          <span class="philosophy-card__eyebrow">Confianza</span>
+          <h3 class="philosophy-card__title">Complementa, no reemplaza</h3>
+          <div class="flex-1">
+            <ExpandableCard
+              client:visible
+              excerpt="En IMHDXEIN unimos lo mejor de dos mundos. Nuestros especialistas son médicos titulados que integran la visión holística y ayurvédica."
+              rest="No tienes que elegir ni suspender tus medicamentos actuales: evaluamos tu caso de forma integral para sumar herramientas que atiendan la raíz de tu bienestar sin contraponerse con tu tratamiento médico."
+            />
+          </div>
+        </div>
+
+        <div class="philosophy-card group flex flex-col h-full">
+          <div class="philosophy-card__icon philosophy-card__icon--sage">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1.343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3m0 0a3 3 0 0 0 3-3"/></svg>
+          </div>
+          <span class="philosophy-card__eyebrow">Integración</span>
+          <h3 class="philosophy-card__title">4 dimensiones del ser</h3>
+          <div class="flex-1">
+            <ExpandableCard
+              client:visible
+              excerpt="Atendemos lo físico, lo psicológico, lo emocional y lo espiritual como un solo proceso de sanación completa."
+              rest="Ninguna dimensión se trata de forma aislada: cada sesión considera cómo tu cuerpo, tu mente, tus emociones y tu espíritu se entrelazan, porque la verdadera salud florece cuando todas armonizan."
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo trabajamos contigo: reduce incertidumbre antes de mostrar el catálogo -->
+  <section class="section-padding bg-white">
+    <div class="container-custom">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Nuestro Proceso</span>
+        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+          Cómo <span class="chakra-gradient-text">trabajamos contigo</span>
+        </h2>
+        <p class="mt-4 text-deep-500 leading-relaxed">
+          Un proceso claro y humano, pensado para acompañarte sin prisas ni presiones.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+        {workSteps.map((step, i) => (
+          <div class="step-card group flex flex-col h-full">
+            <div class={`step-card__icon bg-gradient-to-br ${chakraColors[i]}`}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={iconSvg(step.icon)} />
+            </div>
+            <span class="step-card__eyebrow">Paso {String(i + 1).padStart(2, '0')}</span>
+            <h3 class="step-card__title">{step.title}</h3>
+            <p class="step-card__text">{step.description}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -166,11 +215,12 @@ const iconSvg = (name: string) => {
       <svg class="text-brand-300 mx-auto mb-6 animate-float" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1..343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3m0 0a3 3 0 0 0 3-3"/></svg>
       <h2 class="text-3xl md:text-4xl font-heading font-bold text-white">Da el primer paso hacia tu sanación</h2>
       <p class="mt-4 text-deep-200 max-w-lg mx-auto leading-relaxed">
-        Agenda tu primera consulta y descubre cómo la medicina holística puede transformar tu vida.
+        Sin reemplazar tu tratamiento médico actual, súmate a un proceso de sanación completa. Agenda tu consulta y descubre cómo integramos ciencia y espiritualidad para tu bienestar.
       </p>
+
       <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <a href="/contacto" class="btn-primary text-base">Agendar Cita Ahora</a>
-        <a href="/productos" class="btn-outline !border-white/30 !text-white hover:!bg-white/10 text-base">Ver Productos</a>
+        <a href="/contacto" class="btn-primary text-base">Agendar Consulta</a>
+        <a href="/terapias" class="btn-outline !border-white/30 !text-white hover:!bg-white/10 text-base">Explorar Terapias</a>
       </div>
     </div>
   </section>

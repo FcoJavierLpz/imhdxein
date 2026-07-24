@@ -146,3 +146,155 @@
   background-repeat: repeat;
   background-size: auto;
 }
+
+/* ── Philosophy cards ─────────────────────────────────────── */
+.philosophy-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.75rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(165deg, #ffffff 0%, #fffdf5 100%);
+  box-shadow:
+    0 2px 8px -2px rgba(100, 64, 0, 0.06),
+    0 8px 24px -8px rgba(100, 64, 0, 0.08);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+.philosophy-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 4px 12px -4px rgba(184, 136, 14, 0.15),
+    0 20px 40px -12px rgba(184, 136, 14, 0.18);
+}
+.philosophy-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(255, 219, 111, 0.4), rgba(212, 160, 23, 0.08) 40%, rgba(58, 125, 68, 0.12));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.philosophy-card--featured {
+  background: linear-gradient(165deg, #fff9e6 0%, #fff4d6 100%);
+  box-shadow:
+    0 4px 12px -4px rgba(184, 136, 14, 0.12),
+    0 16px 36px -10px rgba(184, 136, 14, 0.16);
+}
+.philosophy-card--featured::before {
+  background: linear-gradient(145deg, rgba(255, 208, 64, 0.6), rgba(184, 136, 14, 0.3) 50%, rgba(212, 160, 23, 0.15));
+}
+
+.philosophy-card__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  transition: border-radius 0.5s ease, transform 0.4s ease;
+}
+.philosophy-card:hover .philosophy-card__icon {
+  border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+  transform: scale(1.05);
+}
+.philosophy-card__icon--spirit {
+  background: linear-gradient(135deg, #a78bfa, #6d28b0);
+  box-shadow: 0 6px 18px -4px rgba(109, 40, 176, 0.4);
+}
+.philosophy-card__icon--brand {
+  background: linear-gradient(135deg, #d4a017, #92610a);
+  box-shadow: 0 6px 18px -4px rgba(146, 97, 10, 0.45);
+}
+.philosophy-card__icon--sage {
+  background: linear-gradient(135deg, #5fb586, #2f6b3a);
+  box-shadow: 0 6px 18px -4px rgba(47, 107, 58, 0.4);
+}
+
+.philosophy-card__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand-600, #b8880e);
+  margin-bottom: 0.5rem;
+}
+.philosophy-card__title {
+  font-family: Georgia, Cambria, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-deep-800, #2a2520);
+  margin-bottom: 0.875rem;
+}
+
+/* ── Step cards (stepper) ─────────────────────────────────── */
+.step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(165deg, #ffffff 0%, #f8faf8 100%);
+  box-shadow:
+    0 2px 8px -2px rgba(100, 64, 0, 0.06),
+    0 8px 24px -8px rgba(100, 64, 0, 0.08);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 4px 12px -4px rgba(184, 136, 14, 0.12),
+    0 20px 40px -12px rgba(184, 136, 14, 0.15);
+}
+.step-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(255, 219, 111, 0.35), rgba(212, 160, 23, 0.06) 45%, rgba(58, 125, 68, 0.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.step-card__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  transition: border-radius 0.5s ease, transform 0.4s ease;
+}
+.step-card:hover .step-card__icon {
+  border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+  transform: scale(1.05);
+}
+.step-card__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-brand-500, #d4a017);
+  margin-bottom: 0.5rem;
+}
+.step-card__title {
+  font-family: Georgia, Cambria, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-deep-800, #2a2520);
+  margin-bottom: 0.625rem;
+}
+.step-card__text {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-deep-500, #6b6357);
+}
