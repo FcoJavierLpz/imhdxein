@@ -32,8 +32,12 @@
 
         <div class="lg:col-span-2">
           <div v-if="selected" class="animate-fade-in">
-            <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8">
-              <img :src="selected.image" :alt="selected.name" class="w-full h-72 md:h-80 object-cover" />
+            <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8 bg-deep-50 border border-deep-100">
+              <img 
+                :src="selected.image" 
+                :alt="selected.name" 
+                class="w-full h-auto max-h-[420px] object-cover object-center transition-all duration-300" 
+              />
             </div>
 
             <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">{{ selected.name }}</h2>
