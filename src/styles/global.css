@@ -92,11 +92,18 @@
   .chakra-gradient {
     background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
   }
+
   .chakra-gradient-text {
-    background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    /* Color de respaldo sólido por si falla el navegador (usamos un tono dorado/naranja legible) */
+    color: #D4A017; 
+
+    /* Aplicamos el degradado y el recorte solo si el navegador lo soporta de forma nativa y estable */
+    @supports (-webkit-background-clip: text) or (background-clip: text) {
+        background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
   }
   .glass {
     @apply bg-white/80 backdrop-blur-md;
