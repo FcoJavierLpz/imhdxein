@@ -5,6 +5,7 @@
         <div class="lg:col-span-1">
           <div class="sticky top-28 space-y-3">
             <button
+              type="button"
               v-for="(therapy, i) in therapies"
               :key="therapy.id"
               :id="therapy.slug"
@@ -22,7 +23,7 @@
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
                 <div class="flex items-center gap-2 text-xs text-deep-400 mt-0.5">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   <span>{{ therapy.durationMinutes }} min</span>
                 </div>
               </div>
@@ -42,13 +43,13 @@
 
             <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">{{ selected.name }}</h2>
             <div class="mt-4 flex items-center gap-6 text-deep-500">
-              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
+              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
               <span v-if="selected.price && selected.price > 0" class="flex items-center gap-2 text-sm font-semibold text-deep-800">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 {{ selected.price }} MXN
               </span>
               <span v-else class="flex items-center gap-2 text-sm text-brand-600">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Costo personalizado según evaluación
               </span>
             </div>
@@ -62,8 +63,9 @@
               </template>
             </div>
             <div class="mt-8">
+              <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (template literal) -->
               <a :href="`/contacto?therapy=${encodeURIComponent(selected.id)}`" class="btn-primary inline-flex items-center gap-2">
-                Solicitar Terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Solicitar Terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
 
               </a>
             </div>

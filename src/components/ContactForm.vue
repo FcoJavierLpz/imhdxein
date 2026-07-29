@@ -235,27 +235,29 @@ const handleContact = async () => {
         <div class="lg:col-span-1">
           <h2 class="text-2xl font-heading font-bold text-deep-900 mb-6">Información</h2>
           <div class="space-y-6">
+            <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (CONTACT_PHONE_TEL_HREF) -->
             <a :href="CONTACT_PHONE_TEL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
             </a>
+            <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (CONTACT_EMAIL_HREF) -->
             <a :href="CONTACT_EMAIL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
             </a>
-            <a href="#" class="flex gap-4 group">
+            <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
-            </a>
+            </div>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
             </div>
@@ -269,6 +271,7 @@ const handleContact = async () => {
             </p>
             <div class="flex gap-1.5">
               <button
+                type="button"
                 v-for="(c, i) in chakraDays"
                 :key="i"
                 class="flex-1 flex flex-col items-center gap-1 group focus:outline-none"
@@ -307,18 +310,18 @@ const handleContact = async () => {
 
         <div id="request-form-container" class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
-            <button @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
+            <button type="button" @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
             </button>
-            <button @click="activeTab = 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
+            <button type="button" @click="activeTab = 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
             </button>
 
           </div>
 
           <div v-if="activeTab === 'appointment'">
             <div v-if="appointmentSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
-              <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
+              <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
               <h3 class="text-2xl font-heading font-bold text-deep-900">¡Cita agendada!</h3>
               <p class="mt-3 text-deep-500">Tu solicitud ha sido enviada. Nos pondremos en contacto contigo para acordar la fecha y hora de tu cita.</p>
 
@@ -329,13 +332,15 @@ const handleContact = async () => {
                   Evalúa tu situación actual antes de la cita: descubre tu constitución Ayurvédica
                   (Vata, Pitta o Kapha) para que el especialista pueda ofrecerte un enfoque más personalizado..
                 </p>
+                <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (doshaInviteUrl) -->
                 <a :href="doshaInviteUrl" class="btn-primary inline-flex items-center gap-2 mt-4">
                   Hacer el Test Dosha
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
               </div>
 
               <button
+                type="button"
                 @click="appointmentSubmitted = false; appointmentForm = { full_name: '', email: '', phone: '', therapy_id: '', message: '' };"
                 class="btn-outline mt-6"
               >
@@ -362,28 +367,28 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="appointment-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="appointment-full-name" type="text" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
 
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="appointment-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="appointment-email" type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="appointmentForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
-                  <select required class="input-field" v-model="appointmentForm.therapy_id">
+                <div><label for="appointment-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="appointment-phone" type="tel" class="input-field" v-model="appointmentForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
+                <div><label for="appointment-therapy" class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
+                  <select id="appointment-therapy" required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
                     <option v-for="t in therapies" :key="t.id" :value="t.id">{{ t.name }} ({{ t.durationMinutes }} min)</option>
                   </select>
                 </div>
               </div>
-              <div><label class="block text-sm font-medium text-deep-700 mb-1">Mensaje</label><textarea class="input-field" rows="4" v-model="appointmentForm.message" placeholder="Cuéntanos sobre tu situación y nos comunicaremos contigo para acordar la fecha y hora de tu cita..."></textarea></div>
+              <div><label for="appointment-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje</label><textarea id="appointment-message" class="input-field" rows="4" v-model="appointmentForm.message" placeholder="Cuéntanos sobre tu situación y nos comunicaremos contigo para acordar la fecha y hora de tu cita..."></textarea></div>
               <div v-if="appointmentError" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ appointmentError }}</div>
-              <button type="submit" :disabled="appointmentLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ appointmentLoading ? 'Enviando...' : 'Enviar Solicitud' }}</button>
+              <button type="submit" :disabled="appointmentLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ appointmentLoading ? 'Enviando...' : 'Enviar Solicitud' }}</button>
             </form>
           </div>
 
           <div v-if="activeTab === 'contact'">
             <div v-if="contactSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
-              <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
+              <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
               <h3 class="text-2xl font-heading font-bold text-deep-900">Mensaje Enviado</h3>
               <p class="mt-3 text-deep-500">Recibido. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.</p>
 
@@ -394,13 +399,15 @@ const handleContact = async () => {
                   Evalúa tu situación actual antes de la cita: descubre tu constitución Ayurvédica
                   (Vata, Pitta o Kapha) así tu especialista podrá orientar mejor la Consulta General y de Diagnóstico hacia lo que realmente necesitas.
                 </p>
+                <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (doshaInviteUrl) -->
                 <a :href="doshaInviteUrl" class="btn-primary inline-flex items-center gap-2 mt-4">
                   Hacer el Test Dosha
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
               </div>
 
               <button
+                type="button"
                 @click="contactSubmitted = false; contactForm = { full_name: '', email: '', phone: '', subject: '', message: '' };"
                 class="btn-outline mt-6"
               >
@@ -427,17 +434,17 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="contact-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="contact-full-name" type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="contact-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="contact-email" type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input type="tel" class="input-field" v-model="contactForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
-                <div><label class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
+                <div><label for="contact-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="contact-phone" type="tel" class="input-field" v-model="contactForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
+                <div><label for="contact-subject" class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input id="contact-subject" type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
               </div>
-              <div><label class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
+              <div><label for="contact-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea id="contact-message" required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
 
               <div v-if="contactError" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ contactError }}</div>
-              <button type="submit" :disabled="contactLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ contactLoading ? 'Enviando...' : 'Enviar Mensaje' }}</button>
+              <button type="submit" :disabled="contactLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ contactLoading ? 'Enviando...' : 'Enviar Mensaje' }}</button>
             </form>
           </div>
         </div>

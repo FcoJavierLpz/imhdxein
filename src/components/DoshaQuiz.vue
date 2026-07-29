@@ -180,7 +180,7 @@ const restart = () => {
             <p class="text-deep-400 text-xs mt-1">Tierra y Agua</p>
           </div>
         </div>
-        <button class="btn-primary mt-10" @click="startQuiz">Comenzar el Test</button>
+        <button type="button" class="btn-primary mt-10" @click="startQuiz">Comenzar el Test</button>
         <p class="mt-4 text-deep-400 text-xs">Toma menos de 5 minutos. 100% gratuito y confidencial.</p>
       </div>
 
@@ -201,6 +201,7 @@ const restart = () => {
 
         <div class="space-y-3">
           <button
+            type="button"
             v-for="opt in currentQuestion?.options"
             :key="opt.dosha"
             class="w-full text-left p-4 rounded-xl border-2 transition-all duration-200"
@@ -214,8 +215,9 @@ const restart = () => {
         </div>
 
         <div class="mt-10 flex justify-between">
-          <button class="btn-outline disabled:opacity-40 disabled:cursor-not-allowed" :disabled="loading" @click="goBack">Atrás</button>
+          <button type="button" class="btn-outline disabled:opacity-40 disabled:cursor-not-allowed" :disabled="loading" @click="goBack">Atrás</button>
           <button
+            type="button"
             class="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
             :disabled="!canGoNext || loading"
             @click="goNext"
@@ -251,18 +253,19 @@ const restart = () => {
         </div>
         <div class="mt-6 space-y-4 text-left">
           <div>
-            <label class="block text-sm font-medium text-deep-700 mb-1">Nombre (opcional)</label>
-            <input type="text" class="input-field" v-model="fullName" placeholder="Tu nombre" />
+            <label for="dosha-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre (opcional)</label>
+            <input id="dosha-full-name" type="text" class="input-field" v-model="fullName" placeholder="Tu nombre" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label>
-            <input type="email" class="input-field" v-model="email" placeholder="tu@correo.com" />
+            <label for="dosha-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label>
+            <input id="dosha-email" type="email" class="input-field" v-model="email" placeholder="tu@correo.com" />
           </div>
         </div>
         <div v-if="errorMessage" class="mt-4 bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">
           {{ errorMessage }}
         </div>
         <button
+          type="button"
           class="btn-primary w-full mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="loading"
           @click="submitQuiz"
@@ -302,11 +305,11 @@ const restart = () => {
           </p>
           <a href="/contacto" class="btn-primary inline-flex items-center gap-2 mt-6">
             Agendar una consulta
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
         </div>
 
-        <button class="btn-outline mt-8" @click="restart">Volver a hacer el test</button>
+        <button type="button" class="btn-outline mt-8" @click="restart">Volver a hacer el test</button>
       </div>
     </div>
   </section>

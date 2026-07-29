@@ -58,6 +58,7 @@ const toggle = () => {
         stroke-linejoin="round"
         class="expandable-toggle__icon"
         :class="{ 'expandable-toggle__icon--open': expanded }"
+        aria-hidden="true"
       >
         <path d="m6 9 6 6 6-6" />
       </svg>

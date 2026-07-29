@@ -46,10 +46,12 @@ const whatsappLink = (product: Product) => {
       <!-- Filtros de categoría -->
       <div class="flex flex-wrap gap-2 mb-10">
         <button
+          type="button"
           @click="activeCategory = 'Todos'"
           :class="['px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === 'Todos' ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
         >Todos</button>
         <button
+          type="button"
           v-for="cat in categories"
           :key="cat"
           @click="activeCategory = cat"
@@ -89,6 +91,7 @@ const whatsappLink = (product: Product) => {
             <p class="mt-2 text-deep-500 text-sm leading-relaxed line-clamp-3 flex-1">{{ product.description }}</p>
 
             <!-- Botón "Solicitar" por WhatsApp -->
+            <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (whatsappLink) -->
             <a
               v-if="product.isAvailable"
               :href="whatsappLink(product)"
@@ -115,7 +118,7 @@ const whatsappLink = (product: Product) => {
       <!-- Aviso informativo -->
       <div class="mt-14 bg-amber-50 border border-amber-200 rounded-2xl p-6 flex items-start gap-4">
         <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #25D366;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
         </div>
         <div>
           <p class="font-semibold text-deep-800 text-sm">Solicita tu producto por WhatsApp</p>
