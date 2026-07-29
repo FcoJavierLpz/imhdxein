@@ -152,9 +152,9 @@ const restart = () => {
       <!-- INTRO -->
       <div v-if="step === 'intro'" class="text-center animate-fade-in">
         <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Test Gratuito</span>
-        <h1 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
-          Descubre tu <span class="chakra-gradient-text">Dosha</span>
-        </h1>
+        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+          Descubre tu Dosha
+        </h2>
         <p class="mt-5 text-deep-500 leading-relaxed max-w-xl mx-auto">
           En la Ayurveda, cada persona tiene una constitución única formada por tres energías:
           Vata, Pitta y Kapha. Responde estas {{ totalQuestions }} preguntas para descubrir tu
