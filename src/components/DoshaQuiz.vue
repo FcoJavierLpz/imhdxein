@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue';
 import { doshaProfiles } from '../lib/dosha/doshaProfiles';
 import type { Dosha } from '../lib/dosha/questions';
 import { doshaQuestions } from '../lib/dosha/questions';
+import { emailSchema } from '../lib/validation/shared';
 
 type Step = 'intro' | 'quiz' | 'email-gate' | 'result';
 
@@ -33,7 +34,7 @@ const progressPercent = computed(() => Math.round(((currentIndex.value) / totalQ
 const isLastQuestion = computed(() => currentIndex.value === totalQuestions - 1);
 const canGoNext = computed(() => !!currentQuestion.value && !!answers.value[currentQuestion.value.id]);
 
-const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const validateEmail = (value: string) => emailSchema.safeParse(value).success;
 
 // Mejora UX (Escenarios 1 y 3): si el usuario ya viene identificado desde
 // una cita agendada o un mensaje de Consulta General (appointmentId /

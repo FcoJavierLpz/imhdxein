@@ -1,6 +1,5 @@
 import { ActionError, defineAction } from 'astro:actions';
 import { getEntry } from 'astro:content';
-import { z } from 'astro/zod';
 import { Resend } from 'resend';
 import type { Dosha } from '../lib/dosha/questions';
 import {
@@ -12,38 +11,7 @@ import {
   buildPatientConfirmationText,
 } from '../lib/email/appointmentNotification';
 import { supabaseAdmin } from '../lib/supabaseAdmin';
-
-const appointmentInputSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(3, 'Ingresa un nombre válido (mínimo 3 caracteres)')
-    .max(120, 'El nombre es demasiado largo'),
-  email: z.email('Ingresa un correo electrónico válido').trim(),
-
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[0-9\s\-+()]{10,20}$/, 'Ingresa un teléfono válido')
-    .optional()
-    .or(z.literal(''))
-    .transform((value) => (value ? value : null)),
-  therapyId: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(''))
-    .transform((value) => (value ? value : null)),
-  message: z
-    .string()
-    .trim()
-    .max(2000, 'El mensaje es demasiado largo')
-    .optional()
-    .or(z.literal(''))
-    .transform((value) => (value ? value : null)),
-  // Honeypot: campo oculto que solo un bot completaría. Debe llegar vacío.
-  website: z.string().max(0).optional().or(z.literal('')),
-});
+import { appointmentInputSchema } from '../lib/validation/appointment';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const ADMIN_EMAIL = import.meta.env.ADMIN_NOTIFICATION_EMAIL;

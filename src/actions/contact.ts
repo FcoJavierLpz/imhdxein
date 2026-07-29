@@ -1,5 +1,4 @@
 import { ActionError, defineAction } from 'astro:actions';
-import { z } from 'astro/zod';
 import { Resend } from 'resend';
 import {
   buildContactConfirmationHtml,
@@ -7,37 +6,7 @@ import {
   buildContactConfirmationText,
 } from '../lib/email/contactNotification';
 import { supabaseAdmin } from '../lib/supabaseAdmin';
-
-const contactInputSchema = z.object({
-  fullName: z
-    .string()
-    .trim()
-    .min(3, 'Ingresa un nombre válido (mínimo 3 caracteres)')
-    .max(120, 'El nombre es demasiado largo'),
-  email: z.email('Ingresa un correo electrónico válido').trim(),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[0-9\s\-+()]{10,20}$/, 'Ingresa un teléfono válido')
-    .optional()
-    .or(z.literal(''))
-    .transform((value) => (value ? value : null)),
-  subject: z
-    .string()
-    .trim()
-    .min(5, 'Ingresa un asunto válido (mínimo 5 caracteres)')
-    .max(200, 'El asunto es demasiado largo'),
-  message: z
-    .string()
-    .trim()
-    .min(10, 'Ingresa un mensaje válido (mínimo 10 caracteres)')
-    .max(2000, 'El mensaje es demasiado largo'),
-  // Escenario 3 del Test de Dosha: campo oculto que marca que este mensaje
-  // proviene de la tarjeta "Consulta General y de Diagnóstico" en Terapias.
-  origin: z.enum(['contacto', 'consulta_general']).optional().default('contacto'),
-  // Honeypot: campo oculto que solo un bot completaría. Debe llegar vacío.
-  website: z.string().max(0).optional().or(z.literal('')),
-});
+import { contactInputSchema } from '../lib/validation/contact';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const EMAIL_FROM = 'Instituto Holístico <notificaciones@imhdxein.org.mx>';

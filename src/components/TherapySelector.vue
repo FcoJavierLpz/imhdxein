@@ -17,7 +17,7 @@
               @click="select(therapy)"
             >
               <div :class="`w-10 h-10 rounded-xl bg-gradient-to-br ${chakraColors[i]} flex items-center justify-center flex-shrink-0`">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons[therapy.icon] || icons.Sparkles" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="getIconPaths(therapy.icon)" />
               </div>
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
@@ -76,6 +76,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { getIconPaths } from '../lib/icons';
 
 interface Therapy {
   id: string;
@@ -107,18 +108,6 @@ onMounted(() => {
   }
 });
 
-
-const icons: Record<string, string> = {
-  Sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
-  Flower2: '<path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1.343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3"/>',
-  Hand: '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/>',
-  Brain: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77"/>',
-  Droplet: '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.4-4 6.5S5 13 5 15a7 7 0 0 0 7 7z"/>',
-  CircleDot: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/>',
-  Sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/>',
-  Pill: '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>',
-  Gem: '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
-};
 
 const chakraColors = [
   'from-chakra-root to-chakra-sacral',

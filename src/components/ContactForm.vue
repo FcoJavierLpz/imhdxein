@@ -8,6 +8,8 @@ import {
   CONTACT_PHONE_DISPLAY,
   CONTACT_PHONE_TEL_HREF,
 } from '../constants/contact';
+import { messageSchema, subjectSchema } from '../lib/validation/contact';
+import { emailSchema, fullNameSchema, phoneSchema } from '../lib/validation/shared';
 
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -73,9 +75,6 @@ const contactOrigin = ref<'contacto' | 'consulta_general'>('contacto');
 // invitar al Test de Dosha pasando la referencia de forma oculta (Escenarios 1 y 3).
 const lastAppointmentId = ref<string | null>(null);
 const lastContactMessageId = ref<string | null>(null);
-
-const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const validatePhone = (phone: string) => /^[0-9\s\-+()]{10,}$/.test(phone);
 
 const doshaInviteUrl = computed(() => {
   const params = new URLSearchParams();
@@ -145,9 +144,14 @@ onMounted(() => {
 
 const handleAppointment = async () => {
   appointmentError.value = '';
-  if (!appointmentForm.value.full_name.trim() || appointmentForm.value.full_name.length < 3) { appointmentError.value = 'Por favor ingresa un nombre válido (mínimo 3 caracteres)'; return; }
-  if (!validateEmail(appointmentForm.value.email)) { appointmentError.value = 'Por favor ingresa un correo electrónico válido'; return; }
-  if (appointmentForm.value.phone && !validatePhone(appointmentForm.value.phone)) { appointmentError.value = 'Por favor ingresa un teléfono válido'; return; }
+  const nameResult = fullNameSchema.safeParse(appointmentForm.value.full_name);
+  if (!nameResult.success) { appointmentError.value = nameResult.error.issues[0].message; return; }
+  const emailResult = emailSchema.safeParse(appointmentForm.value.email);
+  if (!emailResult.success) { appointmentError.value = emailResult.error.issues[0].message; return; }
+  if (appointmentForm.value.phone) {
+    const phoneResult = phoneSchema.safeParse(appointmentForm.value.phone);
+    if (!phoneResult.success) { appointmentError.value = phoneResult.error.issues[0].message; return; }
+  }
 
   appointmentLoading.value = true;
 
@@ -182,10 +186,14 @@ const handleAppointment = async () => {
 
 const handleContact = async () => {
   contactError.value = '';
-  if (!contactForm.value.full_name.trim() || contactForm.value.full_name.length < 3) { contactError.value = 'Por favor ingresa un nombre válido (mínimo 3 caracteres)'; return; }
-  if (!validateEmail(contactForm.value.email)) { contactError.value = 'Por favor ingresa un correo electrónico válido'; return; }
-  if (!contactForm.value.subject.trim() || contactForm.value.subject.length < 5) { contactError.value = 'Por favor ingresa un asunto válido (mínimo 5 caracteres)'; return; }
-  if (!contactForm.value.message.trim() || contactForm.value.message.length < 10) { contactError.value = 'Por favor ingresa un mensaje válido (mínimo 10 caracteres)'; return; }
+  const nameResult = fullNameSchema.safeParse(contactForm.value.full_name);
+  if (!nameResult.success) { contactError.value = nameResult.error.issues[0].message; return; }
+  const emailResult = emailSchema.safeParse(contactForm.value.email);
+  if (!emailResult.success) { contactError.value = emailResult.error.issues[0].message; return; }
+  const subjectResult = subjectSchema.safeParse(contactForm.value.subject);
+  if (!subjectResult.success) { contactError.value = subjectResult.error.issues[0].message; return; }
+  const messageResult = messageSchema.safeParse(contactForm.value.message);
+  if (!messageResult.success) { contactError.value = messageResult.error.issues[0].message; return; }
 
   contactLoading.value = true;
 

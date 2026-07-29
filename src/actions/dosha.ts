@@ -16,6 +16,7 @@ import {
   type DoshaUpdateSourceType,
 } from '../lib/email/doshaUpdateNotification';
 import { supabaseAdmin } from '../lib/supabaseAdmin';
+import { emailSchema, websiteHoneypotSchema } from '../lib/validation/shared';
 
 const doshaOptionEnum = z.enum(['Vata', 'Pitta', 'Kapha']);
 
@@ -36,7 +37,7 @@ const doshaInputSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((value) => (value ? value : null)),
-  email: z.email('Ingresa un correo electrónico válido').trim(),
+  email: emailSchema,
   answers: answersSchema,
   // Escenario 1: viene de una cita ya agendada.
   appointmentId: z
@@ -52,8 +53,7 @@ const doshaInputSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((value) => (value ? value : null)),
-  // Honeypot: campo oculto que solo un bot completaría. Debe llegar vacío.
-  website: z.string().max(0).optional().or(z.literal('')),
+  website: websiteHoneypotSchema,
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
@@ -129,12 +129,20 @@ const sendUpdateNotification = async (data: {
   }
 };
 
+const emailsMatch = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
 /**
  * Resuelve el nombre, correo y una etiqueta legible de la solicitud original
  * (cita o mensaje de contacto) a la que se vincula este resultado de Dosha.
  * Se usa para poblar el correo de "Actualización" con datos consistentes
  * con la solicitud inicial, en lugar de depender únicamente de lo que el
  * usuario haya vuelto a escribir en el test.
+ *
+ * El appointmentId/contactMessageId llega del cliente sin ninguna prueba de
+ * pertenencia: por eso se exige que el email del test coincida con el email
+ * real de la cita/mensaje antes de vincularlos. Si no coincide, se trata
+ * como si no hubiera vínculo (en vez de filtrar el nombre/terapia de un
+ * tercero en el correo de actualización al admin).
  */
 const resolveLinkedRequestInfo = async (
   appointmentId: string | null,
@@ -156,6 +164,13 @@ const resolveLinkedRequestInfo = async (
 
       if (error || !data) {
         console.error('[dosha.submit] Error al consultar appointments para actualización:', error);
+        return null;
+      }
+
+      if (!data.email || !emailsMatch(data.email, fallback.email)) {
+        console.error(
+          '[dosha.submit] appointmentId no pertenece al email del test; se ignora el vínculo.'
+        );
         return null;
       }
 
@@ -196,6 +211,13 @@ const resolveLinkedRequestInfo = async (
         console.error(
           '[dosha.submit] Error al consultar contact_messages para actualización:',
           error
+        );
+        return null;
+      }
+
+      if (!data.email || !emailsMatch(data.email, fallback.email)) {
+        console.error(
+          '[dosha.submit] contactMessageId no pertenece al email del test; se ignora el vínculo.'
         );
         return null;
       }
