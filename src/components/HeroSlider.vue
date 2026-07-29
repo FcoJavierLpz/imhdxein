@@ -126,7 +126,7 @@ const chakraDots = [
 ];
 
 const current = ref(0);
-let timer: any = null;
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const goTo = (i: number) => { current.value = i % slides.length; resetTimer(); };
 const next = () => { current.value = (current.value + 1) % slides.length; resetTimer(); };
