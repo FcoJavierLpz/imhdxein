@@ -64,6 +64,12 @@ const blogPosts = defineCollection({
     author: z.string(),
     publishedAt: z.coerce.date(),
     isPublished: z.boolean(),
+    audio: z
+      .discriminatedUnion('discriminant', [
+        z.object({ discriminant: z.literal(true), value: z.string() }),
+        z.object({ discriminant: z.literal(false) }),
+      ])
+      .optional(),
   }),
 });
 
