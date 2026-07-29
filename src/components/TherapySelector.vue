@@ -5,6 +5,7 @@
         <div class="lg:col-span-1">
           <div class="sticky top-28 space-y-3">
             <button
+              type="button"
               v-for="(therapy, i) in therapies"
               :key="therapy.id"
               :id="therapy.slug"
@@ -17,12 +18,12 @@
               @click="select(therapy)"
             >
               <div :class="`w-10 h-10 rounded-xl bg-gradient-to-br ${chakraColors[i]} flex items-center justify-center flex-shrink-0`">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="icons[therapy.icon] || icons.Sparkles" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="getIconPaths(therapy.icon)" />
               </div>
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
                 <div class="flex items-center gap-2 text-xs text-deep-400 mt-0.5">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   <span>{{ therapy.durationMinutes }} min</span>
                 </div>
               </div>
@@ -32,19 +33,23 @@
 
         <div class="lg:col-span-2">
           <div v-if="selected" class="animate-fade-in">
-            <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8">
-              <img :src="selected.image" :alt="selected.name" class="w-full h-72 md:h-80 object-cover" />
+            <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8 bg-deep-50 border border-deep-100">
+              <img 
+                :src="selected.image" 
+                :alt="selected.name" 
+                class="w-full h-auto max-h-[420px] object-cover object-center transition-all duration-300" 
+              />
             </div>
 
             <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">{{ selected.name }}</h2>
             <div class="mt-4 flex items-center gap-6 text-deep-500">
-              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
+              <span class="flex items-center gap-2 text-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ selected.durationMinutes }} minutos</span>
               <span v-if="selected.price && selected.price > 0" class="flex items-center gap-2 text-sm font-semibold text-deep-800">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 {{ selected.price }} MXN
               </span>
               <span v-else class="flex items-center gap-2 text-sm text-brand-600">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Costo personalizado según evaluación
               </span>
             </div>
@@ -58,8 +63,9 @@
               </template>
             </div>
             <div class="mt-8">
+              <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (template literal) -->
               <a :href="`/contacto?therapy=${encodeURIComponent(selected.id)}`" class="btn-primary inline-flex items-center gap-2">
-                Solicitar Terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Solicitar Terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
 
               </a>
             </div>
@@ -72,6 +78,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { getIconPaths } from '../lib/icons';
 
 interface Therapy {
   id: string;
@@ -103,18 +110,6 @@ onMounted(() => {
   }
 });
 
-
-const icons: Record<string, string> = {
-  Sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>',
-  Flower2: '<path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1.343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3"/>',
-  Hand: '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/>',
-  Brain: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77"/>',
-  Droplet: '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.4-4 6.5S5 13 5 15a7 7 0 0 0 7 7z"/>',
-  CircleDot: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/>',
-  Sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/>',
-  Pill: '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>',
-  Gem: '<path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
-};
 
 const chakraColors = [
   'from-chakra-root to-chakra-sacral',

@@ -1,24 +1,33 @@
-# example netlify.toml
 [build]
   command = "npm run build"
-  functions = "netlify/functions"
   publish = "dist"
-
-  ## Uncomment to use this redirect for Single Page Applications like create-react-app.
-  ## Not needed for static site generators.
-  #[[redirects]]
-  #  from = "/*"
-  #  to = "/index.html"
-  #  status = 200
-
-  ## (optional) Settings for Netlify Dev
-  ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
-  #[dev]
-  #  command = "yarn start" # Command to start your dev server
-  #  port = 3000 # Port that the dev server will be listening on
-  #  publish = "dist" # Folder with the static content for _redirect file
-
-  ## more info on configuring this file: https://ntl.fyi/file-based-build-config
 
 [build.environment]
   SECRETS_SCAN_OMIT_KEYS = "ADMIN_NOTIFICATION_EMAIL"
+
+# Cabeceras de seguridad HTTP para el sitio público. El sitio recopila PII
+# (nombre, email, teléfono) en sus formularios, por lo que se aplican
+# cabeceras básicas de mitigación de clickjacking, fuga de referrer e
+# inyección de recursos externos a todas las rutas.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-src https://www.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+
+# El panel de administración de contenido (Keystatic) es una SPA de terceros
+# que necesita permisos más amplios que el sitio público (llamadas a APIs
+# externas de autenticación, etc.). Se le asigna una CSP propia, más
+# permisiva, en vez de heredar la CSP estricta de "/*".
+[[headers]]
+  for = "/keystatic/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src https:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+
+[[headers]]
+  for = "/api/keystatic/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; connect-src 'self' https:; frame-ancestors 'none'"

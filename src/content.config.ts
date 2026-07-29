@@ -46,7 +46,7 @@ const therapists = defineCollection({
 
 const testimonials = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/testimonials' }),
-  schema: ({ image }) => z.object({
+  schema: z.object({
     name: z.string(),
     text: z.string(),
     rating: z.number(),

@@ -28,7 +28,7 @@
       <transition name="hero-content" mode="out-in">
         <div :key="current" class="max-w-3xl">
           <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1.343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3m0 0a3 3 0 0 0 3-3"/>
             </svg>
             <span class="text-brand-300 text-sm font-medium">Instituto de Medicina Integrativa y Holística</span>
@@ -53,6 +53,7 @@
 
     <div class="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-5 z-30">
       <button
+        type="button"
         v-for="(dot, i) in chakraDots"
         :key="i"
         class="rounded-full transition-all duration-500 focus:outline-none"
@@ -62,11 +63,11 @@
       />
     </div>
 
-    <button @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+    <button type="button" @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     </button>
-    <button @click="next" class="absolute right-4 xl:right-20 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+    <button type="button" @click="next" class="absolute right-4 xl:right-20 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
     </button>
 
     <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20"></div>
@@ -125,7 +126,7 @@ const chakraDots = [
 ];
 
 const current = ref(0);
-let timer: any = null;
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const goTo = (i: number) => { current.value = i % slides.length; resetTimer(); };
 const next = () => { current.value = (current.value + 1) % slides.length; resetTimer(); };

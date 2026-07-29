@@ -11,6 +11,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://imhdxein.org.mx',
   output: 'server',
+  // react() es requerido por el panel de administración de Keystatic
+  // (renderiza su UI con `client:only="react"`), aunque no haya componentes .tsx propios.
   integrations: [vue(), react(), markdoc(), keystatic(), sitemap()],
 
   vite: {
