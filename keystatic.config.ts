@@ -1,4 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
+import { block } from '@keystatic/core/content-components';
 
 const ICON_OPTIONS = [
   { label: 'Sparkles', value: 'Sparkles' },
@@ -178,6 +179,21 @@ export default config({
           directory: 'src/assets/images/blog',
           publicPath: '../../assets/images/blog/',
         }),
+        audio: fields.conditional(
+          fields.checkbox({
+            label: '¿Incluir reproductor de audio para este artículo?',
+            defaultValue: false,
+          }),
+          {
+            true: fields.file({
+              label: 'Audio del artículo (Podcast / Texto a Voz)',
+              directory: 'public/audios/blog',
+              publicPath: '/audios/blog/',
+              validation: { isRequired: true },
+            }),
+            false: fields.empty(),
+          }
+        ),
         author: fields.text({
           label: 'Autor',
           defaultValue: 'IMHDXEIN',
@@ -192,6 +208,19 @@ export default config({
         }),
         content: fields.markdoc({
           label: 'Contenido del artículo',
+          components: {
+            youtube: block({
+              label: 'Video de YouTube',
+              schema: {
+                url: fields.url({
+                  label: 'URL del video de YouTube',
+                  validation: {
+                    isRequired: true,
+                  },
+                }),
+              },
+            }),
+          },
         }),
       },
     }),

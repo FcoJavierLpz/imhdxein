@@ -40,6 +40,25 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
         <span class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {post.data.author}</span>
         <span class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> {formatDate(post.data.publishedAt)}</span>
       </div>
+      {post.data.audio?.discriminant && post.data.audio.value && (
+        <div class="mt-8 flex items-center gap-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-5">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="mb-1.5 text-sm font-medium text-deep-700">Escucha este artículo</p>
+            <audio
+              controls
+              controlsList="nodownload noplaybackrate"
+              oncontextmenu="return false;"
+              class="w-full"
+              src={post.data.audio.value}
+            >
+              Tu navegador no soporta el elemento de audio.
+            </audio>
+          </div>
+        </div>
+      )}
       <div class="mt-8 prose prose-lg max-w-none text-deep-700 leading-relaxed">
         <Content />
       </div>
