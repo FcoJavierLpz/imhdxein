@@ -64,7 +64,8 @@ export default config({
         }),
         orderIndex: fields.number({
           label: 'Orden',
-          defaultValue: 0,
+          defaultValue: 1,
+          validation: { min: 1 },
         }),
       },
     }),
@@ -103,7 +104,8 @@ export default config({
         }),
         orderIndex: fields.number({
           label: 'Orden',
-          defaultValue: 0,
+          defaultValue: 1,
+          validation: { min: 1 },
         }),
       },
     }),
@@ -133,7 +135,8 @@ export default config({
         }),
         orderIndex: fields.number({
           label: 'Orden',
-          defaultValue: 0,
+          defaultValue: 1,
+          validation: { min: 1 },
         }),
       },
     }),

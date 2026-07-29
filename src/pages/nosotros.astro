@@ -222,7 +222,7 @@ const values = [
         <p class="mt-4 text-deep-500 leading-relaxed">Profesionales apasionados por la sanación integral, con formación de primer nivel y compromiso con tu bienestar.</p>
       </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {therapists.filter(t => t.orderIndex > 0).map((t) => (
+        {therapists.filter(t => t.id !== 'dr-rodrigo-acevedo').map((t) => (
           <div class="card group bg-white">
             <div class="h-56 overflow-hidden bg-deep-100">
               {t.image && (
