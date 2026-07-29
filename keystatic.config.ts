@@ -98,6 +98,14 @@ export default config({
           label: 'Categoría',
           defaultValue: 'General',
         }),
+        benefits: fields.array(
+          fields.text({ label: 'Beneficio' }),
+          {
+            label: 'Beneficios',
+            description: 'Puntos clave que se mostrarán en la ficha de producto (opcional).',
+            itemLabel: (props) => props.value || 'Beneficio',
+          }
+        ),
         isAvailable: fields.checkbox({
           label: 'Disponible',
           defaultValue: true,

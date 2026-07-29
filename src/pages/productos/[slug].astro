@@ -1,0 +1,127 @@
+---
+export const prerender = true;
+
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { CONTACT_WHATSAPP_PHONE } from '../../constants/contact';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { name, description, price, image, category, benefits, isAvailable } = product.data;
+
+const whatsappMessage =
+  `Hola!, me interesa el producto *${name}* ` +
+  `(Precio: $${price} MXN). ¿Me podrían dar más información para solicitarlo?`;
+const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+
+const priceFormatted = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(price);
+
+const specs = [
+  { label: 'Categoría', value: category },
+  { label: 'Precio', value: priceFormatted },
+  { label: 'Disponibilidad', value: isAvailable ? 'Disponible' : 'No disponible' },
+];
+---
+
+<MainLayout
+  title={`${name} - Productos IMHDXEIN`}
+  description={description.slice(0, 160)}
+  image={image?.src}
+>
+  <div class="h-1.5 chakra-gradient"></div>
+  <article class="section-padding bg-white">
+    <div class="container-custom max-w-5xl">
+      <a href="/productos" class="text-brand-600 hover:text-brand-700 font-medium text-sm mb-8 flex items-center gap-1">&larr; Volver a Productos</a>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-10 items-start">
+        <div class="rounded-2xl overflow-hidden shadow-lg bg-deep-100 relative">
+          {image ? (
+            <Image src={image} alt={name} class="w-full h-80 md:h-full object-cover" />
+          ) : (
+            <div class="w-full h-80 md:h-full flex items-center justify-center text-deep-300">Sin imagen</div>
+          )}
+          {!isAvailable && (
+            <span class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-semibold">No disponible</span>
+          )}
+        </div>
+
+        <div class="flex flex-col">
+          <span class="text-xs text-brand-600 font-medium uppercase tracking-wide">{category}</span>
+          <h1 class="mt-2 text-3xl md:text-4xl font-heading font-bold text-deep-900 leading-tight">{name}</h1>
+          <p class="mt-4 text-2xl font-heading font-semibold text-deep-800">{priceFormatted}</p>
+
+          <p class="mt-6 text-deep-600 leading-relaxed whitespace-pre-line">{description}</p>
+
+          {benefits && benefits.length > 0 && (
+            <div class="mt-8">
+              <h2 class="font-heading font-semibold text-deep-800 text-lg">Beneficios</h2>
+              <ul class="mt-3 space-y-2">
+                {benefits.map((benefit) => (
+                  <li class="flex items-start gap-2 text-deep-600 text-sm leading-relaxed">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="mt-0.5 flex-shrink-0 text-brand-500"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div class="mt-8 rounded-2xl border border-deep-100 bg-deep-50/60 p-5">
+            <h2 class="font-heading font-semibold text-deep-800 text-sm mb-3">Especificaciones</h2>
+            <dl class="space-y-1.5">
+              {specs.map((spec) => (
+                <div class="flex justify-between text-sm">
+                  <dt class="text-deep-500">{spec.label}</dt>
+                  <dd class="text-deep-800 font-medium">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          {isAvailable ? (
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-8 w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-base font-semibold text-white transition-all duration-200 hover:shadow-lg hover:brightness-110 active:scale-95"
+              style="background-color: #25D366;"
+              aria-label={`Solicitar ${name} por WhatsApp`}
+            >
+              <svg width="18" height="18" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M16.004 3C9.377 3 4 8.373 4 15c0 2.362.687 4.564 1.872 6.415L4 29l7.767-1.83A11.94 11.94 0 0 0 16.004 27C22.63 27 28 21.627 28 15S22.63 3 16.004 3Zm0 21.818a9.77 9.77 0 0 1-4.98-1.366l-.357-.212-4.61 1.087 1.104-4.49-.234-.367A9.76 9.76 0 0 1 5.2 15c0-5.966 4.847-10.818 10.804-10.818S26.809 9.034 26.809 15 21.961 24.818 16.004 24.818Zm5.61-7.98c-.307-.154-1.816-.897-2.098-1-.28-.103-.485-.154-.688.154-.204.307-.79 1-.968 1.205-.178.205-.357.23-.663.077-.307-.154-1.296-.478-2.468-1.523-.912-.813-1.528-1.817-1.707-2.124-.178-.307-.019-.473.135-.626.139-.138.307-.359.46-.538.154-.18.205-.308.307-.513.103-.205.051-.384-.026-.538-.077-.154-.688-1.659-.943-2.272-.248-.596-.5-.516-.688-.526l-.586-.01c-.205 0-.538.077-.82.384-.28.307-1.07 1.046-1.07 2.551 0 1.505 1.096 2.96 1.249 3.164.153.205 2.157 3.294 5.228 4.62.73.315 1.3.503 1.744.643.733.233 1.4.2 1.928.121.588-.088 1.816-.742 2.072-1.459.256-.717.256-1.331.18-1.459-.077-.128-.281-.205-.588-.359Z"/>
+              </svg>
+              Solicitar por WhatsApp
+            </a>
+          ) : (
+            <span class="mt-8 w-full flex items-center justify-center gap-2 bg-deep-100 text-deep-400 rounded-xl py-3.5 text-base font-medium cursor-not-allowed">No disponible por el momento</span>
+          )}
+          <p class="mt-3 text-center text-xs text-deep-400">Al solicitar, se abrirá WhatsApp con un mensaje prellenado para completar tu compra con nuestro equipo.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": name,
+    "description": description,
+    "category": category,
+    ...(image ? { "image": new URL(image.src, Astro.site).toString() } : {}),
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "MXN",
+      "price": price,
+      "availability": isAvailable ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+  })} />
+</MainLayout>

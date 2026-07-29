@@ -25,6 +25,7 @@ const products = defineCollection({
     price: z.number(),
     image: image().optional(),
     category: z.string(),
+    benefits: z.array(z.string()).optional().default([]),
     isAvailable: z.boolean(),
     orderIndex: z.number(),
   }),
