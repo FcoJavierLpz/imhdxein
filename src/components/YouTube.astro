@@ -1,0 +1,39 @@
+---
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+function getYouTubeId(rawUrl: string): string | null {
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.hostname.includes('youtu.be')) {
+      return parsed.pathname.slice(1);
+    }
+    if (parsed.hostname.includes('youtube.com')) {
+      if (parsed.pathname === '/watch') return parsed.searchParams.get('v');
+      if (parsed.pathname.startsWith('/embed/')) return parsed.pathname.split('/embed/')[1];
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+const videoId = getYouTubeId(url);
+---
+
+{videoId && (
+  <div class="relative w-full overflow-hidden rounded-2xl shadow-lg" style="padding-top: 56.25%;">
+    <iframe
+      class="absolute inset-0 h-full w-full"
+      src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+      title="Video de YouTube"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      loading="lazy"
+    ></iframe>
+  </div>
+)}
