@@ -59,9 +59,59 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
           </div>
         </div>
       )}
-      <div class="mt-8 prose prose-lg max-w-none text-deep-700 leading-relaxed">
+      <div class="protected-content mt-8 prose prose-lg max-w-none text-deep-700 leading-relaxed">
         <Content />
       </div>
     </div>
   </article>
 </MainLayout>
+
+<style>
+  /*
+    Disuasión de copiado: bloquea la selección de texto del artículo.
+  */
+  .protected-content {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .protected-content :global(audio),
+  .protected-content :global(video),
+  .protected-content :global(iframe),
+  .protected-content :global(img) {
+    user-select: auto;
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    -webkit-touch-callout: default;
+  }
+</style>
+
+<script>
+  function initContentProtection() {
+    const protectedEls = document.querySelectorAll<HTMLElement>('.protected-content');
+
+    protectedEls.forEach((el) => {
+      // No bloquear clic derecho sobre elementos multimedia interactivos.
+      const isMediaTarget = (target: EventTarget | null) =>
+        target instanceof Element && target.closest('audio, video, iframe, a, button');
+
+      el.addEventListener('contextmenu', (event) => {
+        if (isMediaTarget(event.target)) return;
+        event.preventDefault();
+      });
+
+      // Disuade el copiado masivo sin bloquear Ctrl+C globalmente
+      // (evita romper accesibilidad, búsqueda del navegador, etc.).
+      el.addEventListener('copy', (event) => {
+        if (isMediaTarget(event.target)) return;
+        event.preventDefault();
+      });
+    });
+  }
+
+  initContentProtection();
+</script>
