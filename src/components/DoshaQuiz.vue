@@ -16,6 +16,10 @@ const email = ref('');
 const loading = ref(false);
 const errorMessage = ref('');
 
+// Honeypot anti-spam: campo oculto que solo un bot llenaría.
+// Si llega con contenido, el servidor descarta la solicitud silenciosamente.
+const honeypot = ref('');
+
 // Referencias ocultas capturadas desde la URL (Escenarios 1 y 3).
 const appointmentId = ref<string | null>(null);
 const contactMessageId = ref<string | null>(null);
@@ -104,6 +108,7 @@ const submitQuiz = async () => {
     answers: answers.value,
     appointmentId: appointmentId.value ?? undefined,
     contactMessageId: contactMessageId.value ?? undefined,
+    website: honeypot.value,
   });
 
   loading.value = false;
@@ -226,6 +231,23 @@ const restart = () => {
         <p class="mt-3 text-deep-500 leading-relaxed">
           Déjanos tu correo para enviarte tu perfil de Dosha y recomendaciones personalizadas.
         </p>
+        <!--
+          Honeypot anti-spam: campo invisible para humanos (fuera del
+          viewport, sin afectar el layout) pero visible para bots que
+          completan todos los inputs de un formulario automáticamente.
+          Si llega con contenido, el servidor descarta la solicitud.
+        -->
+        <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+          <label for="dosha-website">No llenar este campo</label>
+          <input
+            type="text"
+            id="dosha-website"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            v-model="honeypot"
+          />
+        </div>
         <div class="mt-6 space-y-4 text-left">
           <div>
             <label class="block text-sm font-medium text-deep-700 mb-1">Nombre (opcional)</label>

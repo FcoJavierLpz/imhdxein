@@ -62,6 +62,7 @@ const contactForm = ref({ full_name: '', email: '', phone: '', subject: '', mess
 // Honeypot anti-spam: campo oculto que solo un bot llenaría.
 // Si llega con contenido, el servidor descarta la solicitud silenciosamente.
 const appointmentHoneypot = ref('');
+const contactHoneypot = ref('');
 
 // Escenario 3 del Test de Dosha ("Paciente Perdido"): cuando el usuario
 // llega desde la tarjeta "Consulta General y de Diagnóstico" en Terapias,
@@ -195,6 +196,7 @@ const handleContact = async () => {
     subject: contactForm.value.subject.trim(),
     message: contactForm.value.message.trim(),
     origin: contactOrigin.value,
+    website: contactHoneypot.value,
   });
 
   contactLoading.value = false;
@@ -202,6 +204,7 @@ const handleContact = async () => {
   if (data?.success) {
     lastContactMessageId.value = data.contactMessageId ?? null;
     contactSubmitted.value = true;
+    contactHoneypot.value = '';
     return;
   }
 
@@ -398,6 +401,23 @@ const handleContact = async () => {
             </div>
 
             <form v-else class="space-y-5" @submit.prevent="handleContact">
+              <!--
+                Honeypot anti-spam: campo invisible para humanos (fuera del
+                viewport, sin afectar el layout) pero visible para bots que
+                completan todos los inputs de un formulario automáticamente.
+                Si llega con contenido, el servidor descarta la solicitud.
+              -->
+              <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+                <label for="contact-website">No llenar este campo</label>
+                <input
+                  type="text"
+                  id="contact-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                  v-model="contactHoneypot"
+                />
+              </div>
               <div class="grid sm:grid-cols-2 gap-5">
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
                 <div><label class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>

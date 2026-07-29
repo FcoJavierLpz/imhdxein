@@ -52,6 +52,8 @@ const doshaInputSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((value) => (value ? value : null)),
+  // Honeypot: campo oculto que solo un bot completaría. Debe llegar vacío.
+  website: z.string().max(0).optional().or(z.literal('')),
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
@@ -222,6 +224,17 @@ export const dosha = {
     input: doshaInputSchema,
     handler: async (input) => {
       const { dominant, secondary, scores } = calculateDoshaResult(input.answers);
+
+      // Honeypot activado: se responde "éxito" simulado (con el resultado
+      // real ya calculado en memoria) sin persistir nada ni notificar,
+      // para no revelar al bot que fue detectado.
+      if (input.website) {
+        return {
+          success: true,
+          resultadoPrincipal: dominant,
+          resultadoSecundario: secondary,
+        } as const;
+      }
 
       // Determinar el origen del test según qué referencia venga presente.
       const origin: 'appointment' | 'lead' | 'consulta_general' = input.appointmentId

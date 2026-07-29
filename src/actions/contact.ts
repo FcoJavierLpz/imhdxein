@@ -35,24 +35,13 @@ const contactInputSchema = z.object({
   // Escenario 3 del Test de Dosha: campo oculto que marca que este mensaje
   // proviene de la tarjeta "Consulta General y de Diagnóstico" en Terapias.
   origin: z.enum(['contacto', 'consulta_general']).optional().default('contacto'),
+  // Honeypot: campo oculto que solo un bot completaría. Debe llegar vacío.
+  website: z.string().max(0).optional().or(z.literal('')),
 });
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 const EMAIL_FROM = 'Instituto Holístico <notificaciones@imhdxein.org.mx>';
 const EMAIL_REPLY_TO = 'imhdxein@gmail.com';
-
-/**
- * Enmascara un correo electrónico para poder loguearlo sin exponer el dato
- * completo (evita que Netlify bloquee el despliegue por "Secrets Scanning"
- * y protege la privacidad del remitente).
- * Ej: "juan.perez@gmail.com" -> "ju***@gmail.com"
- */
-const maskEmail = (email: string): string => {
-  const [user, domain] = email.split('@');
-  if (!user || !domain) return '***';
-  const visible = user.slice(0, 2);
-  return `${visible}***@${domain}`;
-};
 
 const sendContactConfirmation = async (data: {
   fullName: string;
@@ -89,26 +78,13 @@ export const contact = {
     accept: 'json',
     input: contactInputSchema,
     handler: async (input) => {
+      // Honeypot activado: se responde "éxito" simulado sin persistir nada,
+      // para no revelar al bot que fue detectado.
+      if (input.website) {
+        return { success: true, contactMessageId: null } as const;
+      }
+
       try {
-        // Log de entrada: útil para descartar si Zod rechazó campos o si
-        // llegó algún valor inesperado desde el formulario. El correo se
-        // enmascara para no exponer datos personales/reales en los logs.
-        console.log('[contact.submit] Input recibido:', {
-          fullName: input.fullName,
-          email: maskEmail(input.email),
-          phone: input.phone ? '(provisto)' : null,
-          subject: input.subject,
-          messageLength: input.message.length,
-          origin: input.origin,
-        });
-
-        // Log de verificación de configuración: confirma si la API key de
-        // Resend está presente en el entorno de Netlify, sin exponer su valor.
-        console.log(
-          '[contact.submit] RESEND_API_KEY configurada:',
-          !!import.meta.env.RESEND_API_KEY
-        );
-
         const { data: inserted, error: insertError } = await supabaseAdmin
           .from('contact_messages')
           .insert({
