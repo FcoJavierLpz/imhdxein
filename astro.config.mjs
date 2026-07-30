@@ -17,6 +17,13 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // El panel de administración de Keystatic (/keystatic) se empaqueta como un
+      // único chunk de terceros (~2.7 MB) que solo cargan los administradores, no
+      // los visitantes del sitio público. Se sube el límite para no generar una
+      // advertencia de tamaño sobre ese bundle en cada build.
+      chunkSizeWarningLimit: 3000,
+    },
   },
 
   adapter: netlify(),

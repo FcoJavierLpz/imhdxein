@@ -4,7 +4,6 @@
 
 [build.environment]
   SECRETS_SCAN_OMIT_KEYS = "ADMIN_NOTIFICATION_EMAIL"
-  PNPM_FLAGS = "--store-dir=.pnpm-store"
   NODE_VERSION = "22"
 
 # Cabeceras de seguridad HTTP para el sitio público. El sitio recopila PII
