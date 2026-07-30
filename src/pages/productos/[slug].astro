@@ -43,11 +43,18 @@ const specs = [
       <a href="/productos" class="text-brand-600 hover:text-brand-700 font-medium text-sm mb-8 flex items-center gap-1">&larr; Volver a Productos</a>
 
       <div class="mt-6 grid md:grid-cols-2 gap-10 items-start">
-        <div class="rounded-2xl overflow-hidden shadow-lg bg-deep-100 relative">
+        <div class="rounded-2xl overflow-hidden shadow-lg md:sticky md:top-28 relative">
           {image ? (
-            <Image src={image} alt={name} class="w-full h-80 md:h-full object-cover" />
+            <Image src={image} alt={name} class="w-full aspect-[4/5] object-cover" />
           ) : (
-            <div class="w-full h-80 md:h-full flex items-center justify-center text-deep-300">Sin imagen</div>
+            <div class="w-full aspect-[4/5] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-50 via-white to-spirit-50">
+              <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="text-brand-300" aria-hidden="true">
+                  <path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="M2.32 6.16 12 11l9.68-4.84"/><path d="M12 22.76V11"/>
+                </svg>
+              </div>
+              <span class="text-xs font-medium uppercase tracking-wide text-deep-400">Imagen próximamente</span>
+            </div>
           )}
           {!isAvailable && (
             <span class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-semibold">No disponible</span>
