@@ -66,7 +66,19 @@ const specs = [
           <h1 class="mt-2 text-3xl md:text-4xl font-heading font-bold text-deep-900 leading-tight">{name}</h1>
           <p class="mt-4 text-2xl font-heading font-semibold text-deep-800">{priceFormatted}</p>
 
-          <p class="mt-6 text-deep-600 leading-relaxed whitespace-pre-line">{description}</p>
+          <div class="mt-6">
+            <p id="product-description" class="text-deep-600 leading-relaxed whitespace-pre-line line-clamp-[12]">{description}</p>
+            <button
+              type="button"
+              id="product-description-toggle"
+              class="hidden mt-2 items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+              aria-expanded="false"
+              aria-controls="product-description"
+            >
+              <span>Ver más</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform duration-200"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
 
           {benefits && benefits.length > 0 && (
             <div class="mt-8">
@@ -116,6 +128,24 @@ const specs = [
       </div>
     </div>
   </article>
+
+  <script>
+    const description = document.getElementById('product-description');
+    const toggle = document.getElementById('product-description-toggle');
+
+    if (description && toggle && description.scrollHeight > description.clientHeight + 1) {
+      toggle.classList.remove('hidden');
+      toggle.classList.add('inline-flex');
+
+      toggle.addEventListener('click', () => {
+        const expanded = description.classList.toggle('line-clamp-none');
+        description.classList.toggle('line-clamp-[12]', !expanded);
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.querySelector('span')!.textContent = expanded ? 'Ver menos' : 'Ver más';
+        toggle.querySelector('svg')!.classList.toggle('rotate-180', expanded);
+      });
+    }
+  </script>
 
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
