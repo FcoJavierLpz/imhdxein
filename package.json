@@ -4,20 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm astro dev",
-    "build": "pnpm astro build",
-    "preview": "pnpm astro preview",
-    "astro": "pnpm astro",
-    "typecheck": "pnpm astro check",
-    "lint": "pnpm biome lint --write",
-    "format": "pnpm biome format --write",
-    "check": "pnpm biome check --write",
-    "typecheck:react": "pnpm astro check --filter @astrojs/react",
-    "typecheck:vue": "pnpm astro check --filter @astrojs/vue",
-    "lint:react": "pnpm biome lint --write --filter react",
-    "lint:vue": "pnpm biome lint --write --filter vue",
-    "format:react": "pnpm biome format --write --filter react",
-    "format:vue": "pnpm biome format --write --filter vue"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro check",
+    "lint": "biome lint --write",
+    "format": "biome format --write",
+    "check": "biome check --write"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -49,5 +43,11 @@
     "@keystatic/astro": {
       "astro": "$astro"
     }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
