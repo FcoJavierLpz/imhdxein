@@ -1,9 +1,10 @@
 {
   "name": "Sinergia aromatica terapeuticas",
-  "description": "Una sinergia aromática terepeutica es  una mezcla de aceites esenciales con el objetivo de potencializar el efecto de la terapia recibida, se elaboran con aceites esenciales de la mas alta calidad y de fuentes orgánicas de forma artesanal, cada uno de nuestras sinergias llevan un trabajo y nergia del terapeuta que lo elabora. Estamos seguros que cuando lo uses sentiras esa paz y armonia que existe en tí y la sinergia te lleva a ese camino. ",
+  "description": "Una sinergia aromática terepeutica es  una mezcla de aceites esenciales con el objetivo de potencializar el efecto de la terapia recibida, se elaboran con aceites esenciales de la mas alta calidad y de fuentes orgánicas de forma artesanal, cada uno de nuestras sinergias llevan un trabajo y energia del terapeuta que lo elabora. Estamos seguros que cuando lo uses sentiras esa paz y armonia que existe en tí y la sinergia te lleva a ese camino. ",
   "price": 200,
   "image": "../../assets/images/products/sinergias-terapeuticas/image.png",
   "category": "SINERGIAS",
+  "benefits": [],
   "isAvailable": true,
   "orderIndex": 4
 }
