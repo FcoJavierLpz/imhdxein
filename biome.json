@@ -14,6 +14,7 @@
       "src/**/*.jsx",
       "src/**/*.astro",
       "src/**/*.vue",
+      "netlify/**/*.mts",
       "*.mjs",
       "*.cjs"
     ]
