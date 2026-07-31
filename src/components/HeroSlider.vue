@@ -80,6 +80,9 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import imgAmanecer from '../assets/images/hero/amanecer-nueva-oportunidad.webp';
 import imgPoderSanacion from '../assets/images/hero/poder-sanacion.webp';
 import imgEncuentraNorte from '../assets/images/hero/encuentra-tu-norte.webp';
+import imgSlide4 from '../assets/images/hero/slide-4.webp';
+import imgSlide6 from '../assets/images/hero/slide-6.webp';
+import imgSlide7 from '../assets/images/hero/slide-7.webp';
 
 const slides = [
   { 
@@ -112,6 +115,30 @@ const slides = [
     title: 'Recupera tu equilibrio', 
     subtitle: 'original', 
     description: 'Tu cuerpo tiene la sabiduría para sanar. Integra terapias ancestrales y encuentra el mapa de retorno a tu bienestar.' 
+  },
+  {
+    type: 'image',
+    image: imgSlide4.src,
+    title: 'El arcoíris es muestra',
+    subtitle: 'de que somos luz',
+    description: 'Tenemos que vivir nuestra experiencia para continuar nuestro proceso de trascendencia.',
+    alt: 'Majestuoso paisaje de montaña con un río y un arcoíris brillante sobre el bosque durante el amanecer dorado.'
+  },
+  {
+    type: 'image',
+    image: imgSlide6.src,
+    title: 'Comienza tu camino',
+    subtitle: 'de sanación',
+    description: 'Un espacio seguro donde la medicina integrativa te acompaña a reconectar con tu equilibrio físico, mental y espiritual.',
+    alt: 'Un sendero de madera extendido serpentea a través de una densa jungla hacia un valle montañoso neblinoso durante la puesta de sol dorada.',
+  },
+  {
+    type: 'image',
+    image: imgSlide7.src,
+    title: 'Todo es energia',
+    subtitle: 'haz la conexión',
+    description: 'Un espacio de paz para equilibrar tu energía interior.',
+    alt: 'Persona meditando junto a un río en un entorno natural al atardecer, con un arcoíris y símbolos de geometría sagrada en el cielo.',
   }
 ];
 
