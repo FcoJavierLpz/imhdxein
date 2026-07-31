@@ -4,6 +4,7 @@
   "durationMinutes": 60,
   "price": 1200,
   "icon": "Sparkles",
+  "image": "../../assets/images/therapies/consulta-medica-integrativa/image.webp",
   "isActive": true,
   "orderIndex": 1
 }
