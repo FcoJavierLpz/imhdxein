@@ -198,6 +198,7 @@ export default config({
           {
             true: fields.file({
               label: 'Audio del artículo (Podcast / Texto a Voz)',
+              description: 'Sube el archivo en formato MP3 optimizado para la web (idealmente a 96 kbps y mono).',
               directory: 'public/audios/blog',
               publicPath: '/audios/blog/',
               validation: { isRequired: true },

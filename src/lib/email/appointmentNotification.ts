@@ -158,7 +158,7 @@ export const buildAppointmentText = (data: AppointmentNotificationData): string 
  * Copia de cortesía enviada al paciente confirmando la recepción de su solicitud.
  */
 export const buildPatientConfirmationSubject = (): string =>
-  `Hemos recibido tu solicitud — Instituto Holístico`;
+  `Hemos recibido tu solicitud — Instituto Holístico Dxein`;
 
 export const buildPatientConfirmationHtml = (data: AppointmentNotificationData): string => {
   const firstName = escapeHtml(data.fullName.split(' ')[0] ?? '');
