@@ -9,7 +9,6 @@ import ExpandableCard from '../components/ExpandableCard.vue';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import acercaImg from '../assets/images/acerca.webp';
-import { getIconPaths } from '../lib/icons';
 
 const testimonialEntries = await getCollection('testimonials', ({ data }) => data.isVisible);
 const testimonials = testimonialEntries.map((t) => ({
@@ -20,19 +19,6 @@ const testimonials = testimonialEntries.map((t) => ({
   therapy: t.data.therapy,
 }));
 
-const chakraColors = [
-  'from-chakra-root to-chakra-sacral',
-  'from-chakra-sacral to-chakra-solar',
-  'from-chakra-solar to-chakra-heart',
-  'from-chakra-heart to-chakra-throat',
-  'from-chakra-throat to-chakra-third',
-  'from-chakra-third to-chakra-crown',
-  'from-chakra-crown to-spirit-600',
-  'from-spirit-600 to-chakra-root',
-];
-
-const iconSvg = getIconPaths;
-
 // Puerta de entrada de diagnóstico inicial dentro del catálogo de terapias:
 // misma consulta que utiliza TherapyHelpBanner.vue en /terapias, para
 // mantener consistencia en todo el sitio.
@@ -42,22 +28,18 @@ const workSteps = [
   {
     title: 'Consulta de diagnóstico integral',
     description: 'Escuchamos, analizamos y hacemos una semiología completa de tú historial medico-clínico, sin juzgar  ni pedirte que cambies nada todavía.',
-    icon: 'CircleDot',
   },
   {
     title: 'Plan personalizado',
     description: 'Diseñamos un protocolo integrativo y holístico que se adapta a tu caso y complementa tu tratamiento médico vigente, con el objetivo de hacer sinergia terapéutica.',
-    icon: 'Sparkles',
   },
   {
     title: 'Acompañamiento en las 4 dimensiones',
     description: 'Trabajamos tu bienestar físico, psicológico, emocional y espiritual de forma coordinada con todo el equipo que te acompañará en todo momento  con un alto compromiso humano y ético  y un alto sentido de empatía.',
-    icon: 'Flower2',
   },
   {
     title: 'Seguimiento continuo',
     description: 'Ajustamos el proceso contigo en el tiempo, evaluando avances de forma conjunta y humana.',
-    icon: 'Hand',
   },
 ];
 ---
@@ -168,10 +150,7 @@ const workSteps = [
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
         {workSteps.map((step, i) => (
           <div class="step-card group flex flex-col h-full">
-            <div class={`step-card__icon bg-gradient-to-br ${chakraColors[i]}`}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={iconSvg(step.icon)} />
-            </div>
-            <span class="step-card__eyebrow">Paso {String(i + 1).padStart(2, '0')}</span>
+            <span class="step-card__badge">Paso {String(i + 1).padStart(2, '0')}</span>
             <h3 class="step-card__title">{step.title}</h3>
             <p class="step-card__text">{step.description}</p>
           </div>

@@ -271,27 +271,19 @@
   mask-composite: exclude;
   pointer-events: none;
 }
-.step-card__icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-  display: flex;
+.step-card__badge {
+  display: inline-flex;
+  align-self: flex-start;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
-  transition: border-radius 0.5s ease, transform 0.4s ease;
-}
-.step-card:hover .step-card__icon {
-  border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
-  transform: scale(1.05);
-}
-.step-card__eyebrow {
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  background: var(--color-brand-100, #fff0bf);
+  color: var(--color-brand-700, #9c7000);
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-brand-500, #d4a017);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 .step-card__title {
   font-family: Georgia, Cambria, serif;
