@@ -35,6 +35,23 @@ const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURICom
   </svg>
 </a>
 
+<script>
+  const banner = document.querySelector('.therapy-help-banner');
+  const waBtn = document.querySelector('.wa-float-btn');
+
+  if (banner && waBtn) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        waBtn.classList.toggle('wa-float-btn--hidden', entry.isIntersecting);
+        waBtn.setAttribute('aria-hidden', String(entry.isIntersecting));
+        (waBtn as HTMLElement).tabIndex = entry.isIntersecting ? -1 : 0;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(banner);
+  }
+</script>
+
 <style>
   .wa-float-btn {
     position: fixed;
@@ -50,8 +67,14 @@ const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURICom
     background-color: #25d366;
     color: #ffffff;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
     isolation: isolate;
+  }
+
+  .wa-float-btn--hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(1rem);
   }
 
   .wa-float-btn:hover {
@@ -107,6 +130,10 @@ const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURICom
   @media (prefers-reduced-motion: reduce) {
     .wa-float-btn__pulse {
       animation: none;
+    }
+
+    .wa-float-btn--hidden {
+      transform: none;
     }
   }
 </style>
