@@ -192,8 +192,13 @@ Cada pregunta tiene exactamente 3 opciones (Vata / Pitta / Kapha, en ese orden).
 │  Descripción + Recomendaciones               │
 │  Influencia secundaria (si aplica)           │
 │  ┌───────────────────────────────────────┐   │
-│  │ ¿Quieres profundizar en tu equilibrio?│   │
-│  │ [ Agendar una consulta ]  → /contacto │   │
+│  │ CTA final (condicional, ver §6):       │   │
+│  │ Escenario 2 (sin ids):                 │   │
+│  │  "¿Quieres profundizar..." → /contacto │   │
+│  │ Escenarios 1 y 3 (appointmentId/       │   │
+│  │  contactId presentes):                 │   │
+│  │  "Tus respuestas potencian tu          │   │
+│  │  atención" → /  (sin botón de cita)    │   │
 │  └───────────────────────────────────────┘   │
 │  [ Volver a hacer el test ]                  │
 └─────────────────────────────────────────────┘
@@ -383,10 +388,25 @@ componente Vue.
 
 ### Página de resultado — CTA final
 
+**Escenario 2 (lead frío, sin `appointmentId`/`contactId`):**
+
 > **¿Quieres profundizar en tu equilibrio?**
 > Un especialista puede ayudarte a diseñar un plan personalizado a partir de tu constitución
 > Ayurvédica.
 > **[ Agendar una consulta ]** → `/contacto`
+
+**Escenarios 1 y 3 (con `appointmentId` o `contactId`, cita o mensaje ya existente):**
+
+> **Tus respuestas potencian tu atención**
+> Este test ayudará a evaluar mejor tu situación de terapia y dar una atención más personalizada
+> a tus requerimientos y necesidades. Tu especialista las revisará antes de la sesión.
+> **[ Finalizar y volver al inicio ]** → `/`
+
+El botón de "Agendar una consulta" se oculta en Escenarios 1 y 3 porque el usuario ya cuenta con
+una cita o solicitud en curso; el CTA se centra en cerrar el flujo, no en generar una nueva
+conversión. La lógica de bifurcación (`hasLinkedRequest` en `DoshaQuiz.vue`) reutiliza la misma
+señal (`appointmentId`/`contactMessageId`) descrita en §5.3 y §5.4, sin introducir ningún
+parámetro o estado nuevo.
 
 ### Perfiles de resultado (resumen — ver `doshaProfiles.ts` para texto completo)
 

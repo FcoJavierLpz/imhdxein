@@ -46,6 +46,21 @@ const canSkipEmailGate = computed(
   () => (!!appointmentId.value || !!contactMessageId.value) && validateEmail(email.value)
 );
 
+// Misma señal que `hasLinkedRequest` en src/actions/dosha.ts: diferencia
+// Escenarios 1 y 3 (cita agendada o mensaje de Consulta General ya
+// enviado) del Escenario 2 (lead frío desde el menú). Mantener el nombre
+// sincronizado con el backend si cambia allá.
+const hasLinkedRequest = computed(
+  () => !!appointmentId.value || !!contactMessageId.value
+);
+
+// Stub mínimo: no hay proveedor de analítica (gtag/plausible/dataLayer)
+// instalado en el repo todavía. Deja el punto de enganche listo — cuando
+// se decida el proveedor, reemplazar el console.info por el evento real.
+const trackResultVariant = (variant: 'linked' | 'cold') => {
+  console.info('[dosha:result-cta]', { variant });
+};
+
 
 onMounted(() => {
   const params = new URLSearchParams(window.location.search);
@@ -118,6 +133,7 @@ const submitQuiz = async () => {
     resultDosha.value = data.resultadoPrincipal;
     resultSecondary.value = data.resultadoSecundario ?? null;
     step.value = 'result';
+    trackResultVariant(hasLinkedRequest.value ? 'linked' : 'cold');
     return;
   }
 
@@ -149,6 +165,9 @@ const restart = () => {
   resultDosha.value = null;
   resultSecondary.value = null;
   errorMessage.value = '';
+  // appointmentId/contactMessageId NO se resetean a propósito: el origen
+  // (cita o mensaje previo) no cambia por repetir el test y debe seguir
+  // determinando el CTA final y las notificaciones del servidor.
 };
 </script>
 
@@ -298,15 +317,30 @@ const restart = () => {
           También muestras una influencia secundaria de <strong :style="`color:${secondaryProfile.color}`">{{ secondaryProfile.title }}</strong>.
         </p>
 
-        <div class="mt-10 bg-gradient-to-br from-brand-50 to-spirit-50 rounded-2xl p-8">
-          <h3 class="text-xl font-heading font-bold text-deep-900">¿Quieres profundizar en tu equilibrio?</h3>
-          <p class="mt-2 text-deep-500 text-sm max-w-md mx-auto">
-            Un especialista puede ayudarte a diseñar un plan personalizado a partir de tu constitución Ayurvédica.
-          </p>
-          <a href="/contacto" class="btn-primary inline-flex items-center gap-2 mt-6">
-            Agendar una consulta
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
+        <div
+          class="mt-10 rounded-2xl p-8"
+          :class="hasLinkedRequest ? 'bg-gradient-to-br from-sage-50 to-deep-50' : 'bg-gradient-to-br from-brand-50 to-spirit-50'"
+        >
+          <template v-if="!hasLinkedRequest">
+            <h3 class="text-xl font-heading font-bold text-deep-900">¿Quieres profundizar en tu equilibrio?</h3>
+            <p class="mt-2 text-deep-500 text-sm max-w-md mx-auto">
+              Un especialista puede ayudarte a diseñar un plan personalizado a partir de tu constitución Ayurvédica.
+            </p>
+            <a href="/contacto" class="btn-primary inline-flex items-center gap-2 mt-6">
+              Agendar una consulta
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </template>
+          <template v-else>
+            <h3 class="text-xl font-heading font-bold text-deep-900">Tus respuestas potencian tu atención</h3>
+            <p class="mt-2 text-deep-500 text-sm max-w-md mx-auto">
+              Este test ayudará a evaluar mejor tu situación de terapia y dar una atención más personalizada a tus requerimientos y necesidades. Tu especialista las revisará antes de la sesión.
+            </p>
+            <a href="/" class="btn-primary inline-flex items-center gap-2 mt-6">
+              Finalizar y volver al inicio
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+            </a>
+          </template>
         </div>
 
         <button type="button" class="btn-outline mt-8" @click="restart">Volver a hacer el test</button>
