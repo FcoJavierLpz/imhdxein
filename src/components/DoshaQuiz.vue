@@ -176,31 +176,65 @@ const restart = () => {
     <div class="container-custom max-w-3xl">
       <!-- INTRO -->
       <div v-if="step === 'intro'" class="text-center animate-fade-in">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Test Gratuito</span>
+        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Antes de comenzar</span>
         <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
-          Descubre tu Dosha
+          Tres energías, una sola tú
         </h2>
         <p class="mt-5 text-deep-500 leading-relaxed max-w-xl mx-auto">
-          En la Ayurveda, cada persona tiene una constitución única formada por tres energías:
-          Vata, Pitta y Kapha. Responde estas {{ totalQuestions }} preguntas para descubrir tu
-          dosha dominante y recibir recomendaciones personalizadas para tu bienestar.
+          La Ayurveda reconoce tres energías vitales —Vata, Pitta y Kapha— que conviven en ti en
+          proporciones únicas. Conócelas antes de responder tus {{ totalQuestions }} preguntas.
         </p>
-        <div class="mt-8 grid grid-cols-3 gap-4 max-w-md mx-auto text-sm">
-          <div class="rounded-xl bg-spirit-50 p-4">
-            <p class="font-heading font-semibold text-spirit-600">Vata</p>
-            <p class="text-deep-400 text-xs mt-1">Aire y Éter</p>
+
+        <div class="mt-10 grid sm:grid-cols-3 gap-6 text-left">
+          <div class="philosophy-card group">
+            <div class="philosophy-card__icon philosophy-card__icon--spirit">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>
+            </div>
+            <p class="font-heading font-bold text-lg text-deep-900">Vata</p>
+            <p class="text-spirit-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Aire y Éter</p>
+            <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Vata.tagline }}</p>
           </div>
-          <div class="rounded-xl bg-brand-50 p-4">
-            <p class="font-heading font-semibold text-brand-600">Pitta</p>
-            <p class="text-deep-400 text-xs mt-1">Fuego y Agua</p>
+          <div class="philosophy-card group">
+            <div class="philosophy-card__icon philosophy-card__icon--brand">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            </div>
+            <p class="font-heading font-bold text-lg text-deep-900">Pitta</p>
+            <p class="text-brand-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Fuego y Agua</p>
+            <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Pitta.tagline }}</p>
           </div>
-          <div class="rounded-xl bg-sage-50 p-4">
-            <p class="font-heading font-semibold text-sage-600">Kapha</p>
-            <p class="text-deep-400 text-xs mt-1">Tierra y Agua</p>
+          <div class="philosophy-card group">
+            <div class="philosophy-card__icon philosophy-card__icon--sage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <p class="font-heading font-bold text-lg text-deep-900">Kapha</p>
+            <p class="text-sage-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Tierra y Agua</p>
+            <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Kapha.tagline }}</p>
           </div>
         </div>
-        <button type="button" class="btn-primary mt-10" @click="startQuiz">Comenzar el Test</button>
-        <p class="mt-4 text-deep-400 text-xs">Toma menos de 5 minutos. 100% gratuito y confidencial.</p>
+
+        <button
+          type="button"
+          class="btn-primary mt-12 inline-flex items-center gap-2 px-8 py-4 text-lg"
+          @click="startQuiz"
+        >
+          Comenzar el Test
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+
+        <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-deep-400 text-xs">
+          <span class="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            5 minutos
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            100% confidencial
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            Resultado personalizado
+          </span>
+        </div>
       </div>
 
       <!-- QUIZ -->
