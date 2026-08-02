@@ -338,14 +338,6 @@ const handleContact = async () => {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
               </div>
-
-              <button
-                type="button"
-                @click="appointmentSubmitted = false; appointmentForm = { full_name: '', email: '', phone: '', therapy_id: '', message: '' };"
-                class="btn-outline mt-6"
-              >
-                Enviar otra solicitud
-              </button>
             </div>
 
             <form v-else class="space-y-5" @submit.prevent="handleAppointment">
@@ -407,6 +399,7 @@ const handleContact = async () => {
               </div>
 
               <button
+                v-if="contactOrigin !== 'consulta_general'"
                 type="button"
                 @click="contactSubmitted = false; contactForm = { full_name: '', email: '', phone: '', subject: '', message: '' };"
                 class="btn-outline mt-6"
