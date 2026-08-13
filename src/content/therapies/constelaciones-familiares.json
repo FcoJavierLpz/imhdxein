@@ -1,0 +1,10 @@
+{
+  "name": "CONSTELACIONES FAMILIARES",
+  "description": "CONSTELACIONES FAMILIARES\nLas constelaciones familiares son una terapia alternativa y sistémica creada por Bert Hellinger. Buscan sacar a la luz dinámicas ocultas y patrones de conducta heredados de la familia para sanar heridas emocionales, comprender el pasado y mejorar las relaciones personales del individuo.\n¿Qué son y cómo funcionan?\n•\tEnfoque sistémico: Miran a la persona como parte de una red de vínculos familiares y de antepasados.\n•\tDinámica grupal, individual o a distancia: Se realizan en talleres grupales donde otros asistentes actúan como representantes de los familiares, o de manera individual con muñecos y objetos.\n•\tLos órdenes del amor: Se basan en tres reglas: el derecho a la pertenencia de todos los miembros, el respeto a la jerarquía de las generaciones y el equilibrio entre dar y recibir.\n•\tHacer visible lo inconsciente: Permiten ver de forma gráfica y espacial nudos o traumas del pasado que afectan la vida presente.\n\n\nPrincipales beneficios\n•\tComprensión profunda: Ayudan a entender el origen de bloqueos, miedos o tristezas repetitivas que no tienen una causa clara en la vida actual. \n•\tLiberación de cargas: Permiten soltar culpas, dolores o responsabilidades familiares que no te corresponden y que arrastras de tus ancestros. \n•\tMejora de relaciones: Favorecen la reconciliación interna y la empatía, facilitando vínculos más sanos con la pareja, los hijos y los padres.\n•\tSensación de paz y orden: Aportan una visión de aceptación hacia la historia familiar, ayudando a encontrar el propio lugar y avanzar con mayor serenidad\n",
+  "durationMinutes": 60,
+  "price": 650,
+  "icon": "Sparkles",
+  "image": "../../assets/images/therapies/constelaciones-familiares/image.png",
+  "isActive": true,
+  "orderIndex": 5
+}
