@@ -23,14 +23,27 @@ export default async () => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const { error } = await supabase.from('dosha_results').select('id').limit(1);
+  // AWS Lambda (motor de las Netlify Functions) puede fallar la resolución
+  // DNS en cold starts de forma transitoria. Como esta función solo corre
+  // 2 veces/semana, siempre arranca en frío, así que reintentamos antes de
+  // rendirnos para no perder una de las dos ventanas semanales por un blip.
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const { error } = await supabase.from('dosha_results').select('id').limit(1);
 
-  if (error) {
-    console.error('keep-supabase-alive: fallo la consulta de mantenimiento', error);
-    return;
+    if (!error) {
+      console.log('keep-supabase-alive: consulta de mantenimiento ejecutada correctamente');
+      return;
+    }
+
+    if (attempt === maxAttempts) {
+      console.error('keep-supabase-alive: fallo la consulta de mantenimiento', error);
+      return;
+    }
+
+    console.warn(`keep-supabase-alive: intento ${attempt} fallido, reintentando`, error.message);
+    await new Promise((resolve) => setTimeout(resolve, attempt * 2000));
   }
-
-  console.log('keep-supabase-alive: consulta de mantenimiento ejecutada correctamente');
 };
 
 export const config: Config = {
