@@ -4,7 +4,7 @@
   "durationMinutes": 50,
   "price": 550,
   "icon": "Sparkles",
-  "image": "../../assets/images/therapies/REIKI/image.png",
+  "image": "../../assets/images/therapies/REIKI/image.webp",
   "isActive": true,
   "orderIndex": 4
 }
