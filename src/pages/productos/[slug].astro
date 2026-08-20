@@ -45,7 +45,19 @@ const specs = [
       <div class="mt-6 grid md:grid-cols-2 gap-10 items-start">
         <div class="rounded-2xl overflow-hidden shadow-lg md:sticky md:top-28 relative">
           {image ? (
-            <Image src={image} alt={name} class="w-full aspect-[4/5] object-cover" />
+            <>
+              <Image src={image} alt={name} class="w-full aspect-[4/5] object-cover" />
+              <button
+                type="button"
+                id="product-image-zoom-trigger"
+                class="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-sm px-3.5 py-2 text-xs font-semibold text-deep-800 shadow-sm hover:bg-white transition-colors"
+                aria-haspopup="dialog"
+                aria-controls="product-image-lightbox"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                Ampliar imagen
+              </button>
+            </>
           ) : (
             <div class="w-full aspect-[4/5] flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-50 via-white to-spirit-50">
               <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-sm">
@@ -129,6 +141,28 @@ const specs = [
     </div>
   </article>
 
+  {image && (
+    <div
+      id="product-image-lightbox"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Imagen ampliada de ${name}`}
+    >
+      <div class="relative max-w-2xl w-full max-h-[80vh] bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <button
+          type="button"
+          id="product-image-lightbox-close"
+          class="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-deep-800 shadow-sm hover:bg-white transition-colors"
+          aria-label="Cerrar imagen ampliada"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <Image src={image} alt={name} class="w-full max-h-[80vh] object-contain" />
+      </div>
+    </div>
+  )}
+
   <script>
     const description = document.getElementById('product-description');
     const toggle = document.getElementById('product-description-toggle');
@@ -143,6 +177,35 @@ const specs = [
         toggle.setAttribute('aria-expanded', String(expanded));
         toggle.querySelector('span')!.textContent = expanded ? 'Ver menos' : 'Ver más';
         toggle.querySelector('svg')!.classList.toggle('rotate-180', expanded);
+      });
+    }
+
+    const lightbox = document.getElementById('product-image-lightbox');
+    const zoomTrigger = document.getElementById('product-image-zoom-trigger');
+    const closeButton = document.getElementById('product-image-lightbox-close');
+
+    if (lightbox && zoomTrigger && closeButton) {
+      const openLightbox = () => {
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+        closeButton.focus();
+      };
+
+      const closeLightbox = () => {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+        zoomTrigger.focus();
+      };
+
+      zoomTrigger.addEventListener('click', openLightbox);
+      closeButton.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox();
       });
     }
   </script>
