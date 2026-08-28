@@ -4,7 +4,9 @@
   "price": 310,
   "image": "../../assets/images/products/triphala suplementos alimenticio capsulas 410 mg/image.png",
   "category": "Suplementos",
-  "benefits": [],
+  "benefits": [
+    "Triphala compuesto poliherbal  ayuda a equilibrar dosha Vata, mejora y equilibra la función intestinal y la macrobiota  ademas tiene propiedades antiinflamatorias, antioxidantes, adaptógenas e inmunitarias. "
+  ],
   "isAvailable": true,
   "orderIndex": 1
 }
