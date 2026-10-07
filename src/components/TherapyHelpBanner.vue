@@ -182,7 +182,6 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
 
 .therapy-help-banner__cta-primary:hover {
   background-color: color-mix(in oklch, var(--color-whatsapp-strong) 85%, black);
-  transform: translateY(-1px);
 }
 
 .therapy-help-banner__cta-secondary {

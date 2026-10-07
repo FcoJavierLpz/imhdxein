@@ -64,7 +64,7 @@
 
           <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight">
             {{ slides[current].title }}
-            <span class="block chakra-gradient-text">{{ slides[current].subtitle }}</span>
+            <span class="block headline-accent">{{ slides[current].subtitle }}</span>
           </p>
 
           <p class="mt-6 text-lg md:text-xl text-deep-300 max-w-xl leading-relaxed">

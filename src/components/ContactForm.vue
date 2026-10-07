@@ -20,6 +20,13 @@ const props = defineProps<{ therapies: Therapy[] }>();
 const activeTab = ref<'appointment' | 'contact'>('appointment');
 const activeChakra = ref<number | null>(null);
 
+// Con ratón el panel ya se abrió al pasar por encima: el clic no debe cerrarlo. Con teclado
+// (pointerType vacío) o táctil, el clic alterna abrir/cerrar.
+const toggleChakra = (i: number, event: MouseEvent) => {
+  const pointerType = (event as PointerEvent).pointerType;
+  activeChakra.value = pointerType === 'mouse' || activeChakra.value !== i ? i : null;
+};
+
 const chakraDays = [
   {
     letter: 'L', day: 'Lunes', chakra: 'Chakra Raíz (Muladhara)',
@@ -281,7 +288,7 @@ const handleContact = async () => {
                 aria-controls="chakra-day-detail"
                 @pointerenter="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = i; }"
                 @pointerleave="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = null; }"
-                @click="activeChakra = activeChakra === i ? null : i"
+                @click="(e: MouseEvent) => toggleChakra(i, e)"
               >
                 <div
                   class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
@@ -296,8 +303,8 @@ const handleContact = async () => {
             <Transition name="chakra-detail">
               <div
                 v-if="activeChakra !== null"
-                class="mt-4 rounded-xl p-4 text-sm leading-relaxed border-l-4 bg-white/60"
-                :style="`border-color: ${chakraDays[activeChakra].color}`"
+                class="mt-4 rounded-xl p-4 text-sm leading-relaxed border bg-white/60"
+                :style="`border-color: ${chakraDays[activeChakra].color}55`"
               >
                 <div class="flex items-center gap-2 mb-1">
                   <span

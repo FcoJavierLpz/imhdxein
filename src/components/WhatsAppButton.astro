@@ -100,7 +100,8 @@ const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURICom
     border-radius: 9999px;
     background-color: var(--color-whatsapp);
     z-index: 0;
-    animation: wa-pulse 2.2s ease-out infinite;
+    /* Tres pulsos para señalar el botón al llegar; después queda quieto. */
+    animation: wa-pulse 2.2s ease-out 3;
   }
 
   @keyframes wa-pulse {
