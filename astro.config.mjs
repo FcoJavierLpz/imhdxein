@@ -1,6 +1,6 @@
 import vue from '@astrojs/vue';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 
 import react from '@astrojs/react';
 import markdoc from '@astrojs/markdoc';
@@ -43,6 +43,31 @@ export default defineConfig({
       chunkSizeWarningLimit: 3000,
     },
   },
+
+  // Fuentes alojadas en el propio sitio (Fontsource se descarga al compilar). Las variables
+  // --font-inter y --font-gelasio incluyen un fallback con métricas ajustadas para evitar saltos.
+  // Gelasio tiene las mismas métricas que Georgia: los titulares conservan su carácter y ahora
+  // se ven igual en Android y Linux, que no traen Georgia.
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: 'Inter',
+      cssVariable: '--font-inter',
+      weights: ['400 700'],
+      styles: ['normal', 'italic'],
+      subsets: ['latin'],
+      fallbacks: ['system-ui', 'sans-serif'],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: 'Gelasio',
+      cssVariable: '--font-gelasio',
+      weights: ['400 700'],
+      styles: ['normal', 'italic'],
+      subsets: ['latin'],
+      fallbacks: ['Georgia', 'serif'],
+    },
+  ],
 
   adapter: netlify(),
 });

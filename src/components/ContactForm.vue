@@ -286,7 +286,7 @@ const handleContact = async () => {
                   class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
                   :style="`background-color: ${c.color}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
                 >{{ c.letter }}</div>
-                <span class="text-[9px] text-deep-400 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
+                <span class="text-[11px] text-deep-500 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
               </button>
             </div>
 

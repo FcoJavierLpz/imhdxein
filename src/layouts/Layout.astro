@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import {
   CONTACT_ADDRESS_CITY,
   CONTACT_ADDRESS_COUNTRY_CODE,
@@ -32,6 +33,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Solo se precarga el estilo normal; la cursiva se descarga si una página la usa. -->
+    <Font cssVariable="--font-inter" preload={[{ style: 'normal' }]} />
+    <Font cssVariable="--font-gelasio" preload={[{ style: 'normal' }]} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
