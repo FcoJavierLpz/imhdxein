@@ -187,8 +187,7 @@ const restart = () => {
     <div class="container-custom max-w-3xl">
       <!-- INTRO -->
       <div v-if="step === 'intro'" class="text-center animate-fade-in">
-        <span class="text-brand-700 text-sm font-semibold tracking-wider uppercase">Antes de comenzar</span>
-        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tres energías, una sola tú
         </h2>
         <p class="mt-5 text-deep-500 leading-relaxed max-w-xl mx-auto">
@@ -348,8 +347,7 @@ const restart = () => {
 
       <!-- RESULT -->
       <div v-else-if="step === 'result' && resultProfile" class="animate-fade-in text-center">
-        <span class="text-brand-700 text-sm font-semibold tracking-wider uppercase">Tu resultado</span>
-        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tu dosha dominante es <span :style="`color:${resultProfile.color}`">{{ resultProfile.title }}</span>
         </h2>
         <p class="mt-2 text-deep-500 text-sm">{{ resultProfile.element }} — {{ resultProfile.tagline }}</p>

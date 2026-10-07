@@ -183,10 +183,12 @@ Una paleta cálida de tierra y oro, con la escala chakra reservada como firma de
 - **Title** (600–700, 18–20px, 1.375): títulos de tarjetas, pasos y bloques.
 - **Body** (400, 16px, 1.625): texto general. En artículos, 18px con columna de 40rem (unas 69 letras por línea).
 - **Lead** (400, 18–20px, 1.625): entradilla bajo los títulos de hero y de sección.
-- **Label** (600–700, 12–14px, tracking 0.05–0.1em, mayúsculas): etiquetas de sección, categorías y metadatos. Nunca por debajo de 12px.
+- **Label** (500–700, 12–14px, tracking 0.05–0.1em, mayúsculas): categorías, metadatos y rótulos de datos (Teléfono, Formación académica, Paso 1). Nunca encima de un título como antetítulo. Nunca por debajo de 12px.
 
 ### Named Rules
 **The Italic Accent Rule.** El énfasis dentro de un titular de hero es una palabra en Gelasio cursiva color gold-glow ("Artículos de *bienestar*"). Nunca texto con degradado.
+
+**The Heading Speaks Rule.** Ningún título lleva antetítulo en mayúsculas ("NUESTRO EQUIPO" sobre "Terapeutas certificados"). Si el título necesita contexto, se reescribe el título o la entradilla.
 
 **The 12px Floor Rule.** Ningún texto legible baja de 12px; la excepción es la línea "Medicina Integrativa" del logotipo.
 
@@ -248,7 +250,7 @@ Barra superior pegajosa sobre blanco al 95%, que al hacer scroll gana desenfoque
 Franja de 6px con el degradado de los siete chakras, colocada una sola vez bajo el hero de cada página. Es la firma visual del instituto.
 
 ### Hero de página
-Banda oscura con fotografía o degradado de color con velo, etiqueta en mayúsculas en un tono claro, titular Gelasio blanco con una palabra de énfasis en cursiva gold-glow, y entradilla en un neutro claro. Si el degradado tiene transparencia, la sección lleva fondo night-earth para no mezclarse con blanco.
+Banda oscura con fotografía o degradado de color con velo, titular Gelasio blanco con una palabra de énfasis en cursiva gold-glow, y entradilla en un neutro claro. Si el degradado tiene transparencia, la sección lleva fondo night-earth para no mezclarse con blanco.
 
 ## Do's and Don'ts
 
@@ -266,4 +268,5 @@ Banda oscura con fotografía o degradado de color con velo, etiqueta en mayúscu
 - **Don't** elevar elementos al pasar el ratón ni usar animaciones en bucle infinito.
 - **Don't** usar bordes laterales gruesos de color en tarjetas, avisos o paneles.
 - **Don't** bajar de 12px en texto legible.
+- **Don't** poner antetítulos en mayúsculas sobre los títulos de sección o de hero.
 - **Don't** repetir la barra chakra varias veces seguidas.
