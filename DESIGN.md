@@ -181,7 +181,7 @@ Una paleta cálida de tierra y oro, con la escala chakra reservada como firma de
 - **Display** (700, de 36 a 72px, 1.25): titular del carrusel de la portada.
 - **Headline** (700, de 30 a 48px, 1.25): títulos de página en los heroes (`text-4xl md:text-5xl`) y de sección (`text-3xl md:text-4xl`).
 - **Title** (600–700, 18–20px, 1.375): títulos de tarjetas, pasos y bloques.
-- **Body** (400, 16px, 1.625): texto general. En artículos, 18px con columna de 40rem (unas 69 letras por línea).
+- **Body** (400, 16px, 1.625): texto general. En artículos, 18px dentro de la columna única del artículo (56rem).
 - **Lead** (400, 18–20px, 1.625): entradilla bajo los títulos de hero y de sección.
 - **Label** (500–700, 12–14px, tracking 0.05–0.1em, mayúsculas): categorías, metadatos y rótulos de datos (Teléfono, Formación académica, Paso 1). Nunca encima de un título como antetítulo. Nunca por debajo de 12px.
 
@@ -194,7 +194,7 @@ Una paleta cálida de tierra y oro, con la escala chakra reservada como firma de
 
 ## Layout
 
-Contenedor centrado de 80rem (`max-w-7xl`) con 1rem de margen lateral, ampliado a 1.5–2rem en pantallas medianas y grandes. Las secciones usan 5rem de margen vertical. Los textos de introducción se limitan a 42–48rem y la prosa de artículos a 40rem.
+Contenedor centrado de 80rem (`max-w-7xl`) con 1rem de margen lateral, ampliado a 1.5–2rem en pantallas medianas y grandes. Las secciones usan 5rem de margen vertical. Los textos de introducción se limitan a 42–48rem. Los artículos del blog usan una única columna de 56rem para todos sus bloques.
 
 Puntos de quiebre de Tailwind: 640, 768, 1024 y 1280px. La navegación completa aparece desde 1024px; por debajo, menú desplegable. Las rejillas de tarjetas van de 1 columna en móvil a 2, 3 o 4 en escritorio. En móvil los controles del carrusel forman una fila bajo los CTA para no tapar el texto.
 
@@ -259,7 +259,7 @@ Banda oscura con fotografía o degradado de color con velo, titular Gelasio blan
 - **Do** elegir el gris de texto según la superficie (Surface-Specific Gray Rule) y comprobar 4.5:1 en texto normal y 3:1 en texto grande e iconos.
 - **Do** mantener objetivos táctiles de al menos 44 × 44px y foco visible en todo control.
 - **Do** dar a todo carrusel o movimiento automático un control de pausa y respetar `prefers-reduced-motion`.
-- **Do** limitar la prosa larga a unas 70 letras por línea (40rem a 18px).
+- **Do** mantener el artículo del blog como una sola columna uniforme (56rem): imagen, título, audio, texto y compartir comparten el mismo ancho y borde.
 - **Do** reservar la barra chakra para debajo del hero, una vez por página.
 
 ### Don't:

@@ -4,23 +4,49 @@ export const prerender = true;
 import MainLayout from '../../layouts/MainLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
+import { readingMinutes } from '../../lib/readingTime';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blogPosts', ({ data }) => data.isPublished);
+  // Del más reciente al más antiguo, igual que el listado del blog.
+  const posts = (await getCollection('blogPosts', ({ data }) => data.isPublished)).sort(
+    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+  );
 
   return await Promise.all(
-    posts.map(async (post) => {
+    posts.map(async (post, i) => {
       const { Content } = await render(post);
+      // "Sigue leyendo": el artículo siguiente (más reciente) y el anterior (más antiguo).
+      const neighbors = [posts[i - 1], posts[i + 1]].filter((p) => p !== undefined);
       return {
         params: { slug: post.id },
-        props: { post, Content },
+        props: { post, Content, neighbors, minutes: readingMinutes(post.body ?? '') },
       };
     })
   );
 }
 
-const { post, Content } = Astro.props;
+const { post, Content, neighbors, minutes } = Astro.props;
 const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const articleUrl = new URL(`/blog/${post.id}`, Astro.site).toString();
+const shareText = `${post.data.title} — IMHDXEIN`;
+const shareLinks = [
+  {
+    name: 'WhatsApp',
+    href: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${articleUrl}`)}`,
+    icon: '<path fill="currentColor" stroke="none" d="M12.04 2a9.9 9.9 0 0 0-8.47 15.02L2 22l5.1-1.53A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.03.9.9-2.95-.2-.31a8.2 8.2 0 1 1 6.81 3.69Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.32-2.9c-.25-.43.25-.4.71-1.33.08-.16.04-.3-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.68c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.15-1.17-.06-.1-.22-.16-.47-.28Z"/>',
+  },
+  {
+    name: 'X',
+    href: `https://x.com/intent/post?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(articleUrl)}`,
+    icon: '<path fill="currentColor" stroke="none" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.19L2 3h6.33l4.37 5.77L17.75 3Zm-1.08 16.18h1.7L7.42 4.73H5.6l11.07 14.45Z"/>',
+  },
+  {
+    name: 'LinkedIn',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`,
+    icon: '<path fill="currentColor" stroke="none" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/>',
+  },
+];
 ---
 
 <MainLayout
@@ -28,17 +54,22 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
   description={post.data.excerpt}
   image={post.data.image.src}
 >
+  <!-- Progreso de lectura: decorativo para lectores de pantalla (el contenido ya es navegable). -->
+  <div class="fixed inset-x-0 top-0 z-[60] h-[3px] pointer-events-none" aria-hidden="true">
+    <div id="reading-progress" class="h-full origin-left bg-brand-500" style="transform: scaleX(0)"></div>
+  </div>
   <div class="h-1.5 chakra-gradient"></div>
-  <article class="section-padding bg-white">
+  <article class="section-padding !pb-12 bg-white">
     <div class="container-custom max-w-4xl">
       <a href="/blog" class="text-brand-600 hover:text-brand-700 font-medium text-sm mb-8 inline-flex items-center gap-1 py-2"><span aria-hidden="true">&larr;</span> Volver al blog</a>
       <div class="rounded-2xl overflow-hidden mb-8 shadow-lg">
         <Image src={post.data.image} alt={post.data.title} class="w-full h-72 md:h-96 object-cover" />
       </div>
       <h1 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-deep-900 leading-tight">{post.data.title}</h1>
-      <div class="mt-4 flex items-center gap-4 text-deep-500 text-sm">
+      <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-deep-500 text-sm">
         <span class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> {post.data.author}</span>
         <span class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> {formatDate(post.data.publishedAt)}</span>
+        <span class="flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> {minutes} min de lectura</span>
       </div>
       {post.data.audio?.discriminant && post.data.audio.value && (
         <div class="mt-8 flex items-center gap-4 rounded-2xl border border-brand-100 bg-brand-50/60 p-5">
@@ -59,11 +90,66 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
           </div>
         </div>
       )}
-      <div class="protected-content mt-8 prose prose-lg max-w-none text-deep-700 leading-relaxed">
+      <div id="article-body" class="protected-content mt-8 prose prose-lg max-w-none text-deep-700 leading-relaxed">
         <Content />
       </div>
+
+      <!-- Compartir: al final, cuando el lector ya sabe si el artículo le sirvió. -->
+      <section class="mt-14 border-t border-deep-100 pt-8" aria-labelledby="share-heading">
+        <h2 id="share-heading" class="font-heading text-xl font-bold text-deep-900">Comparte este artículo</h2>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            id="copy-link"
+            data-url={articleUrl}
+            class="inline-flex min-h-11 items-center gap-2 rounded-full border border-deep-200 bg-white px-4 text-sm font-medium text-deep-700 transition-colors hover:border-brand-500 hover:text-brand-700"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span data-copy-label>Copiar enlace</span>
+          </button>
+          {shareLinks.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex min-h-11 items-center gap-2 rounded-full border border-deep-200 bg-white px-4 text-sm font-medium text-deep-700 transition-colors hover:border-brand-500 hover:text-brand-700"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" set:html={link.icon} />
+              {link.name}<span class="sr-only"> (se abre en una pestaña nueva)</span>
+            </a>
+          ))}
+        </div>
+        <p id="copy-status" class="sr-only" aria-live="polite"></p>
+      </section>
     </div>
   </article>
+
+  <!-- Sigue leyendo -->
+  <nav class="section-padding !pt-0 bg-white" aria-labelledby="more-heading">
+    <div class="container-custom max-w-4xl border-t border-deep-100 pt-12">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        <h2 id="more-heading" class="font-heading text-2xl md:text-3xl font-bold text-deep-900">Sigue leyendo</h2>
+        <a href="/blog" class="inline-flex items-center gap-1 py-2 text-sm font-semibold text-brand-600 hover:text-brand-700">
+          Ver todos los artículos <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+      {neighbors.length > 0 && (
+        <ul class="mt-8 grid gap-6 sm:grid-cols-2">
+          {neighbors.map((next) => (
+            <li>
+              <a href={`/blog/${next.id}`} class="card group flex h-full flex-col">
+                <Image src={next.data.image} alt="" widths={[400, 640]} sizes="(min-width: 640px) 432px, 100vw" class="h-44 w-full object-cover" />
+                <span class="flex flex-1 flex-col p-5">
+                  <time datetime={next.data.publishedAt.toISOString()} class="text-xs text-deep-500">{formatDate(next.data.publishedAt)}</time>
+                  <span class="mt-1 font-heading text-lg font-semibold leading-snug text-deep-800 transition-colors group-hover:text-brand-700">{next.data.title}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </nav>
 </MainLayout>
 
 <style>
@@ -87,6 +173,25 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
     -moz-user-select: auto;
     -ms-user-select: auto;
     -webkit-touch-callout: default;
+  }
+
+  /*
+    Texto justificado para un bloque de lectura uniforme. La separación silábica en español
+    (<html lang="es">) evita huecos grandes entre palabras. En móvil (< 640px) se mantiene la
+    alineación a la izquierda: con tan pocas palabras por línea el justificado abriría
+    espacios muy desiguales incluso con guiones.
+  */
+  .protected-content :global(p),
+  .protected-content :global(li) {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+  @media (min-width: 640px) {
+    .protected-content :global(p),
+    .protected-content :global(li) {
+      text-align: justify;
+      text-justify: inter-word;
+    }
   }
 </style>
 
@@ -114,4 +219,60 @@ const formatDate = (date: Date) => date.toLocaleDateString('es-MX', { year: 'num
   }
 
   initContentProtection();
+
+  // Progreso de lectura medido sobre el cuerpo del artículo, no sobre toda la página.
+  const progress = document.getElementById('reading-progress');
+  const body = document.getElementById('article-body');
+  if (progress && body) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = body.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const ratio = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : rect.top <= 0 ? 1 : 0;
+      progress.style.transform = `scaleX(${ratio})`;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+
+  // Copiar enlace con confirmación visible y anunciada (aria-live).
+  const copyButton = document.getElementById('copy-link');
+  const copyLabel = copyButton?.querySelector<HTMLElement>('[data-copy-label]');
+  const copyStatus = document.getElementById('copy-status');
+  let resetTimer: ReturnType<typeof setTimeout> | undefined;
+  copyButton?.addEventListener('click', async () => {
+    const url = copyButton.dataset.url ?? window.location.href;
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(url);
+      copied = true;
+    } catch {
+      // Sin acceso al portapapeles (contexto no seguro o permiso denegado): copia clásica.
+      const field = document.createElement('textarea');
+      field.value = url;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.append(field);
+      field.select();
+      copied = document.execCommand('copy');
+      field.remove();
+    }
+    const message = copied ? '¡Copiado!' : 'No se pudo copiar';
+    if (copyLabel) copyLabel.textContent = message;
+    if (copyStatus) copyStatus.textContent = copied ? 'Enlace copiado al portapapeles' : 'No se pudo copiar el enlace';
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => {
+      if (copyLabel) copyLabel.textContent = 'Copiar enlace';
+      if (copyStatus) copyStatus.textContent = '';
+    }, 2500);
+  });
 </script>
