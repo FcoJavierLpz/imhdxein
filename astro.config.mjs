@@ -7,6 +7,7 @@ import markdoc from '@astrojs/markdoc';
 import netlify from '@astrojs/netlify';
 import keystatic from '@keystatic/astro';
 import sitemap from '@astrojs/sitemap';
+import { readdirSync, readFileSync } from 'node:fs';
 
 /**
  * @vitejs/plugin-vue compila los SFC con `lang="ts"` pasando la config global `oxc` de Vite,
@@ -26,12 +27,40 @@ function disableReactRefreshForVue() {
   };
 }
 
+/**
+ * Fecha de publicación de cada artículo (frontmatter `publishedAt` de Keystatic), para el
+ * <lastmod> del sitemap: ayuda a que los buscadores rastreen antes los artículos nuevos.
+ * La clave es el slug del archivo, el mismo id que usa la ruta /blog/[slug].
+ */
+const BLOG_DIR = './src/content/blogPosts';
+const blogPublishedAt = Object.fromEntries(
+  readdirSync(BLOG_DIR)
+    .filter((file) => file.endsWith('.mdoc'))
+    .map((file) => {
+      const match = readFileSync(`${BLOG_DIR}/${file}`, 'utf8').match(/^publishedAt:\s*['"]?([\d-]+)/m);
+      return [file.replace(/\.mdoc$/, '').toLowerCase(), match?.[1]];
+    })
+    .filter(([, date]) => date)
+);
+
 export default defineConfig({
   site: 'https://imhdxein.org.mx',
   output: 'server',
   // react() es requerido por el panel de administración de Keystatic
   // (renderiza su UI con `client:only="react"`), aunque no haya componentes .tsx propios.
-  integrations: [vue(), react(), markdoc(), keystatic(), sitemap()],
+  integrations: [
+    vue(),
+    react(),
+    markdoc(),
+    keystatic(),
+    sitemap({
+      serialize(item) {
+        const slug = item.url.match(/\/blog\/([^/]+)\/?$/)?.[1];
+        if (slug && blogPublishedAt[slug]) item.lastmod = new Date(blogPublishedAt[slug]).toISOString();
+        return item;
+      },
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss(), disableReactRefreshForVue()],

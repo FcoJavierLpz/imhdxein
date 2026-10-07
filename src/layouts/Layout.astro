@@ -1,5 +1,7 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Font } from 'astro:assets';
+import { metaDescription, OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH, ogImageUrl } from '../lib/seo';
 import {
   CONTACT_ADDRESS_CITY,
   CONTACT_ADDRESS_COUNTRY_CODE,
@@ -11,20 +13,43 @@ import {
 } from '../constants/contact';
 
 export interface Props {
+  /** Título de la página sin la marca: el layout añade " | IMHDXEIN". Sin título, se usa el de la portada. */
   title?: string;
   description?: string;
-  image?: string;
+  /** Imagen importada (astro:assets); se recorta a 1200×630 para redes sociales. */
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Artículos del blog: og:type "article" con fecha de publicación y autor. */
+  article?: { publishedTime: Date; author: string };
 }
 
-const siteName = "IMHDXEIN - Instituto de Medicina Holística Dxein";
+const siteName = 'IMHDXEIN - Instituto de Medicina Holística Dxein';
+const BRAND_SUFFIX = ' | IMHDXEIN';
+const TITLE_MAX = 60;
 
 const {
-  title = `${siteName} | Terapias, Productos y Citas`,
-  description = `${siteName}. Medicina integrativa en Guadalajara: consulta médica integrativa, nutrición, Reiki, alineación de chakras y constelaciones familiares. Agenda tu consulta.`,
-  image = "https://imhdxein.org.mx/og-image.jpg",
+  title,
+  description = 'Medicina integrativa y holística en Guadalajara: consulta médica integrativa, nutrición, Reiki, alineación de chakras y constelaciones familiares.',
+  image,
+  imageAlt,
+  article,
 } = Astro.props;
 
+// La marca se añade si cabe en los 60 caracteres que Google muestra; los nombres largos de
+// productos o artículos (de Keystatic) se dejan completos antes que recortarlos.
+const fullTitle = !title
+  ? 'IMHDXEIN | Medicina integrativa y holística en Guadalajara'
+  : `${title}${BRAND_SUFFIX}`.length <= TITLE_MAX
+    ? `${title}${BRAND_SUFFIX}`
+    : title;
+const metaDesc = metaDescription(description);
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+// La imagen por defecto ya está recortada a 1200×630 en public/og-image.jpg.
+const ogImage = image
+  ? await ogImageUrl(image, Astro.site!)
+  : new URL('/og-image.jpg', Astro.site).toString();
+const ogImageAlt = imageAlt ?? title ?? siteName;
 ---
 
 
@@ -38,33 +63,36 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <Font cssVariable="--font-gelasio" preload={[{ style: 'normal' }]} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta name="keywords" content="medicina integrativa, medicina holística, consulta médica integrativa, Reiki, alineación de chakras, constelaciones familiares, flores de bach, IMHDXEIN, Guadalajara" />
-    <meta name="author" content="IMHDXEIN" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDesc} />
+    <meta name="author" content={article?.author ?? 'IMHDXEIN'} />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDesc} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.publishedTime.toISOString()} />}
+    {article && <meta property="article:author" content={article.author} />}
     <meta property="og:locale" content="es_MX" />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:url" content={canonicalURL} />
     
-    <!-- Imagen OG Optimizada -->
-    <meta property="og:image" content={image} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <!-- Imagen para redes: siempre absoluta, JPEG de 1200×630 (dimensiones reales, no supuestas) -->
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
     <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content={ogImageAlt} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDesc} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <!-- Structured Data: MedicalOrganization -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -83,6 +111,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         "addressCountry": CONTACT_ADDRESS_COUNTRY_CODE
       }
     })} />
+    <!-- Datos estructurados propios de cada página (p. ej. BlogPosting). -->
+    <slot name="head" />
   </head>
   <body>
     <slot />

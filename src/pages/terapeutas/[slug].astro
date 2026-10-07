@@ -41,9 +41,10 @@ const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP_PHONE}?text=${encodeURICom
 ---
 
 <MainLayout
-  title={`${displayName} - Equipo IMHDXEIN`}
+  title={displayName}
   description={`${displayTitle} · ${specialty}. Conoce la formación y trayectoria de ${displayName} en IMHDXEIN, Instituto de Medicina Holística.`}
-  image={image?.src}
+  image={image}
+  imageAlt={displayName}
 >
   <div class="h-1.5 chakra-gradient"></div>
   <article class="section-padding bg-white">
