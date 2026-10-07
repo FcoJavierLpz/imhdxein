@@ -33,7 +33,7 @@
           </div>
         </div>
 
-        <div ref="detailEl" id="therapy-detail" class="lg:col-span-2 scroll-mt-28" tabindex="-1">
+        <div ref="detailEl" id="therapy-detail" class="lg:col-span-2 scroll-mt-28 focus-visible:outline-none" tabindex="-1">
           <div v-if="selected" class="animate-fade-in">
             <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8 bg-deep-50 border border-deep-100">
               <img
@@ -69,7 +69,19 @@
                 <div v-else class="whitespace-pre-line" :class="{ 'min-h-[0.75rem]': seg.text.trim() === '' }">{{ seg.text }}</div>
               </template>
             </div>
-            <div class="mt-8">
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind -->
+              <a
+                v-if="selected.protocol"
+                :href="selected.protocol.href"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-outline inline-flex items-center gap-2 text-left"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                <span>{{ selected.protocol.label }} <span class="text-sm font-normal">(PDF)</span></span>
+              </a>
               <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (template literal) -->
               <a :href="`/contacto?therapy=${encodeURIComponent(selected.id)}`" class="btn-primary inline-flex items-center gap-2">
                 Solicitar terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -97,6 +109,7 @@ interface Therapy {
   price: number | null;
   icon: string;
   image?: ResponsiveImage;
+  protocol?: { href: string; label: string } | null;
 }
 
 

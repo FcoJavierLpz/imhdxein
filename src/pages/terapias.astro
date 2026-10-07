@@ -8,6 +8,15 @@ import MainLayout from '../layouts/MainLayout.astro';
 import { toResponsiveImage } from '../lib/images';
 import { toTitleCase } from '../lib/text';
 
+// Protocolos descargables por terapia (clave = id de la terapia en Keystatic). Los PDF viven en
+// public/docs/ y se sirven desde la raíz del sitio, por eso la ruta empieza en /docs/.
+const protocols: Record<string, { href: string; label: string }> = {
+  'alineacion-de-chakras': {
+    href: '/docs/protocolo-alineacion-chakras.pdf',
+    label: 'Descargar protocolo de alineación',
+  },
+};
+
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
 
@@ -20,6 +29,7 @@ const therapies = await Promise.all(
     // La imagen ocupa como máximo 2/3 del contenedor (≈830px) en desktop.
     image: await toResponsiveImage(t.data.image, [480, 800, 1200, 1600]),
     price: t.data.price ?? null,
+    protocol: protocols[t.id] ?? null,
   }))
 );
 ---
