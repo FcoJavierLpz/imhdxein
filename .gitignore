@@ -35,3 +35,4 @@ pnpm-debug.log*
 .netlify
 .clinerules
 .claude/
+.impeccable
