@@ -274,20 +274,24 @@ const handleContact = async () => {
                 type="button"
                 v-for="(c, i) in chakraDays"
                 :key="i"
-                class="flex-1 flex flex-col items-center gap-1 group focus:outline-none"
-                @mouseenter="activeChakra = i"
-                @mouseleave="activeChakra = null"
+                class="flex-1 flex flex-col items-center gap-1 py-1 rounded-lg group"
+                :aria-label="`${c.day}: ${c.chakra}`"
+                :aria-expanded="activeChakra === i"
+                aria-controls="chakra-day-detail"
+                @pointerenter="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = i; }"
+                @pointerleave="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = null; }"
                 @click="activeChakra = activeChakra === i ? null : i"
               >
                 <div
                   class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
                   :style="`background-color: ${c.color}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
                 >{{ c.letter }}</div>
-                <span class="text-[9px] text-deep-400 leading-none hidden sm:block">{{ c.day.slice(0, 3) }}</span>
+                <span class="text-[9px] text-deep-400 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
               </button>
             </div>
 
             <!-- Detail panel -->
+            <div id="chakra-day-detail" aria-live="polite">
             <Transition name="chakra-detail">
               <div
                 v-if="activeChakra !== null"
@@ -304,16 +308,17 @@ const handleContact = async () => {
                 <p class="text-deep-500">{{ chakraDays[activeChakra].description }}</p>
               </div>
             </Transition>
+            </div>
           </div>
 
         </div>
 
         <div id="request-form-container" class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
-            <button type="button" @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+            <button type="button" @click="activeTab = 'appointment'" :aria-pressed="activeTab === 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
             </button>
-            <button type="button" @click="activeTab = 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+            <button type="button" @click="activeTab = 'contact'" :aria-pressed="activeTab === 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
             </button>
 

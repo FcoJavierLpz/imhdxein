@@ -4,15 +4,19 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import ProductShop from '../components/ProductShop.vue';
 import { getCollection } from 'astro:content';
+import { toResponsiveImage } from '../lib/images';
 
 const productEntries = (await getCollection('products'))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
 
-const products = productEntries.map((p) => ({
-  id: p.id,
-  ...p.data,
-  image: p.data.image?.src,
-}));
+const products = await Promise.all(
+  productEntries.map(async (p) => ({
+    id: p.id,
+    ...p.data,
+    // Tarjetas de 1 a 4 columnas: ≈300px en desktop, ancho completo en móvil.
+    image: await toResponsiveImage(p.data.image, [320, 480, 640, 960]),
+  }))
+);
 
 ---
 

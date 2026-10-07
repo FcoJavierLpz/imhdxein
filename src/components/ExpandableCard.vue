@@ -33,6 +33,7 @@ const toggle = () => {
       :id="contentId"
       class="expandable-panel"
       :class="{ 'expandable-panel--open': expanded }"
+      :inert="!expanded"
     >
       <div class="expandable-panel__inner">
         <p class="text-deep-600 text-sm leading-relaxed mt-2">{{ props.rest }}</p>
@@ -86,7 +87,9 @@ const toggle = () => {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  margin-top: 0.75rem;
+  /* 44px de área táctil sin cambiar el ritmo visual: el margen absorbe el alto extra. */
+  min-height: 2.75rem;
+  margin-top: 0.125rem;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-brand-600, #b8880e);

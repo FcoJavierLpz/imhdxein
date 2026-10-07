@@ -5,18 +5,21 @@ import { getCollection } from 'astro:content';
 import TherapySelector from '../components/TherapySelector.vue';
 import TherapyHelpBanner from '../components/TherapyHelpBanner.vue';
 import MainLayout from '../layouts/MainLayout.astro';
+import { toResponsiveImage } from '../lib/images';
 
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
 
-const therapies = therapyEntries.map((t) => ({
-  id: t.id,
-  slug: t.id,
-  ...t.data,
-  image: t.data.image?.src,
-
-  price: t.data.price ?? null,
-}));
+const therapies = await Promise.all(
+  therapyEntries.map(async (t) => ({
+    id: t.id,
+    slug: t.id,
+    ...t.data,
+    // La imagen ocupa como máximo 2/3 del contenedor (≈830px) en desktop.
+    image: await toResponsiveImage(t.data.image, [480, 800, 1200, 1600]),
+    price: t.data.price ?? null,
+  }))
+);
 ---
 
 <MainLayout

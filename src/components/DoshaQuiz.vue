@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { actions, isInputError } from 'astro:actions';
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { doshaProfiles } from '../lib/dosha/doshaProfiles';
 import type { Dosha } from '../lib/dosha/questions';
 import { doshaQuestions } from '../lib/dosha/questions';
@@ -32,6 +32,15 @@ const totalQuestions = doshaQuestions.length;
 const currentQuestion = computed(() => doshaQuestions[currentIndex.value]);
 const progressPercent = computed(() => Math.round(((currentIndex.value) / totalQuestions) * 100));
 const isLastQuestion = computed(() => currentIndex.value === totalQuestions - 1);
+
+// Al avanzar o retroceder, el foco pasa a la nueva pregunta para que el lector de
+// pantalla la anuncie y el teclado no se quede en un botón que cambió de contexto.
+const questionHeading = ref<HTMLElement | null>(null);
+watch(currentIndex, async () => {
+  if (step.value !== 'quiz') return;
+  await nextTick();
+  questionHeading.value?.focus();
+});
 const canGoNext = computed(() => !!currentQuestion.value && !!answers.value[currentQuestion.value.id]);
 
 const validateEmail = (value: string) => emailSchema.safeParse(value).success;
@@ -244,20 +253,28 @@ const restart = () => {
             <span>Pregunta {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
             <span>{{ progressPercent }}%</span>
           </div>
-          <div class="h-2 rounded-full bg-deep-100 overflow-hidden">
+          <div
+            class="h-2 rounded-full bg-deep-100 overflow-hidden"
+            role="progressbar"
+            aria-label="Progreso del test"
+            :aria-valuenow="progressPercent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
             <div class="h-full chakra-gradient transition-all duration-300" :style="`width: ${progressPercent}%`"></div>
           </div>
         </div>
 
         <p class="text-brand-500 text-xs font-semibold tracking-wider uppercase mb-2">{{ currentQuestion?.category }}</p>
-        <h2 class="text-2xl font-heading font-bold text-deep-900 mb-8">{{ currentQuestion?.question }}</h2>
+        <h2 ref="questionHeading" tabindex="-1" class="text-2xl font-heading font-bold text-deep-900 mb-8 focus:outline-none">{{ currentQuestion?.question }}</h2>
 
-        <div class="space-y-3">
+        <div class="space-y-3" role="group" :aria-label="currentQuestion?.question">
           <button
             type="button"
             v-for="opt in currentQuestion?.options"
             :key="opt.dosha"
             class="w-full text-left p-4 rounded-xl border-2 transition-all duration-200"
+            :aria-pressed="answers[currentQuestion!.id] === opt.dosha"
             :class="answers[currentQuestion!.id] === opt.dosha
               ? 'border-brand-500 bg-brand-50'
               : 'border-deep-100 hover:border-brand-200 hover:bg-deep-50'"

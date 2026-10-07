@@ -87,6 +87,25 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
+
+  /* Foco visible para navegación con teclado. brand-700 supera 3:1 sobre blanco y
+     sobre deep-900; las secciones oscuras o saturadas cambian a un anillo claro con .on-dark. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring, var(--color-brand-700));
+    outline-offset: 3px;
+  }
+  .on-dark {
+    --focus-ring: var(--color-brand-300);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .animate-float {
+      animation: none;
+    }
+  }
 }
 
 @layer components {
@@ -129,12 +148,18 @@
   .container-custom {
     @apply max-w-7xl mx-auto;
   }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]
+      focus:rounded-lg focus:bg-deep-900 focus:px-5 focus:py-3 focus:text-white focus:font-semibold
+      focus:shadow-xl;
+    --focus-ring: var(--color-brand-300);
+  }
   .card {
     @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden;
   }
   .input-field {
     @apply w-full px-4 py-3 rounded-lg border border-deep-200
-      focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent
+      focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600
       transition-all duration-200 bg-white;
   }
 }

@@ -40,7 +40,7 @@ const specs = [
   <div class="h-1.5 chakra-gradient"></div>
   <article class="section-padding bg-white">
     <div class="container-custom max-w-5xl">
-      <a href="/productos" class="text-brand-600 hover:text-brand-700 font-medium text-sm mb-8 flex items-center gap-1">&larr; Volver a Productos</a>
+      <a href="/productos" class="text-brand-600 hover:text-brand-700 font-medium text-sm mb-8 inline-flex items-center gap-1 py-2"><span aria-hidden="true">&larr;</span> Volver a Productos</a>
 
       <div class="mt-6 grid md:grid-cols-2 gap-10 items-start">
         <div class="rounded-2xl overflow-hidden shadow-lg md:sticky md:top-28 relative">
@@ -83,7 +83,7 @@ const specs = [
             <button
               type="button"
               id="product-description-toggle"
-              class="hidden mt-2 items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
+              class="hidden mt-1 min-h-11 items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700"
               aria-expanded="false"
               aria-controls="product-description"
             >
@@ -153,7 +153,7 @@ const specs = [
         <button
           type="button"
           id="product-image-lightbox-close"
-          class="absolute top-3 right-3 flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-deep-800 shadow-sm hover:bg-white transition-colors"
+          class="absolute top-3 right-3 flex items-center justify-center w-11 h-11 rounded-full bg-white/90 text-deep-800 shadow-sm hover:bg-white transition-colors"
           aria-label="Cerrar imagen ampliada"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -205,7 +205,13 @@ const specs = [
         if (event.target === lightbox) closeLightbox();
       });
       document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && !lightbox.classList.contains('hidden')) closeLightbox();
+        if (lightbox.classList.contains('hidden')) return;
+        if (event.key === 'Escape') closeLightbox();
+        // El botón de cerrar es el único control del diálogo modal: Tab no debe escapar a la página.
+        if (event.key === 'Tab') {
+          event.preventDefault();
+          closeButton.focus();
+        }
       });
     }
   </script>

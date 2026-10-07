@@ -1,10 +1,25 @@
 <template>
-  <section class="relative min-h-[90vh] flex items-center overflow-hidden">
+  <section
+    class="on-dark relative min-h-[90vh] flex flex-col justify-center pt-12 pb-36 lg:py-0 overflow-hidden"
+    aria-roledescription="carrusel"
+    aria-label="Mensajes destacados"
+    @pointerenter="carousel.onPointerEnter"
+    @pointerleave="carousel.onPointerLeave"
+    @focusin="carousel.onFocusIn"
+    @focusout="carousel.onFocusOut"
+    @touchstart.passive="carousel.onTouchStart"
+    @touchend.passive="carousel.onTouchEnd"
+    @touchcancel.passive="carousel.onTouchCancel"
+  >
+    <!-- Título estable de la página: el texto visible del slide rota, el h1 no. -->
+    <h1 class="sr-only">IMHDXEIN, Instituto de Medicina Integrativa y Holística</h1>
+
     <div
       v-for="(slide, i) in slides"
       :key="i"
       class="absolute inset-0 transition-opacity duration-1000 ease-in-out"
       :class="current === i ? 'opacity-100 z-10' : 'opacity-0 z-0'"
+      :aria-hidden="current !== i"
     >
       <template v-if="slide.type === 'brand'">
         <div class="absolute inset-0 bg-gradient-to-br from-spirit-900 via-deep-900 to-sage-900"></div>
@@ -14,31 +29,44 @@
 
       <template v-else>
         <img
-          :src="slide.image"
+          v-if="mounted.has(i)"
+          :src="images[slide.image].src"
+          :srcset="images[slide.image].srcset"
+          sizes="100vw"
+          :width="images[slide.image].width"
+          :height="images[slide.image].height"
           :alt="slide.alt"
           class="absolute inset-0 w-full h-full object-cover object-bottom ken-burns"
           :class="current === i ? 'ken-burns-active' : 'ken-burns-idle'"
-          loading="lazy"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
       </template>
     </div>
 
-    <div class="container-custom px-4 relative z-20 w-full">
+    <!-- En reproducción no se anuncia cada cambio; en pausa (o al interactuar) sí. -->
+    <div class="container-custom px-4 relative z-20 w-full" :aria-live="isPlaying ? 'off' : 'polite'" aria-atomic="true">
       <transition name="hero-content" mode="out-in">
-        <div :key="current" class="max-w-3xl">
+        <!-- biome-ignore lint/a11y/useSemanticElements: patrón Carousel de WAI-ARIA APG; cada diapositiva es un group, no un fieldset de formulario. -->
+        <div
+          :key="current"
+          class="max-w-3xl"
+          role="group"
+          aria-roledescription="diapositiva"
+          :aria-label="`${current + 1} de ${slides.length}`"
+        >
           <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v0M12 5a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3m0-12c1.657 0 3 1.343 3 3v6c0 1.657-1.343 3-3 3m0-12c-1.657 0-3 1.343-3 3v6c0 1.657 1.343 3 3 3m0 0a3 3 0 0 0 3-3"/>
             </svg>
             <span class="text-brand-300 text-sm font-medium">Instituto de Medicina Integrativa y Holística</span>
           </div>
-          
-          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight">
+
+          <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-white leading-tight">
             {{ slides[current].title }}
             <span class="block chakra-gradient-text">{{ slides[current].subtitle }}</span>
-          </h1>
-          
+          </p>
+
           <p class="mt-6 text-lg md:text-xl text-deep-300 max-w-xl leading-relaxed">
             {{ slides[current].description }}
           </p>
@@ -51,40 +79,69 @@
       </transition>
     </div>
 
-    <div class="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-5 z-30">
+    <div class="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-1 z-30">
       <button
         type="button"
         v-for="(dot, i) in chakraDots"
         :key="i"
-        class="rounded-full transition-all duration-500 focus:outline-none"
-        :class="current === i ? 'w-4 h-4 shadow-lg scale-125' : 'w-3 h-3 opacity-60 hover:opacity-90'"
-        :style="`background-color: ${dot.color}; ${current === i ? `box-shadow: 0 0 12px 3px ${dot.color}80` : ''}`"
+        class="group flex items-center justify-center w-7 h-7 rounded-full"
+        :aria-label="`Ir a la diapositiva ${i + 1}: ${slides[i].title} ${slides[i].subtitle}`"
+        :aria-current="current === i ? 'true' : undefined"
         @click="goTo(i)"
-      />
+      >
+        <span
+          class="block rounded-full transition-all duration-500"
+          :class="current === i ? 'w-4 h-4 shadow-lg scale-125' : 'w-3 h-3 opacity-60 group-hover:opacity-90'"
+          :style="`background-color: ${dot.color}; ${current === i ? `box-shadow: 0 0 12px 3px ${dot.color}80` : ''}`"
+        ></span>
+      </button>
     </div>
 
-    <button type="button" @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-    </button>
-    <button type="button" @click="next" class="absolute right-4 xl:right-20 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
+    <!--
+      Por debajo de lg los controles forman una fila bajo los CTA para no tapar el texto;
+      desde lg el contenedor se disuelve (lg:contents) y cada botón vuelve a su sitio lateral.
+      WCAG 2.2.2: el contenido que se mueve solo debe poder pausarse.
+    -->
+    <div class="container-custom px-4 relative z-30 w-full mt-10 flex items-center gap-3 lg:contents">
+      <button type="button" aria-label="Diapositiva anterior" @click="prev" :class="[controlClass, 'lg:absolute lg:left-4 lg:top-1/2 lg:-translate-y-1/2']">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button
+        type="button"
+        :aria-label="userPaused ? 'Reanudar presentación' : 'Pausar presentación'"
+        @click="togglePause"
+        :class="[controlClass, 'lg:absolute lg:right-4 xl:right-20 lg:bottom-36']"
+      >
+        <svg v-if="userPaused" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>
+        <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+      </button>
+      <button type="button" aria-label="Diapositiva siguiente" @click="next" :class="[controlClass, 'lg:absolute lg:right-4 xl:right-20 lg:top-1/2 lg:-translate-y-1/2']">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <span class="ml-1 text-sm text-deep-300 tabular-nums lg:hidden" aria-hidden="true">{{ current + 1 }} / {{ slides.length }}</span>
+    </div>
 
     <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-20"></div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { reactive, watch } from 'vue';
+import type { ResponsiveImage } from '../lib/images';
+import { useCarousel } from '../lib/useCarousel';
 
-import imgAmanecer from '../assets/images/hero/amanecer-nueva-oportunidad.webp';
-import imgPoderSanacion from '../assets/images/hero/poder-sanacion.webp';
-import imgEncuentraNorte from '../assets/images/hero/encuentra-tu-norte.webp';
-import imgSlide4 from '../assets/images/hero/slide-4.webp';
-import imgSlide6 from '../assets/images/hero/slide-6.webp';
-import imgSlide7 from '../assets/images/hero/slide-7.webp';
+type HeroImageKey = 'amanecer' | 'poderSanacion' | 'encuentraNorte' | 'slide4' | 'slide6' | 'slide7';
 
-const slides = [
+const { images } = defineProps<{ images: Record<HeroImageKey, ResponsiveImage> }>();
+
+type Slide = {
+  title: string;
+  subtitle: string;
+  description: string;
+  alt: string;
+} & ({ type: 'brand' } | { type: 'image'; image: HeroImageKey });
+
+const slides: Slide[] = [
   { 
     type: 'brand', 
     title: 'Sanación integral', 
@@ -94,7 +151,7 @@ const slides = [
   },
   { 
     type: 'image', 
-    image: imgAmanecer.src,
+    image: 'amanecer',
     title: 'Cada amanecer es', 
     subtitle: 'una oportunidad', 
     description: 'El universo nos otorga cambios de paradigmas. El camino del guerrero es la acción.',
@@ -102,7 +159,7 @@ const slides = [
   },
   { 
     type: 'image', 
-    image: imgPoderSanacion.src, 
+    image: 'poderSanacion',
     title: 'El poder de sanar', 
     subtitle: 'está en ti', 
     description: 'Somos los únicos capaces de iniciar el camino hacia el cambio verdadero.',
@@ -110,7 +167,7 @@ const slides = [
   },
   { 
     type: 'image', 
-    image: imgEncuentraNorte.src,
+    image: 'encuentraNorte',
     alt: 'Mujer de pie en la cima de una montaña contemplando un amanecer neblinoso, junto a una brújula dorada antigua y una geoda de cuarzo que simbolizan la guía y la sanación espiritual.',
     title: 'Recupera tu equilibrio', 
     subtitle: 'original', 
@@ -118,7 +175,7 @@ const slides = [
   },
   {
     type: 'image',
-    image: imgSlide4.src,
+    image: 'slide4',
     title: 'El arcoíris es muestra',
     subtitle: 'de que somos luz',
     description: 'Tenemos que vivir nuestra experiencia para continuar nuestro proceso de trascendencia.',
@@ -126,7 +183,7 @@ const slides = [
   },
   {
     type: 'image',
-    image: imgSlide6.src,
+    image: 'slide6',
     title: 'Comienza tu camino',
     subtitle: 'de sanación',
     description: 'Un espacio seguro donde la medicina integrativa te acompaña a reconectar con tu equilibrio físico, mental y espiritual.',
@@ -134,7 +191,7 @@ const slides = [
   },
   {
     type: 'image',
-    image: imgSlide7.src,
+    image: 'slide7',
     title: 'Todo es energia',
     subtitle: 'haz la conexión',
     description: 'Un espacio de paz para equilibrar tu energía interior.',
@@ -152,23 +209,19 @@ const chakraDots = [
   { color: '#7B2D8E' },
 ];
 
-const current = ref(0);
-let timer: ReturnType<typeof setInterval> | null = null;
+const controlClass =
+  'z-30 w-11 h-11 shrink-0 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all';
 
-const goTo = (i: number) => { current.value = i % slides.length; resetTimer(); };
-const next = () => { current.value = (current.value + 1) % slides.length; resetTimer(); };
-const prev = () => { current.value = (current.value - 1 + slides.length) % slides.length; resetTimer(); };
-const resetTimer = () => { clearInterval(timer); startTimer(); };
-const startTimer = () => { timer = setInterval(next, 6000); };
+const { current, userPaused, isPlaying, goTo, next, prev, togglePause, ...carousel } = useCarousel(
+  () => slides.length
+);
 
-onMounted(() => {
-  timer = setInterval(() => {
-    current.value = (current.value + 1) % slides.length;
-  }, 6000);
-});
-
-onUnmounted(() => {
-  if (timer) clearInterval(timer);
+// Solo se montan las imágenes del slide visible y del siguiente: antes las 6
+// se descargaban al cargar la página aunque estuvieran ocultas con opacity-0.
+const mounted = reactive(new Set([0, 1]));
+watch(current, (i) => {
+  mounted.add(i);
+  mounted.add((i + 1) % slides.length);
 });
 </script>
 
@@ -218,6 +271,10 @@ onUnmounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .ken-burns-active {
     animation: none;
+  }
+  .hero-content-enter-from,
+  .hero-content-leave-to {
+    transform: none;
   }
 }
 </style>

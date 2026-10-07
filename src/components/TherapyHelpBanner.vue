@@ -106,7 +106,7 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-spirit-500 flex items-center justify-center flex-shrink-0">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
       </div>
-      <p class="text-sm text-deep-700 leading-relaxed pr-4">
+      <p class="text-sm text-deep-700 leading-relaxed pr-8">
         ¿No sabes qué terapia elegir o por dónde empezar? Te ayudamos a orientar tu proceso de sanación.
       </p>
     </div>
@@ -148,10 +148,10 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
 
 .therapy-help-banner__close {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  width: 1.75rem;
-  height: 1.75rem;
+  top: 0.35rem;
+  right: 0.35rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -3,12 +3,14 @@
     <div class="container-custom">
       <div class="grid lg:grid-cols-3 gap-8">
         <div class="lg:col-span-1">
-          <div class="sticky top-28 space-y-3">
+          <div class="sticky top-28 space-y-3" role="group" aria-label="Elige una terapia">
             <button
               type="button"
               v-for="(therapy, i) in therapies"
               :key="therapy.id"
               :id="therapy.slug"
+              :aria-pressed="selected?.id === therapy.id"
+              aria-controls="therapy-detail"
               :class="[
                 'w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left',
                 selected?.id === therapy.id
@@ -18,7 +20,7 @@
               @click="select(therapy)"
             >
               <div :class="`w-10 h-10 rounded-xl bg-gradient-to-br ${chakraColors[i]} flex items-center justify-center flex-shrink-0`">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="getIconPaths(therapy.icon)" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" v-html="getIconPaths(therapy.icon)" />
               </div>
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
@@ -31,12 +33,17 @@
           </div>
         </div>
 
-        <div class="lg:col-span-2">
+        <div ref="detailEl" id="therapy-detail" class="lg:col-span-2 scroll-mt-28" tabindex="-1">
           <div v-if="selected" class="animate-fade-in">
             <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8 bg-deep-50 border border-deep-100">
-              <img 
-                :src="selected.image" 
-                :alt="selected.name" 
+              <img
+                :src="selected.image.src"
+                :srcset="selected.image.srcset"
+                sizes="(min-width: 1280px) 830px, (min-width: 1024px) 66vw, 100vw"
+                :width="selected.image.width"
+                :height="selected.image.height"
+                :alt="selected.name"
+                decoding="async"
                 class="w-full h-auto max-h-[420px] object-cover object-center transition-all duration-300" 
               />
             </div>
@@ -79,6 +86,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { getIconPaths } from '../lib/icons';
+import type { ResponsiveImage } from '../lib/images';
 
 interface Therapy {
   id: string;
@@ -88,7 +96,7 @@ interface Therapy {
   durationMinutes: number;
   price: number | null;
   icon: string;
-  image?: string;
+  image?: ResponsiveImage;
 }
 
 
@@ -96,8 +104,16 @@ const props = defineProps<{ therapies: Therapy[] }>();
 
 const selected = ref<Therapy | null>(props.therapies[0] || null);
 
+const detailEl = ref<HTMLElement | null>(null);
+
 const select = (therapy: Therapy) => {
   selected.value = therapy;
+  // En móvil el detalle queda debajo de la lista: sin esto, el toque no muestra ningún cambio visible.
+  if (window.matchMedia('(max-width: 1023px)').matches && detailEl.value) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    detailEl.value.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    detailEl.value.focus({ preventScroll: true });
+  }
 };
 
 onMounted(() => {

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import type { ResponsiveImage } from '../lib/images';
 
 interface Product {
   id: string;
   name: string;
   description: string;
   price: number;
-  image?: string;
+  image?: ResponsiveImage;
   category: string;
   isAvailable: boolean;
   orderIndex: number;
@@ -35,20 +36,26 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
     <div class="container-custom">
 
       <!-- Filtros de categoría -->
-      <div class="flex flex-wrap gap-2 mb-10">
+      <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filtrar por categoría">
         <button
           type="button"
           @click="activeCategory = 'Todos'"
-          :class="['px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === 'Todos' ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
+          :aria-pressed="activeCategory === 'Todos'"
+          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === 'Todos' ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
         >Todos</button>
         <button
           type="button"
           v-for="cat in categories"
           :key="cat"
           @click="activeCategory = cat"
-          :class="['px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === cat ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
+          :aria-pressed="activeCategory === cat"
+          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === cat ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
         >{{ cat }}</button>
       </div>
+
+      <p class="sr-only" aria-live="polite">
+        {{ filtered.length }} {{ filtered.length === 1 ? 'producto' : 'productos' }}
+      </p>
 
       <!-- Grid de productos -->
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -61,8 +68,14 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
           <a :href="productHref(product)" class="h-52 overflow-hidden relative flex-shrink-0 bg-deep-100 block">
             <img
               v-if="product.image"
-              :src="product.image"
+              :src="product.image.src"
+              :srcset="product.image.srcset"
+              sizes="(min-width: 1280px) 300px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              :width="product.image.width"
+              :height="product.image.height"
               :alt="product.name"
+              loading="lazy"
+              decoding="async"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <span
