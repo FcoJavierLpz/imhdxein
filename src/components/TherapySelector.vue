@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getIconPaths } from '../lib/icons';
 import type { ResponsiveImage } from '../lib/images';
 
@@ -116,15 +116,26 @@ const select = (therapy: Therapy) => {
   }
 };
 
-onMounted(() => {
-  const hash = window.location.hash?.replace('#', '');
-  if (!hash) return;
-
-  const therapyFromHash = props.therapies.find((t) => t.slug === hash);
-  if (therapyFromHash) {
-    selected.value = therapyFromHash;
+// Los ids pueden tener espacios o mayúsculas (vienen del nombre de archivo en Keystatic),
+// así que el hash llega codificado. También se escucha hashchange: los enlaces del pie
+// a otra terapia, estando ya en /terapias, no recargan la página.
+const selectFromHash = () => {
+  let hash: string;
+  try {
+    hash = decodeURIComponent(window.location.hash.slice(1));
+  } catch {
+    return; // hash mal formado (p. ej. un "%" suelto): se conserva la terapia por defecto
   }
+  if (!hash) return;
+  const therapyFromHash = props.therapies.find((t) => t.slug === hash);
+  if (therapyFromHash) select(therapyFromHash);
+};
+
+onMounted(() => {
+  selectFromHash();
+  window.addEventListener('hashchange', selectFromHash);
 });
+onUnmounted(() => window.removeEventListener('hashchange', selectFromHash));
 
 
 const chakraColors = [

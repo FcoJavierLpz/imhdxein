@@ -364,12 +364,12 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="appointment-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="appointment-full-name" type="text" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="appointment-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="appointment-full-name" type="text" autocomplete="name" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
 
-                <div><label for="appointment-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="appointment-email" type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="appointment-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="appointment-email" type="email" autocomplete="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="appointment-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="appointment-phone" type="tel" class="input-field" v-model="appointmentForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
+                <div><label for="appointment-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="appointment-phone" type="tel" autocomplete="tel" class="input-field" v-model="appointmentForm.phone" placeholder="33 1234 5678" /></div>
                 <div><label for="appointment-therapy" class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
                   <select id="appointment-therapy" required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
@@ -432,11 +432,11 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="contact-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="contact-full-name" type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
-                <div><label for="contact-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="contact-email" type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="contact-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="contact-full-name" type="text" autocomplete="name" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="contact-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="contact-email" type="email" autocomplete="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="contact-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="contact-phone" type="tel" class="input-field" v-model="contactForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
+                <div><label for="contact-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="contact-phone" type="tel" autocomplete="tel" class="input-field" v-model="contactForm.phone" placeholder="33 1234 5678" /></div>
                 <div><label for="contact-subject" class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input id="contact-subject" type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
               </div>
               <div><label for="contact-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea id="contact-message" required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>

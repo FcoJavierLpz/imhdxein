@@ -6,6 +6,7 @@ import TherapySelector from '../components/TherapySelector.vue';
 import TherapyHelpBanner from '../components/TherapyHelpBanner.vue';
 import MainLayout from '../layouts/MainLayout.astro';
 import { toResponsiveImage } from '../lib/images';
+import { toTitleCase } from '../lib/text';
 
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
@@ -15,6 +16,7 @@ const therapies = await Promise.all(
     id: t.id,
     slug: t.id,
     ...t.data,
+    name: toTitleCase(t.data.name),
     // La imagen ocupa como máximo 2/3 del contenedor (≈830px) en desktop.
     image: await toResponsiveImage(t.data.image, [480, 800, 1200, 1600]),
     price: t.data.price ?? null,

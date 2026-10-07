@@ -4,15 +4,10 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
+import { toTitleCase } from '../lib/text';
 
 const therapistEntries = (await getCollection('therapists', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
-
-const toTitleCase = (text: string) =>
-  text
-    .trim()
-    .toLowerCase()
-    .replace(/(^|[\s.'-])\S/g, (c) => c.toUpperCase());
 
 const therapists = therapistEntries.map((t) => ({
   id: t.id,
@@ -259,7 +254,10 @@ const values = [
             <div class="p-6 flex flex-col flex-1">
               <h3 class="font-heading font-semibold text-deep-800 text-lg">{t.name}</h3>
               <p class="text-brand-600 text-sm font-medium">{t.title}</p>
-              <p class="text-spirit-600 text-xs mt-1">{t.specialty}</p>
+              {/* Si el cargo ya incluye la especialidad (p. ej. "Especialista en… / Terapeuta…") no se repite. */}
+              {!t.title.toLocaleLowerCase('es-MX').includes(t.specialty.toLocaleLowerCase('es-MX')) && (
+                <p class="text-spirit-600 text-xs mt-1">{t.specialty}</p>
+              )}
               <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 group-hover:text-brand-700">
                 Ver perfil profesional
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform group-hover:translate-x-1">

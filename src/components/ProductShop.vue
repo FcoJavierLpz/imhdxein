@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { ResponsiveImage } from '../lib/images';
+import { categoryKey, categoryLabel, formatPrice } from '../lib/product';
 
 interface Product {
   id: string;
@@ -17,13 +18,19 @@ const props = defineProps<{
   products: Product[];
 }>();
 
-const categories = [...new Set(props.products.map(p => p.category))];
-const activeCategory = ref('Todos');
+// Una entrada por categoría normalizada ("SUPLEMENTOS" y "Suplementos" son la misma).
+const categoryLabels = new Map<string, string>();
+for (const p of props.products) {
+  const key = categoryKey(p.category);
+  if (!categoryLabels.has(key)) categoryLabels.set(key, categoryLabel(p.category));
+}
+const categories = [...categoryLabels].map(([key, label]) => ({ key, label }));
+const activeCategory = ref<string | null>(null);
 
 const filtered = computed(() =>
-  activeCategory.value === 'Todos'
+  activeCategory.value === null
     ? props.products
-    : props.products.filter(p => p.category === activeCategory.value)
+    : props.products.filter(p => categoryKey(p.category) === activeCategory.value)
 );
 
 /** Ruta a la ficha de detalle del producto. Se codifica el id porque puede contener espacios. */
@@ -36,22 +43,23 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
     <div class="container-custom">
 
       <!-- Filtros de categoría -->
-      <div class="flex flex-wrap gap-2 mb-10" role="group" aria-label="Filtrar por categoría">
+      <fieldset class="flex flex-wrap gap-2 mb-10">
+        <legend class="sr-only">Filtrar por categoría</legend>
         <button
           type="button"
-          @click="activeCategory = 'Todos'"
-          :aria-pressed="activeCategory === 'Todos'"
-          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === 'Todos' ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
+          @click="activeCategory = null"
+          :aria-pressed="activeCategory === null"
+          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === null ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
         >Todos</button>
         <button
           type="button"
           v-for="cat in categories"
-          :key="cat"
-          @click="activeCategory = cat"
-          :aria-pressed="activeCategory === cat"
-          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === cat ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
-        >{{ cat }}</button>
-      </div>
+          :key="cat.key"
+          @click="activeCategory = cat.key"
+          :aria-pressed="activeCategory === cat.key"
+          :class="['min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all', activeCategory === cat.key ? 'bg-brand-500 text-white shadow-md' : 'bg-deep-100 text-deep-600 hover:bg-deep-200']"
+        >{{ cat.label }}</button>
+      </fieldset>
 
       <p class="sr-only" aria-live="polite">
         {{ filtered.length }} {{ filtered.length === 1 ? 'producto' : 'productos' }}
@@ -64,8 +72,8 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
           :key="product.id"
           class="card group flex flex-col"
         >
-          <!-- Imagen (enlaza a la ficha de producto) -->
-          <a :href="productHref(product)" class="h-52 overflow-hidden relative flex-shrink-0 bg-deep-100 block">
+          <!-- Imagen (enlaza a la ficha de producto; fuera del orden de tabulación porque el título y el botón ya enlazan) -->
+          <a :href="productHref(product)" tabindex="-1" class="h-52 overflow-hidden relative flex-shrink-0 bg-deep-100 block">
             <img
               v-if="product.image"
               :src="product.image.src"
@@ -81,7 +89,7 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
             <span
               v-if="product.price"
               class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-semibold text-deep-800 shadow-sm"
-            >${{ product.price }}</span>
+            >{{ formatPrice(product.price) }}</span>
             <span
               v-if="!product.isAvailable"
               class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-semibold text-sm"
@@ -90,7 +98,7 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
 
           <!-- Contenido -->
           <div class="p-5 flex flex-col flex-1">
-            <span class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ product.category }}</span>
+            <span class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ categoryLabel(product.category) }}</span>
             <a :href="productHref(product)" class="mt-1">
               <h3 class="font-heading font-semibold text-deep-800 leading-snug group-hover:text-brand-600 transition-colors">{{ product.name }}</h3>
             </a>
@@ -100,7 +108,7 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
               :href="productHref(product)"
               class="mt-4 w-full flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-semibold text-brand-600 border-2 border-brand-500 transition-all duration-200 hover:bg-brand-500 hover:text-white active:scale-95"
             >
-              Ver producto
+              Ver producto<span class="sr-only">: {{ product.name }}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>

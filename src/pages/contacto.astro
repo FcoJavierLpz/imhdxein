@@ -4,6 +4,7 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import ContactForm from '../components/ContactForm.vue';
 import { getCollection } from 'astro:content';
+import { toTitleCase } from '../lib/text';
 import {
   CONTACT_ADDRESS_CITY,
   CONTACT_ADDRESS_NEIGHBORHOOD,
@@ -16,7 +17,7 @@ const therapyEntries = (await getCollection('therapies', ({ data }) => data.isAc
 
 const therapyOptions = therapyEntries.map((t) => ({
   id: t.id,
-  name: t.data.name,
+  name: toTitleCase(t.data.name),
   durationMinutes: t.data.durationMinutes,
 }));
 ---
