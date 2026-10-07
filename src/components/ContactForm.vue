@@ -332,8 +332,8 @@ const handleContact = async () => {
                 @click="(e: MouseEvent) => toggleChakra(i, e)"
               >
                 <div
-                  class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
-                  :style="`background-color: ${c.color}; color: ${readableTextOn(c.color)}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 group-hover:scale-110"
+                  :style="`background-color: ${c.color}; color: ${readableTextOn(c.color)}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40` : ''}`"
                 >{{ c.letter }}</div>
                 <span class="text-[11px] text-deep-500 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
               </button>

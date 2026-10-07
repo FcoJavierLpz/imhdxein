@@ -99,7 +99,7 @@ const productHref = (product: Product) => `/productos/${encodeURIComponent(produ
           <!-- Contenido -->
           <div class="p-5 flex flex-col flex-1">
             <span class="text-xs text-brand-600 font-medium uppercase tracking-wide">{{ categoryLabel(product.category) }}</span>
-            <a :href="productHref(product)" class="mt-1">
+            <a :href="productHref(product)" class="mt-1 block py-0.5">
               <h3 class="font-heading font-semibold text-deep-800 leading-snug group-hover:text-brand-600 transition-colors">{{ product.name }}</h3>
             </a>
             <p class="mt-2 text-deep-500 text-sm leading-relaxed line-clamp-3 flex-1">{{ product.description }}</p>
