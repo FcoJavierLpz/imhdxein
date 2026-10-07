@@ -24,7 +24,7 @@
               </div>
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
-                <div class="flex items-center gap-2 text-xs text-deep-400 mt-0.5">
+                <div class="flex items-center gap-2 text-xs text-deep-600 mt-0.5">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   <span>{{ therapy.durationMinutes }} min</span>
                 </div>

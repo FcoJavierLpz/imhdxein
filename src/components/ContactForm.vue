@@ -10,6 +10,7 @@ import {
 } from '../constants/contact';
 import { messageSchema, subjectSchema } from '../lib/validation/contact';
 import { emailSchema, fullNameSchema, phoneSchema } from '../lib/validation/shared';
+import { readableTextOn } from '../lib/color';
 
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -240,26 +241,26 @@ const handleContact = async () => {
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
             </a>
             <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (CONTACT_EMAIL_HREF) -->
             <a :href="CONTACT_EMAIL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
             </a>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
             </div>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
             </div>
           </div>
                     <div class="mt-10 bg-gradient-to-br from-sage-50 to-brand-50 rounded-2xl p-6">
@@ -283,8 +284,8 @@ const handleContact = async () => {
                 @click="activeChakra = activeChakra === i ? null : i"
               >
                 <div
-                  class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
-                  :style="`background-color: ${c.color}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
+                  :style="`background-color: ${c.color}; color: ${readableTextOn(c.color)}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
                 >{{ c.letter }}</div>
                 <span class="text-[11px] text-deep-500 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
               </button>
@@ -315,10 +316,10 @@ const handleContact = async () => {
 
         <div id="request-form-container" class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
-            <button type="button" @click="activeTab = 'appointment'" :aria-pressed="activeTab === 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+            <button type="button" @click="activeTab = 'appointment'" :aria-pressed="activeTab === 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-500 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
             </button>
-            <button type="button" @click="activeTab = 'contact'" :aria-pressed="activeTab === 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
+            <button type="button" @click="activeTab = 'contact'" :aria-pressed="activeTab === 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-500 hover:text-deep-600']">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
             </button>
 

@@ -89,12 +89,12 @@ const toggle = () => {
   margin-top: 0.125rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-brand-600, #b8880e);
+  color: var(--color-brand-600);
   transition: color 0.2s ease;
 }
 
 .expandable-toggle:hover {
-  color: var(--color-brand-700, #96700b);
+  color: var(--color-brand-700);
 }
 
 .expandable-toggle__icon {

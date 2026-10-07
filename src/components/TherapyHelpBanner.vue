@@ -156,13 +156,13 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  color: var(--color-deep-400, #9c8e7a);
+  color: var(--color-deep-400);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .therapy-help-banner__close:hover {
-  background-color: var(--color-deep-100, #e8e4de);
-  color: var(--color-deep-700, #403a30);
+  background-color: var(--color-deep-100);
+  color: var(--color-deep-700);
 }
 
 .therapy-help-banner__cta-primary {
@@ -176,12 +176,12 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
   font-size: 0.875rem;
   font-weight: 600;
   color: #ffffff;
-  background-color: #25d366;
+  background-color: var(--color-whatsapp-strong);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .therapy-help-banner__cta-primary:hover {
-  background-color: #1fb958;
+  background-color: color-mix(in oklch, var(--color-whatsapp-strong) 85%, black);
   transform: translateY(-1px);
 }
 
@@ -195,13 +195,13 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
   font-size: 0.8125rem;
   font-weight: 600;
   text-align: center;
-  border: 2px solid var(--color-brand-500, #d4a017);
-  color: var(--color-brand-600, #b8880e);
+  border: 2px solid var(--color-brand-500);
+  color: var(--color-brand-600);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .therapy-help-banner__cta-secondary:hover {
-  background-color: var(--color-brand-500, #d4a017);
+  background-color: var(--color-brand-500);
   color: #ffffff;
 }
 

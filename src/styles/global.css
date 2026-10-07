@@ -16,10 +16,12 @@
   --color-brand-300: #FFDB6F;
   --color-brand-400: #FFD040;
   --color-brand-500: #D4A017;
-  --color-brand-600: #B8880E;
-  --color-brand-700: #9C7000;
-  --color-brand-800: #805800;
-  --color-brand-900: #644000;
+  /* 600–900 derivados en OKLCH con el matiz de brand-500 (84°): el dorado sirve como texto
+     sobre blanco y fondos claros (600 ≥ 5:1, 700 ≥ 6.5:1) sin derivar hacia el marrón. */
+  --color-brand-600: #8C6600;
+  --color-brand-700: #745500;
+  --color-brand-800: #5C4300;
+  --color-brand-900: #463200;
 
   --color-sage-50: #F0F7F1;
   --color-sage-100: #DCF0DF;
@@ -42,6 +44,11 @@
   --color-spirit-700: #5A1570;
   --color-spirit-800: #4A0C60;
   --color-spirit-900: #3A0550;
+
+  /* WhatsApp: el verde de marca queda para el logo flotante; los botones con texto usan
+     una variante más oscura del mismo verde para que el blanco llegue a 5:1. */
+  --color-whatsapp: #25D366;
+  --color-whatsapp-strong: #007F34;
 
   --color-deep-50: #F5F3F0;
   --color-deep-100: #E8E4DE;
@@ -128,9 +135,10 @@
   .glass {
     @apply bg-white/80 backdrop-blur-md;
   }
+  /* Texto oscuro sobre dorado (7.8:1): el blanco sobre brand-500 solo daba 2.4:1. */
   .btn-primary {
-    @apply bg-brand-500 text-white px-6 py-3 rounded-lg font-semibold
-      hover:bg-brand-600 transition-all duration-300
+    @apply bg-brand-500 text-deep-900 px-6 py-3 rounded-lg font-semibold
+      hover:bg-brand-400 transition-all duration-300
       shadow-lg hover:shadow-xl hover:-translate-y-0.5;
   }
   .btn-secondary {
@@ -140,7 +148,7 @@
   }
   .btn-outline {
     @apply border-2 border-brand-500 text-brand-600 px-6 py-3 rounded-lg font-semibold
-      hover:bg-brand-500 hover:text-white transition-all duration-300;
+      hover:bg-brand-500 hover:text-deep-900 transition-all duration-300;
   }
   .section-padding {
     @apply py-20 px-4 sm:px-6 lg:px-8;
@@ -253,7 +261,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-brand-600, #b8880e);
+  color: var(--color-brand-600);
   margin-bottom: 0.5rem;
 }
 .philosophy-card__title {
@@ -261,7 +269,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-deep-800, #2a2520);
+  color: var(--color-deep-800);
   margin-bottom: 0.875rem;
 }
 
@@ -302,8 +310,8 @@
   align-items: center;
   padding: 0.35rem 0.9rem;
   border-radius: 9999px;
-  background: var(--color-brand-100, #fff0bf);
-  color: var(--color-brand-700, #9c7000);
+  background: var(--color-brand-100);
+  color: var(--color-brand-700);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -315,11 +323,11 @@
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-deep-800, #2a2520);
+  color: var(--color-deep-800);
   margin-bottom: 0.625rem;
 }
 .step-card__text {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--color-deep-500, #6b6357);
+  color: var(--color-deep-500);
 }

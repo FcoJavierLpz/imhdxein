@@ -185,7 +185,7 @@ const restart = () => {
     <div class="container-custom max-w-3xl">
       <!-- INTRO -->
       <div v-if="step === 'intro'" class="text-center animate-fade-in">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Antes de comenzar</span>
+        <span class="text-brand-700 text-sm font-semibold tracking-wider uppercase">Antes de comenzar</span>
         <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tres energías, una sola tú
         </h2>
@@ -230,7 +230,7 @@ const restart = () => {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
 
-        <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-deep-400 text-xs">
+        <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-deep-500 text-xs">
           <span class="inline-flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             5 minutos
@@ -249,7 +249,7 @@ const restart = () => {
       <!-- QUIZ -->
       <div v-else-if="step === 'quiz'" class="animate-fade-in">
         <div class="mb-8">
-          <div class="flex justify-between items-center text-xs text-deep-400 mb-2">
+          <div class="flex justify-between items-center text-xs text-deep-500 mb-2">
             <span>Pregunta {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
             <span>{{ progressPercent }}%</span>
           </div>
@@ -265,7 +265,7 @@ const restart = () => {
           </div>
         </div>
 
-        <p class="text-brand-500 text-xs font-semibold tracking-wider uppercase mb-2">{{ currentQuestion?.category }}</p>
+        <p class="text-brand-700 text-xs font-semibold tracking-wider uppercase mb-2">{{ currentQuestion?.category }}</p>
         <h2 ref="questionHeading" tabindex="-1" class="text-2xl font-heading font-bold text-deep-900 mb-8 focus:outline-none">{{ currentQuestion?.question }}</h2>
 
         <div class="space-y-3" role="group" :aria-label="currentQuestion?.question">
@@ -346,11 +346,11 @@ const restart = () => {
 
       <!-- RESULT -->
       <div v-else-if="step === 'result' && resultProfile" class="animate-fade-in text-center">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Tu resultado</span>
+        <span class="text-brand-700 text-sm font-semibold tracking-wider uppercase">Tu resultado</span>
         <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tu dosha dominante es <span :style="`color:${resultProfile.color}`">{{ resultProfile.title }}</span>
         </h2>
-        <p class="mt-2 text-deep-400 text-sm">{{ resultProfile.element }} — {{ resultProfile.tagline }}</p>
+        <p class="mt-2 text-deep-500 text-sm">{{ resultProfile.element }} — {{ resultProfile.tagline }}</p>
 
         <p class="mt-6 text-deep-600 leading-relaxed text-left max-w-xl mx-auto">{{ resultProfile.description }}</p>
 
@@ -364,7 +364,7 @@ const restart = () => {
           </ul>
         </div>
 
-        <p v-if="secondaryProfile" class="mt-6 text-deep-400 text-sm">
+        <p v-if="secondaryProfile" class="mt-6 text-deep-500 text-sm">
           También muestras una influencia secundaria de <strong :style="`color:${secondaryProfile.color}`">{{ secondaryProfile.title }}</strong>.
         </p>
 
