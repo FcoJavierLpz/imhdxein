@@ -171,6 +171,10 @@
       focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600
       transition-all duration-200 bg-white;
   }
+  /* Campo con error: borde y anillo en rojo raíz, también con foco, además del mensaje enlazado. */
+  .input-field[aria-invalid="true"] {
+    @apply border-chakra-root focus:border-chakra-root focus:ring-chakra-root;
+  }
 }
 
 @layer utilities {

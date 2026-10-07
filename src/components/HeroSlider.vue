@@ -72,8 +72,8 @@
           </p>
 
           <div class="mt-8 flex flex-wrap gap-4">
-            <a href="/contacto" class="btn-primary text-base">Agendar tu Cita</a>
-            <a href="/terapias" class="btn-outline !border-white/30 !text-white hover:!bg-white/10 text-base">Explorar Terapias</a>
+            <a href="/contacto" class="btn-primary text-base">Agendar consulta</a>
+            <a href="/terapias" class="btn-outline !border-white/30 !text-white hover:!bg-white/10 text-base">Explorar terapias</a>
           </div>
         </div>
       </transition>
@@ -192,7 +192,7 @@ const slides: Slide[] = [
   {
     type: 'image',
     image: 'slide7',
-    title: 'Todo es energia',
+    title: 'Todo es energía',
     subtitle: 'haz la conexión',
     description: 'Un espacio de paz para equilibrar tu energía interior.',
     alt: 'Persona meditando junto a un río en un entorno natural al atardecer, con un arcoíris y símbolos de geometría sagrada en el cielo.',

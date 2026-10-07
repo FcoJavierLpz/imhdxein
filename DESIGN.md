@@ -143,7 +143,7 @@ El movimiento es escaso y siempre interrumpible: los carruseles se pueden pausar
 Una paleta cálida de tierra y oro, con la escala chakra reservada como firma de marca.
 
 ### Primary
-- **Oro del amanecer** (gold-dawn): fondo de la acción principal ("Agendar Consulta", chip activo, CTA). Siempre con texto oscuro (night-earth); el blanco sobre este oro no llega a AA.
+- **Oro del amanecer** (gold-dawn): fondo de la acción principal ("Agendar consulta", chip activo, CTA). Siempre con texto oscuro (night-earth); el blanco sobre este oro no llega a AA.
 - **Oro de texto** (gold-text): enlaces, "Ver más", precios destacados y bordes de botón de contorno sobre fondos claros (≥ 5:1 sobre blanco).
 - **Oro tinta** (gold-ink): etiquetas en mayúsculas y texto dorado pequeño sobre fondos claros o dorados (≥ 6.5:1).
 - **Oro resplandor** (gold-glow): énfasis de titulares y anillo de foco sobre heroes y secciones oscuras.
@@ -242,7 +242,7 @@ Acogedores y claros: grandes, de un solo vistazo, con contraste alto.
 - **Error / Disabled:** mensajes en línea bajo el campo; los deshabilitados en earth-sand con texto earth-dusk.
 
 ### Navigation
-Barra superior pegajosa sobre blanco al 95%, que al hacer scroll gana desenfoque y sombra. Enlaces en Inter 14px earth-muted; el activo con fondo gold-mist, texto gold-ink y `aria-current="page"`. El CTA "Agendar Consulta" es un botón primario compacto. En móvil, un botón de menú de 44px abre una lista vertical de enlaces amplios con el CTA a todo el ancho; se cierra con Escape.
+Barra superior pegajosa sobre blanco al 95%, que al hacer scroll gana desenfoque y sombra. Enlaces en Inter 14px earth-muted; el activo con fondo gold-mist, texto gold-ink y `aria-current="page"`. El CTA "Agendar consulta" es un botón primario compacto. En móvil, un botón de menú de 44px abre una lista vertical de enlaces amplios con el CTA a todo el ancho; se cierra con Escape.
 
 ### Barra chakra
 Franja de 6px con el degradado de los siete chakras, colocada una sola vez bajo el hero de cada página. Es la firma visual del instituto.

@@ -12,7 +12,7 @@ Pacientes que buscan medicina integrativa y bienestar holístico. El espectro va
 
 ## Product Purpose
 
-Sitio del Instituto de Medicina Holística Dxein (IMHDXEIN, CDMX). Presenta el instituto, su equipo de médicos y terapeutas, el catálogo de terapias y productos, contenido educativo (blog) y un test de dosha. El éxito es que el visitante confíe en el enfoque y agende una consulta (formulario de contacto o WhatsApp), solicite una terapia o compre un producto.
+Sitio del Instituto de Medicina Holística Dxein (IMHDXEIN, Guadalajara, Jalisco). Presenta el instituto, su equipo de médicos y terapeutas, el catálogo de terapias y productos, contenido educativo (blog) y un test de dosha. El éxito es que el visitante confíe en el enfoque y agende una consulta (formulario de contacto o WhatsApp), solicite una terapia o compre un producto.
 
 ## Positioning
 

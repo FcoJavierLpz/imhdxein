@@ -20,7 +20,7 @@ export const doshaProfiles: Record<Dosha, DoshaProfile> = {
   Vata: {
     dosha: 'Vata',
     title: 'Vata',
-    element: 'Aire y Éter',
+    element: 'Aire y éter',
     tagline: 'Creatividad en movimiento',
     description:
       'Tu energía dominante es Vata: aire y espacio en constante movimiento. Eres creativo/a, entusiasta y rápido/a para aprender, aunque cuando te desequilibras puede aparecer ansiedad, insomnio o dificultad para sostener rutinas. Tu bienestar florece con calidez, constancia y calma.',
@@ -35,7 +35,7 @@ export const doshaProfiles: Record<Dosha, DoshaProfile> = {
   Pitta: {
     dosha: 'Pitta',
     title: 'Pitta',
-    element: 'Fuego y Agua',
+    element: 'Fuego y agua',
     tagline: 'Foco, pasión y determinación',
     description:
       'Tu energía dominante es Pitta: fuego transformador. Eres decidido/a, apasionado/a y con gran capacidad de liderazgo, pero cuando te desequilibras puede aparecer irritabilidad, inflamación o exceso de autoexigencia. Tu bienestar florece con frescura, moderación y soltura.',
@@ -50,7 +50,7 @@ export const doshaProfiles: Record<Dosha, DoshaProfile> = {
   Kapha: {
     dosha: 'Kapha',
     title: 'Kapha',
-    element: 'Tierra y Agua',
+    element: 'Tierra y agua',
     tagline: 'Estabilidad y calma profunda',
     description:
       'Tu energía dominante es Kapha: tierra y agua que sostienen. Eres tranquilo/a, leal y con gran capacidad de resistencia física y emocional, pero cuando te desequilibras puede aparecer letargo, apego o dificultad para soltar el pasado. Tu bienestar florece con movimiento, estímulo y ligereza.',

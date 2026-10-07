@@ -20,7 +20,7 @@ const siteName = "IMHDXEIN - Instituto de Medicina Holística Dxein";
 
 const {
   title = `${siteName} | Terapias, Productos y Citas`,
-  description = `${siteName}. Alineación de Chakras, Flores de Bach, Aromaterapia y más. Agenda tu cita hoy.`,
+  description = `${siteName}. Medicina integrativa en Guadalajara: consulta médica integrativa, nutrición, Reiki, alineación de chakras y constelaciones familiares. Agenda tu consulta.`,
   image = "https://imhdxein.org.mx/og-image.jpg",
 } = Astro.props;
 
@@ -40,7 +40,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="medicina holística, Alineación de Chakras, Acupuntura, flores de bach, aromaterapia, terapias alternativas, chakras, IMHDXEIN, CDMX" />
+    <meta name="keywords" content="medicina integrativa, medicina holística, consulta médica integrativa, Reiki, alineación de chakras, constelaciones familiares, flores de bach, IMHDXEIN, Guadalajara" />
     <meta name="author" content="IMHDXEIN" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
@@ -71,7 +71,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       "@context": "https://schema.org",
       "@type": "MedicalOrganization",
       "name": "IMHDXEIN - Instituto de Medicina Holística Dxein",
-      "description": "Instituto de Medicina Holística. Alineación de Chakras, Acupuntura, Flores de Bach y más.",
+      "description": "Instituto de Medicina Integrativa y Holística en Guadalajara: consulta médica integrativa, nutrición, Reiki, alineación de chakras y constelaciones familiares.",
       "url": "https://imhdxein.org.mx",
       "logo": "https://imhdxein.org.mx/logoimhdxein.png",
       "telephone": CONTACT_PHONE_E164,

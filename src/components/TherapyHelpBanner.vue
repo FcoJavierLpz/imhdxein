@@ -75,10 +75,10 @@ const whatsappHref = computed(() => {
 });
 
 // Puerta de entrada de diagnóstico inicial: redirige directamente al
-// formulario de "Solicitar Terapia" con la Consulta Médica Integrativa
+// formulario de "Solicitar terapia" con la Consulta Médica Integrativa
 // preseleccionada (ContactForm.vue ya detecta `?therapy=<id>`, valida que
 // exista en la lista de terapias, la preselecciona en el <select> y activa
-// automáticamente la pestaña de "Solicitar Terapia").
+// automáticamente la pestaña de "Solicitar terapia").
 const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
 
 </script>
