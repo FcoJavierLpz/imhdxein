@@ -1,0 +1,9 @@
+{
+  "name": "Asesoria en Alimentación ayurvédica",
+  "description": "La asesoria en alimentación y  nutrición ayurvédica  tiene la finalidad de que conozcas y aprendas a enfocar tu alimentación de acuerdo al tipo de dosha y tomar en cuenta la energia de los alimentos  con la finalidad de mejorar tu salud y nutrición de forma integrativa y holisitca.",
+  "durationMinutes": 50,
+  "price": 1000,
+  "icon": "Sparkles",
+  "isActive": true,
+  "orderIndex": 1
+}
