@@ -71,6 +71,10 @@
             {{ slides[current].description }}
           </p>
 
+          <p v-if="slides[current].author" class="mt-2 max-w-xl text-right font-heading italic text-deep-300 text-sm tracking-wide">
+            — {{ slides[current].author }}
+          </p>
+
           <div class="mt-8 flex flex-wrap gap-4">
             <a href="/contacto" class="btn-primary text-base">Agendar consulta</a>
             <a href="/terapias" class="btn-outline !border-white/30 !text-white hover:!bg-white/10 text-base">Explorar terapias</a>
@@ -138,6 +142,7 @@ type Slide = {
   title: string;
   subtitle: string;
   description: string;
+  author?: string;
   alt: string;
 } & ({ type: 'brand' } | { type: 'image'; image: HeroImageKey });
 
@@ -152,9 +157,10 @@ const slides: Slide[] = [
   { 
     type: 'image', 
     image: 'amanecer',
-    title: 'Cada amanecer es', 
-    subtitle: 'una oportunidad', 
-    description: 'El universo nos otorga cambios de paradigmas. El camino del guerrero es la acción.',
+    title: 'Cada amanecer es',
+    subtitle: 'una invitación',
+    description: 'A despertar nuestra consciencia y seguir creciendo. Hoy es un nuevo comienzo.',
+    author: 'acehrlobo',
     alt: 'Amanecer brumoso en la montaña representando un nuevo comienzo',
   },
   { 
