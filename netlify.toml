@@ -1,6 +1,14 @@
   [build]
     command = "pnpm build"
     publish = "dist"
+    # Cada guardado en Keystatic Cloud (autor keystatic-cloud[bot]) hace commit
+    # directo a main y Netlify cobra 15 créditos por deploy de producción. Para
+    # no pagar un deploy por cada edición de contenido, esos commits se saltan
+    # aquí (exit 0) y se acumulan en main sin publicarse; los commits propios
+    # (código) siguen desplegando de inmediato (exit 1). El build hook semanal
+    # de netlify/functions/trigger-batched-deploy.mts ignora esta regla y
+    # publica de un solo golpe todo lo acumulado.
+    ignore = "test \"$(git log -1 --format=%ae $COMMIT_REF)\" = \"127914443+keystatic-cloud[bot]@users.noreply.github.com\""
 
 [build.environment]
   SECRETS_SCAN_OMIT_KEYS = "ADMIN_NOTIFICATION_EMAIL"
