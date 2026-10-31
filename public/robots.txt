@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+# Panel de administración de contenido (Keystatic), su API y los endpoints de formularios:
+# no aportan nada en buscadores. Además responden con "X-Robots-Tag: noindex"
+# (src/middleware.ts), porque Disallow por sí solo no impide indexar una URL enlazada.
+Disallow: /keystatic
+Disallow: /api/
+Disallow: /_actions/
 
 Sitemap: https://imhdxein.org.mx/sitemap-index.xml

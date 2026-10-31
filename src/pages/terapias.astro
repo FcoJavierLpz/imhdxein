@@ -5,31 +5,45 @@ import { getCollection } from 'astro:content';
 import TherapySelector from '../components/TherapySelector.vue';
 import TherapyHelpBanner from '../components/TherapyHelpBanner.vue';
 import MainLayout from '../layouts/MainLayout.astro';
+import { toResponsiveImage } from '../lib/images';
+import { toTitleCase } from '../lib/text';
+
+// Protocolos descargables por terapia (clave = id de la terapia en Keystatic). Los PDF viven en
+// public/docs/ y se sirven desde la raíz del sitio, por eso la ruta empieza en /docs/.
+const protocols: Record<string, { href: string; label: string }> = {
+  'alineacion-de-chakras': {
+    href: '/docs/protocolo-alineacion-chakras.pdf',
+    label: 'Descargar protocolo de alineación',
+  },
+};
 
 const therapyEntries = (await getCollection('therapies', ({ data }) => data.isActive))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
 
-const therapies = therapyEntries.map((t) => ({
-  id: t.id,
-  slug: t.id,
-  ...t.data,
-  image: t.data.image?.src,
-
-  price: t.data.price ?? null,
-}));
+const therapies = await Promise.all(
+  therapyEntries.map(async (t) => ({
+    id: t.id,
+    slug: t.id,
+    ...t.data,
+    name: toTitleCase(t.data.name),
+    // La imagen ocupa como máximo 2/3 del contenedor (≈830px) en desktop.
+    image: await toResponsiveImage(t.data.image, [480, 800, 1200, 1600]),
+    price: t.data.price ?? null,
+    protocol: protocols[t.id] ?? null,
+  }))
+);
 ---
 
 <MainLayout
-  title="Terapias Holísticas - IMHDXEIN | Alineación de Chakras, Flores de Bach y más"
-  description="Explora nuestras terapias holísticas: Alineación de Chakras, Flores de Bach, Aromaterapia, y Medicina Integrativa. Agenda tu cita."
+  title="Terapias holísticas e integrativas"
+  description="Consulta médica integrativa, nutrición, alineación de chakras, Reiki y constelaciones familiares: terapias que complementan tu tratamiento médico."
 >
   <section class="relative py-24 overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-brand-800 via-brand-900 to-deep-900"></div>
     <div class="absolute inset-0 lotus-bg opacity-20"></div>
     <div class="container-custom px-4 relative z-10">
       <div class="max-w-3xl">
-        <span class="text-brand-300 text-sm font-semibold tracking-wider uppercase">Nuestras Terapias</span>
-        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">Terapias <span class="chakra-gradient-text">holísticas</span></h1>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold text-white">Terapias <span class="headline-accent">holísticas</span></h1>
         <p class="mt-6 text-brand-100 text-lg leading-relaxed">Explora nuestras modalidades terapéuticas y encuentra la que resuena con tu proceso de sanación.</p>
       </div>
     </div>
@@ -42,7 +56,7 @@ const therapies = therapyEntries.map((t) => ({
   ) : (
     <section class="section-padding bg-white">
       <div class="container-custom">
-        <p class="text-center text-deep-400 py-12">Próximamente publicaremos nuestras terapias.</p>
+        <p class="text-center text-deep-500 py-12">Próximamente publicaremos nuestras terapias.</p>
       </div>
     </section>
   )}

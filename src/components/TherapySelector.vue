@@ -3,12 +3,14 @@
     <div class="container-custom">
       <div class="grid lg:grid-cols-3 gap-8">
         <div class="lg:col-span-1">
-          <div class="sticky top-28 space-y-3">
+          <div class="sticky top-28 space-y-3" role="group" aria-label="Elige una terapia">
             <button
               type="button"
               v-for="(therapy, i) in therapies"
               :key="therapy.id"
               :id="therapy.slug"
+              :aria-pressed="selected?.id === therapy.id"
+              aria-controls="therapy-detail"
               :class="[
                 'w-full flex items-center gap-4 p-4 rounded-xl transition-all duration-200 text-left',
                 selected?.id === therapy.id
@@ -18,11 +20,11 @@
               @click="select(therapy)"
             >
               <div :class="`w-10 h-10 rounded-xl bg-gradient-to-br ${chakraColors[i]} flex items-center justify-center flex-shrink-0`">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" v-html="getIconPaths(therapy.icon)" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" v-html="getIconPaths(therapy.icon)" />
               </div>
               <div class="min-w-0">
                 <h3 :class="['font-semibold text-sm', selected?.id === therapy.id ? 'text-deep-900' : 'text-deep-600']">{{ therapy.name }}</h3>
-                <div class="flex items-center gap-2 text-xs text-deep-400 mt-0.5">
+                <div class="flex items-center gap-2 text-xs text-deep-600 mt-0.5">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   <span>{{ therapy.durationMinutes }} min</span>
                 </div>
@@ -31,12 +33,17 @@
           </div>
         </div>
 
-        <div class="lg:col-span-2">
+        <div ref="detailEl" id="therapy-detail" class="lg:col-span-2 scroll-mt-28 focus-visible:outline-none" tabindex="-1">
           <div v-if="selected" class="animate-fade-in">
             <div v-if="selected.image" class="rounded-2xl overflow-hidden shadow-lg mb-8 bg-deep-50 border border-deep-100">
-              <img 
-                :src="selected.image" 
-                :alt="selected.name" 
+              <img
+                :src="selected.image.src"
+                :srcset="selected.image.srcset"
+                sizes="(min-width: 1280px) 830px, (min-width: 1024px) 66vw, 100vw"
+                :width="selected.image.width"
+                :height="selected.image.height"
+                :alt="selected.name"
+                decoding="async"
                 class="w-full h-auto max-h-[420px] object-cover object-center transition-all duration-300" 
               />
             </div>
@@ -62,10 +69,22 @@
                 <div v-else class="whitespace-pre-line" :class="{ 'min-h-[0.75rem]': seg.text.trim() === '' }">{{ seg.text }}</div>
               </template>
             </div>
-            <div class="mt-8">
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind -->
+              <a
+                v-if="selected.protocol"
+                :href="selected.protocol.href"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-outline inline-flex items-center gap-2 text-left"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                <span>{{ selected.protocol.label }} <span class="text-sm font-normal">(PDF)</span></span>
+              </a>
               <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (template literal) -->
               <a :href="`/contacto?therapy=${encodeURIComponent(selected.id)}`" class="btn-primary inline-flex items-center gap-2">
-                Solicitar Terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Solicitar terapia <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
 
               </a>
             </div>
@@ -77,8 +96,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getIconPaths } from '../lib/icons';
+import type { ResponsiveImage } from '../lib/images';
 
 interface Therapy {
   id: string;
@@ -88,7 +108,8 @@ interface Therapy {
   durationMinutes: number;
   price: number | null;
   icon: string;
-  image?: string;
+  image?: ResponsiveImage;
+  protocol?: { href: string; label: string } | null;
 }
 
 
@@ -96,19 +117,38 @@ const props = defineProps<{ therapies: Therapy[] }>();
 
 const selected = ref<Therapy | null>(props.therapies[0] || null);
 
+const detailEl = ref<HTMLElement | null>(null);
+
 const select = (therapy: Therapy) => {
   selected.value = therapy;
+  // En móvil el detalle queda debajo de la lista: sin esto, el toque no muestra ningún cambio visible.
+  if (window.matchMedia('(max-width: 1023px)').matches && detailEl.value) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    detailEl.value.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    detailEl.value.focus({ preventScroll: true });
+  }
+};
+
+// Los ids pueden tener espacios o mayúsculas (vienen del nombre de archivo en Keystatic),
+// así que el hash llega codificado. También se escucha hashchange: los enlaces del pie
+// a otra terapia, estando ya en /terapias, no recargan la página.
+const selectFromHash = () => {
+  let hash: string;
+  try {
+    hash = decodeURIComponent(window.location.hash.slice(1));
+  } catch {
+    return; // hash mal formado (p. ej. un "%" suelto): se conserva la terapia por defecto
+  }
+  if (!hash) return;
+  const therapyFromHash = props.therapies.find((t) => t.slug === hash);
+  if (therapyFromHash) select(therapyFromHash);
 };
 
 onMounted(() => {
-  const hash = window.location.hash?.replace('#', '');
-  if (!hash) return;
-
-  const therapyFromHash = props.therapies.find((t) => t.slug === hash);
-  if (therapyFromHash) {
-    selected.value = therapyFromHash;
-  }
+  selectFromHash();
+  window.addEventListener('hashchange', selectFromHash);
 });
+onUnmounted(() => window.removeEventListener('hashchange', selectFromHash));
 
 
 const chakraColors = [

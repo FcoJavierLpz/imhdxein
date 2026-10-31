@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { actions, isInputError } from 'astro:actions';
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { doshaProfiles } from '../lib/dosha/doshaProfiles';
 import type { Dosha } from '../lib/dosha/questions';
 import { doshaQuestions } from '../lib/dosha/questions';
@@ -32,6 +32,15 @@ const totalQuestions = doshaQuestions.length;
 const currentQuestion = computed(() => doshaQuestions[currentIndex.value]);
 const progressPercent = computed(() => Math.round(((currentIndex.value) / totalQuestions) * 100));
 const isLastQuestion = computed(() => currentIndex.value === totalQuestions - 1);
+
+// Al avanzar o retroceder, el foco pasa a la nueva pregunta para que el lector de
+// pantalla la anuncie y el teclado no se quede en un botón que cambió de contexto.
+const questionHeading = ref<HTMLElement | null>(null);
+watch(currentIndex, async () => {
+  if (step.value !== 'quiz') return;
+  await nextTick();
+  questionHeading.value?.focus();
+});
 const canGoNext = computed(() => !!currentQuestion.value && !!answers.value[currentQuestion.value.id]);
 
 const validateEmail = (value: string) => emailSchema.safeParse(value).success;
@@ -112,7 +121,9 @@ const submitQuiz = async () => {
   errorMessage.value = '';
 
   if (!validateEmail(email.value)) {
-    errorMessage.value = 'Por favor ingresa un correo electrónico válido.';
+    errorMessage.value = 'Ingresa un correo electrónico válido para recibir tu resultado.';
+    await nextTick();
+    document.getElementById('dosha-email')?.focus();
     return;
   }
 
@@ -176,8 +187,7 @@ const restart = () => {
     <div class="container-custom max-w-3xl">
       <!-- INTRO -->
       <div v-if="step === 'intro'" class="text-center animate-fade-in">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Antes de comenzar</span>
-        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tres energías, una sola tú
         </h2>
         <p class="mt-5 text-deep-500 leading-relaxed max-w-xl mx-auto">
@@ -191,7 +201,7 @@ const restart = () => {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>
             </div>
             <p class="font-heading font-bold text-lg text-deep-900">Vata</p>
-            <p class="text-spirit-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Aire y Éter</p>
+            <p class="text-spirit-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Aire y éter</p>
             <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Vata.tagline }}</p>
           </div>
           <div class="philosophy-card group">
@@ -199,7 +209,7 @@ const restart = () => {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
             </div>
             <p class="font-heading font-bold text-lg text-deep-900">Pitta</p>
-            <p class="text-brand-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Fuego y Agua</p>
+            <p class="text-brand-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Fuego y agua</p>
             <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Pitta.tagline }}</p>
           </div>
           <div class="philosophy-card group">
@@ -207,7 +217,7 @@ const restart = () => {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
             </div>
             <p class="font-heading font-bold text-lg text-deep-900">Kapha</p>
-            <p class="text-sage-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Tierra y Agua</p>
+            <p class="text-sage-600 text-xs font-semibold uppercase tracking-wide mt-0.5">Tierra y agua</p>
             <p class="mt-3 text-deep-500 text-sm leading-relaxed">{{ doshaProfiles.Kapha.tagline }}</p>
           </div>
         </div>
@@ -217,11 +227,11 @@ const restart = () => {
           class="btn-primary mt-12 inline-flex items-center gap-2 px-8 py-4 text-lg"
           @click="startQuiz"
         >
-          Comenzar el Test
+          Comenzar el test
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
 
-        <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-deep-400 text-xs">
+        <div class="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-deep-500 text-xs">
           <span class="inline-flex items-center gap-1.5">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             5 minutos
@@ -240,24 +250,32 @@ const restart = () => {
       <!-- QUIZ -->
       <div v-else-if="step === 'quiz'" class="animate-fade-in">
         <div class="mb-8">
-          <div class="flex justify-between items-center text-xs text-deep-400 mb-2">
+          <div class="flex justify-between items-center text-xs text-deep-500 mb-2">
             <span>Pregunta {{ currentIndex + 1 }} de {{ totalQuestions }}</span>
             <span>{{ progressPercent }}%</span>
           </div>
-          <div class="h-2 rounded-full bg-deep-100 overflow-hidden">
+          <div
+            class="h-2 rounded-full bg-deep-100 overflow-hidden"
+            role="progressbar"
+            aria-label="Progreso del test"
+            :aria-valuenow="progressPercent"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
             <div class="h-full chakra-gradient transition-all duration-300" :style="`width: ${progressPercent}%`"></div>
           </div>
         </div>
 
-        <p class="text-brand-500 text-xs font-semibold tracking-wider uppercase mb-2">{{ currentQuestion?.category }}</p>
-        <h2 class="text-2xl font-heading font-bold text-deep-900 mb-8">{{ currentQuestion?.question }}</h2>
+        <p class="text-brand-700 text-xs font-semibold tracking-wider uppercase mb-2">{{ currentQuestion?.category }}</p>
+        <h2 ref="questionHeading" tabindex="-1" class="text-2xl font-heading font-bold text-deep-900 mb-8 focus:outline-none">{{ currentQuestion?.question }}</h2>
 
-        <div class="space-y-3">
+        <div class="space-y-3" role="group" :aria-label="currentQuestion?.question">
           <button
             type="button"
             v-for="opt in currentQuestion?.options"
             :key="opt.dosha"
             class="w-full text-left p-4 rounded-xl border-2 transition-all duration-200"
+            :aria-pressed="answers[currentQuestion!.id] === opt.dosha"
             :class="answers[currentQuestion!.id] === opt.dosha
               ? 'border-brand-500 bg-brand-50'
               : 'border-deep-100 hover:border-brand-200 hover:bg-deep-50'"
@@ -307,14 +325,14 @@ const restart = () => {
         <div class="mt-6 space-y-4 text-left">
           <div>
             <label for="dosha-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre (opcional)</label>
-            <input id="dosha-full-name" type="text" class="input-field" v-model="fullName" placeholder="Tu nombre" />
+            <input id="dosha-full-name" type="text" autocomplete="name" class="input-field" v-model="fullName" placeholder="Tu nombre" />
           </div>
           <div>
             <label for="dosha-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label>
-            <input id="dosha-email" type="email" class="input-field" v-model="email" placeholder="tu@correo.com" />
+            <input id="dosha-email" type="email" autocomplete="email" class="input-field" v-model="email" placeholder="tu@correo.com" :aria-invalid="!!errorMessage || undefined" :aria-describedby="errorMessage ? 'dosha-error' : undefined" />
           </div>
         </div>
-        <div v-if="errorMessage" class="mt-4 bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">
+        <div v-if="errorMessage" id="dosha-error" role="alert" class="mt-4 bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">
           {{ errorMessage }}
         </div>
         <button
@@ -329,11 +347,10 @@ const restart = () => {
 
       <!-- RESULT -->
       <div v-else-if="step === 'result' && resultProfile" class="animate-fade-in text-center">
-        <span class="text-brand-500 text-sm font-semibold tracking-wider uppercase">Tu resultado</span>
-        <h2 class="mt-3 text-3xl md:text-4xl font-heading font-bold text-deep-900">
+        <h2 class="text-3xl md:text-4xl font-heading font-bold text-deep-900">
           Tu dosha dominante es <span :style="`color:${resultProfile.color}`">{{ resultProfile.title }}</span>
         </h2>
-        <p class="mt-2 text-deep-400 text-sm">{{ resultProfile.element }} — {{ resultProfile.tagline }}</p>
+        <p class="mt-2 text-deep-500 text-sm">{{ resultProfile.element }} — {{ resultProfile.tagline }}</p>
 
         <p class="mt-6 text-deep-600 leading-relaxed text-left max-w-xl mx-auto">{{ resultProfile.description }}</p>
 
@@ -347,7 +364,7 @@ const restart = () => {
           </ul>
         </div>
 
-        <p v-if="secondaryProfile" class="mt-6 text-deep-400 text-sm">
+        <p v-if="secondaryProfile" class="mt-6 text-deep-500 text-sm">
           También muestras una influencia secundaria de <strong :style="`color:${secondaryProfile.color}`">{{ secondaryProfile.title }}</strong>.
         </p>
 

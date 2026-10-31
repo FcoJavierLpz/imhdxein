@@ -16,10 +16,12 @@
   --color-brand-300: #FFDB6F;
   --color-brand-400: #FFD040;
   --color-brand-500: #D4A017;
-  --color-brand-600: #B8880E;
-  --color-brand-700: #9C7000;
-  --color-brand-800: #805800;
-  --color-brand-900: #644000;
+  /* 600–900 derivados en OKLCH con el matiz de brand-500 (84°): el dorado sirve como texto
+     sobre blanco y fondos claros (600 ≥ 5:1, 700 ≥ 6.5:1) sin derivar hacia el marrón. */
+  --color-brand-600: #8C6600;
+  --color-brand-700: #745500;
+  --color-brand-800: #5C4300;
+  --color-brand-900: #463200;
 
   --color-sage-50: #F0F7F1;
   --color-sage-100: #DCF0DF;
@@ -43,6 +45,11 @@
   --color-spirit-800: #4A0C60;
   --color-spirit-900: #3A0550;
 
+  /* WhatsApp: el verde de marca queda para el logo flotante; los botones con texto usan
+     una variante más oscura del mismo verde para que el blanco llegue a 5:1. */
+  --color-whatsapp: #25D366;
+  --color-whatsapp-strong: #007F34;
+
   --color-deep-50: #F5F3F0;
   --color-deep-100: #E8E4DE;
   --color-deep-200: #D1C9BD;
@@ -54,12 +61,11 @@
   --color-deep-800: #2A2520;
   --color-deep-900: #151210;
 
-  --font-heading: Georgia, Cambria, serif;
-  --font-body: Inter, system-ui, sans-serif;
+  --font-heading: var(--font-gelasio);
+  --font-body: var(--font-inter);
 
   --animate-fade-in: fadeIn 0.6s ease-out forwards;
   --animate-slide-up: slideUp 0.6s ease-out forwards;
-  --animate-float: float 6s ease-in-out infinite;
 
   @keyframes fadeIn {
     0% { opacity: 0; }
@@ -71,10 +77,6 @@
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
 }
 
 @layer base {
@@ -87,6 +89,22 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
+
+  /* Foco visible para navegación con teclado. brand-700 supera 3:1 sobre blanco y
+     sobre deep-900; las secciones oscuras o saturadas cambian a un anillo claro con .on-dark. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring, var(--color-brand-700));
+    outline-offset: 3px;
+  }
+  .on-dark {
+    --focus-ring: var(--color-brand-300);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
 
 @layer components {
@@ -94,9 +112,18 @@
     background: linear-gradient(135deg, #C41E3A 0%, #E8751A 16%, #D4A017 33%, #3A7D44 50%, #1E90C6 66%, #4B0082 83%, #7B2D8E 100%);
   }
 
+  /* Énfasis de titulares sobre heroes oscuros: cursiva de Gelasio en dorado sólido. Se lee
+     siempre (el arcoíris dejaba letras índigo sobre morado) y deja la paleta chakra para
+     el logotipo y la barra bajo cada hero. */
+  .headline-accent {
+    font-style: italic;
+    color: var(--color-brand-300);
+  }
+
+  /* Solo para el logotipo IMHDXEIN. */
   .chakra-gradient-text {
     /* Color de respaldo sólido por si falla el navegador (usamos un tono dorado/naranja legible) */
-    color: #D4A017; 
+    color: #D4A017;
 
     /* Aplicamos el degradado y el recorte solo si el navegador lo soporta de forma nativa y estable */
     @supports (-webkit-background-clip: text) or (background-clip: text) {
@@ -109,19 +136,20 @@
   .glass {
     @apply bg-white/80 backdrop-blur-md;
   }
+  /* Texto oscuro sobre dorado (7.8:1): el blanco sobre brand-500 solo daba 2.4:1. */
   .btn-primary {
-    @apply bg-brand-500 text-white px-6 py-3 rounded-lg font-semibold
-      hover:bg-brand-600 transition-all duration-300
-      shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+    @apply bg-brand-500 text-deep-900 px-6 py-3 rounded-lg font-semibold
+      hover:bg-brand-400 transition-all duration-300
+      shadow-lg hover:shadow-xl;
   }
   .btn-secondary {
     @apply bg-spirit-500 text-white px-6 py-3 rounded-lg font-semibold
       hover:bg-spirit-600 transition-all duration-300
-      shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+      shadow-lg hover:shadow-xl;
   }
   .btn-outline {
     @apply border-2 border-brand-500 text-brand-600 px-6 py-3 rounded-lg font-semibold
-      hover:bg-brand-500 hover:text-white transition-all duration-300;
+      hover:bg-brand-500 hover:text-deep-900 transition-all duration-300;
   }
   .section-padding {
     @apply py-20 px-4 sm:px-6 lg:px-8;
@@ -129,25 +157,26 @@
   .container-custom {
     @apply max-w-7xl mx-auto;
   }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]
+      focus:rounded-lg focus:bg-deep-900 focus:px-5 focus:py-3 focus:text-white focus:font-semibold
+      focus:shadow-xl;
+    --focus-ring: var(--color-brand-300);
+  }
   .card {
     @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden;
   }
   .input-field {
     @apply w-full px-4 py-3 rounded-lg border border-deep-200
-      focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent
+      focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-brand-600
       transition-all duration-200 bg-white;
+  }
+  /* Campo con error: borde y anillo en rojo raíz, también con foco, además del mensaje enlazado. */
+  .input-field[aria-invalid="true"] {
+    @apply border-chakra-root focus:border-chakra-root focus:ring-chakra-root;
   }
 }
 
-@layer utilities {
-  .animate-delay-100 { animation-delay: 0.1s; }
-  .animate-delay-200 { animation-delay: 0.2s; }
-  .animate-delay-300 { animation-delay: 0.3s; }
-  .animate-delay-400 { animation-delay: 0.4s; }
-  .animate-delay-500 { animation-delay: 0.5s; }
-  .animate-delay-600 { animation-delay: 0.6s; }
-  .animate-delay-700 { animation-delay: 0.7s; }
-}
 
 .lotus-bg {
   background-image: url("../assets/images/background.webp");
@@ -166,10 +195,9 @@
   box-shadow:
     0 2px 8px -2px rgba(100, 64, 0, 0.06),
     0 8px 24px -8px rgba(100, 64, 0, 0.08);
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
+  transition: box-shadow 0.4s ease;
 }
 .philosophy-card:hover {
-  transform: translateY(-4px);
   box-shadow:
     0 4px 12px -4px rgba(184, 136, 14, 0.15),
     0 20px 40px -12px rgba(184, 136, 14, 0.18);
@@ -223,20 +251,12 @@
   box-shadow: 0 6px 18px -4px rgba(47, 107, 58, 0.4);
 }
 
-.philosophy-card__eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-brand-600, #b8880e);
-  margin-bottom: 0.5rem;
-}
 .philosophy-card__title {
-  font-family: Georgia, Cambria, serif;
+  font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-deep-800, #2a2520);
+  color: var(--color-deep-800);
   margin-bottom: 0.875rem;
 }
 
@@ -251,10 +271,9 @@
   box-shadow:
     0 2px 8px -2px rgba(100, 64, 0, 0.06),
     0 8px 24px -8px rgba(100, 64, 0, 0.08);
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
+  transition: box-shadow 0.4s ease;
 }
 .step-card:hover {
-  transform: translateY(-4px);
   box-shadow:
     0 4px 12px -4px rgba(184, 136, 14, 0.12),
     0 20px 40px -12px rgba(184, 136, 14, 0.15);
@@ -277,24 +296,24 @@
   align-items: center;
   padding: 0.35rem 0.9rem;
   border-radius: 9999px;
-  background: var(--color-brand-100, #fff0bf);
-  color: var(--color-brand-700, #9c7000);
-  font-size: 0.6875rem;
+  background: var(--color-brand-100);
+  color: var(--color-brand-700);
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
 .step-card__title {
-  font-family: Georgia, Cambria, serif;
+  font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-deep-800, #2a2520);
+  color: var(--color-deep-800);
   margin-bottom: 0.625rem;
 }
 .step-card__text {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--color-deep-500, #6b6357);
+  color: var(--color-deep-500);
 }

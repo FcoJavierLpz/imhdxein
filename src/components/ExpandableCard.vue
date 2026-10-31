@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, useId } from 'vue';
 
 // Micro-componente de expansión fluida para tarjetas con texto extenso.
 // Muestra un extracto corto siempre visible y revela el resto del contenido
 // de forma controlada mediante un botón "Ver más / Ver menos", evitando
 // saturar la primera impresión visual de la tarjeta.
 //
-// Nota: se evita `useId()` (API de Vue 3.5+) para prevenir conflictos con
-// el transform de Fast Refresh de Vite/Vue durante desarrollo (error
-// "$RefreshSig$ is not defined"). En su lugar se genera un id único por
-// instancia con `Math.random()`, suficiente para el uso de aria-controls
-// dentro de una misma página.
+// `useId()` da el mismo id en servidor y cliente (Astro aplica un prefijo por isla),
+// así `aria-controls` no se desincroniza al hidratar como pasaba con `Math.random()`.
 
 const props = defineProps<{
   excerpt: string;
@@ -18,7 +15,7 @@ const props = defineProps<{
 }>();
 
 const expanded = ref(false);
-const contentId = `expandable-content-${Math.random().toString(36).slice(2, 10)}`;
+const contentId = `expandable-content-${useId()}`;
 
 const toggle = () => {
   expanded.value = !expanded.value;
@@ -33,6 +30,7 @@ const toggle = () => {
       :id="contentId"
       class="expandable-panel"
       :class="{ 'expandable-panel--open': expanded }"
+      :inert="!expanded"
     >
       <div class="expandable-panel__inner">
         <p class="text-deep-600 text-sm leading-relaxed mt-2">{{ props.rest }}</p>
@@ -86,15 +84,17 @@ const toggle = () => {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  margin-top: 0.75rem;
+  /* 44px de área táctil sin cambiar el ritmo visual: el margen absorbe el alto extra. */
+  min-height: 2.75rem;
+  margin-top: 0.125rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-brand-600, #b8880e);
+  color: var(--color-brand-600);
   transition: color 0.2s ease;
 }
 
 .expandable-toggle:hover {
-  color: var(--color-brand-700, #96700b);
+  color: var(--color-brand-700);
 }
 
 .expandable-toggle__icon {

@@ -75,10 +75,10 @@ const whatsappHref = computed(() => {
 });
 
 // Puerta de entrada de diagnóstico inicial: redirige directamente al
-// formulario de "Solicitar Terapia" con la Consulta Médica Integrativa
+// formulario de "Solicitar terapia" con la Consulta Médica Integrativa
 // preseleccionada (ContactForm.vue ya detecta `?therapy=<id>`, valida que
 // exista en la lista de terapias, la preselecciona en el <select> y activa
-// automáticamente la pestaña de "Solicitar Terapia").
+// automáticamente la pestaña de "Solicitar terapia").
 const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
 
 </script>
@@ -106,7 +106,7 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-spirit-500 flex items-center justify-center flex-shrink-0">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
       </div>
-      <p class="text-sm text-deep-700 leading-relaxed pr-4">
+      <p class="text-sm text-deep-700 leading-relaxed pr-8">
         ¿No sabes qué terapia elegir o por dónde empezar? Te ayudamos a orientar tu proceso de sanación.
       </p>
     </div>
@@ -148,21 +148,21 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
 
 .therapy-help-banner__close {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  width: 1.75rem;
-  height: 1.75rem;
+  top: 0.35rem;
+  right: 0.35rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  color: var(--color-deep-400, #9c8e7a);
+  color: var(--color-deep-400);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .therapy-help-banner__close:hover {
-  background-color: var(--color-deep-100, #e8e4de);
-  color: var(--color-deep-700, #403a30);
+  background-color: var(--color-deep-100);
+  color: var(--color-deep-700);
 }
 
 .therapy-help-banner__cta-primary {
@@ -176,13 +176,12 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
   font-size: 0.875rem;
   font-weight: 600;
   color: #ffffff;
-  background-color: #25d366;
+  background-color: var(--color-whatsapp-strong);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .therapy-help-banner__cta-primary:hover {
-  background-color: #1fb958;
-  transform: translateY(-1px);
+  background-color: color-mix(in oklch, var(--color-whatsapp-strong) 85%, black);
 }
 
 .therapy-help-banner__cta-secondary {
@@ -195,13 +194,13 @@ const generalConsultHref = '/contacto?therapy=consulta-medica-integrativa';
   font-size: 0.8125rem;
   font-weight: 600;
   text-align: center;
-  border: 2px solid var(--color-brand-500, #d4a017);
-  color: var(--color-brand-600, #b8880e);
+  border: 2px solid var(--color-brand-500);
+  color: var(--color-brand-600);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .therapy-help-banner__cta-secondary:hover {
-  background-color: var(--color-brand-500, #d4a017);
+  background-color: var(--color-brand-500);
   color: #ffffff;
 }
 

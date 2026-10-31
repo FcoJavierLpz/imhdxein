@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { actions, isInputError } from 'astro:actions';
 import {
   CONTACT_ADDRESS_FULL,
@@ -10,6 +10,7 @@ import {
 } from '../constants/contact';
 import { messageSchema, subjectSchema } from '../lib/validation/contact';
 import { emailSchema, fullNameSchema, phoneSchema } from '../lib/validation/shared';
+import { readableTextOn } from '../lib/color';
 
 
 interface Therapy { id: string; name: string; durationMinutes: number; }
@@ -18,6 +19,13 @@ const props = defineProps<{ therapies: Therapy[] }>();
 
 const activeTab = ref<'appointment' | 'contact'>('appointment');
 const activeChakra = ref<number | null>(null);
+
+// Con ratón el panel ya se abrió al pasar por encima: el clic no debe cerrarlo. Con teclado
+// (pointerType vacío) o táctil, el clic alterna abrir/cerrar.
+const toggleChakra = (i: number, event: MouseEvent) => {
+  const pointerType = (event as PointerEvent).pointerType;
+  activeChakra.value = pointerType === 'mouse' || activeChakra.value !== i ? i : null;
+};
 
 const chakraDays = [
   {
@@ -56,6 +64,30 @@ const appointmentSubmitted = ref(false);
 const contactSubmitted = ref(false);
 const appointmentError = ref('');
 const contactError = ref('');
+// Campo que provocó el error: recibe aria-invalid, se enlaza al mensaje y toma el foco,
+// para que el error quede junto al dato que hay que corregir y el lector de pantalla lo lea.
+const appointmentErrorField = ref('');
+const contactErrorField = ref('');
+
+const showFieldError = async (target: typeof appointmentErrorField, fieldId: string) => {
+  target.value = fieldId;
+  await nextTick();
+  document.getElementById(fieldId)?.focus();
+};
+
+// Nombres de campo del servidor (Astro Actions) -> id del control en el formulario.
+const firstInvalidField = (fields: Record<string, string[] | undefined>, prefix: string) => {
+  const ids: Record<string, string> = {
+    fullName: 'full-name',
+    email: 'email',
+    phone: 'phone',
+    therapyId: 'therapy',
+    subject: 'subject',
+    message: 'message',
+  };
+  const entry = Object.entries(fields).find(([, messages]) => messages?.length);
+  return entry ? { id: `${prefix}-${ids[entry[0]] ?? entry[0]}`, message: entry[1]![0] } : null;
+};
 const appointmentLoading = ref(false);
 const contactLoading = ref(false);
 const appointmentForm = ref({ full_name: '', email: '', phone: '', therapy_id: '', message: '' });
@@ -144,14 +176,20 @@ onMounted(() => {
 
 const handleAppointment = async () => {
   appointmentError.value = '';
+  appointmentErrorField.value = '';
+  const fail = (fieldId: string, message: string) => {
+    appointmentError.value = message;
+    showFieldError(appointmentErrorField, fieldId);
+  };
   const nameResult = fullNameSchema.safeParse(appointmentForm.value.full_name);
-  if (!nameResult.success) { appointmentError.value = nameResult.error.issues[0].message; return; }
+  if (!nameResult.success) return fail('appointment-full-name', nameResult.error.issues[0].message);
   const emailResult = emailSchema.safeParse(appointmentForm.value.email);
-  if (!emailResult.success) { appointmentError.value = emailResult.error.issues[0].message; return; }
+  if (!emailResult.success) return fail('appointment-email', emailResult.error.issues[0].message);
   if (appointmentForm.value.phone) {
     const phoneResult = phoneSchema.safeParse(appointmentForm.value.phone);
-    if (!phoneResult.success) { appointmentError.value = phoneResult.error.issues[0].message; return; }
+    if (!phoneResult.success) return fail('appointment-phone', phoneResult.error.issues[0].message);
   }
+  if (!appointmentForm.value.therapy_id) return fail('appointment-therapy', 'Selecciona la terapia que te interesa');
 
   appointmentLoading.value = true;
 
@@ -175,25 +213,35 @@ const handleAppointment = async () => {
 
 
   if (error && isInputError(error)) {
-    const firstFieldError = Object.values(error.fields).flat()[0];
-    appointmentError.value = firstFieldError ?? 'Revisa los datos ingresados e intenta de nuevo.';
+    const invalid = firstInvalidField(error.fields, 'appointment');
+    if (invalid) return fail(invalid.id, invalid.message);
+    appointmentError.value = 'Revisa los datos ingresados e intenta de nuevo.';
     return;
   }
 
-  appointmentError.value = 'Error al enviar la solicitud. Por favor intenta de nuevo.';
+  appointmentError.value = `No pudimos enviar tu solicitud. Inténtalo de nuevo en unos minutos o llámanos al ${CONTACT_PHONE_DISPLAY}.`;
 };
 
 
 const handleContact = async () => {
   contactError.value = '';
+  contactErrorField.value = '';
+  const fail = (fieldId: string, message: string) => {
+    contactError.value = message;
+    showFieldError(contactErrorField, fieldId);
+  };
   const nameResult = fullNameSchema.safeParse(contactForm.value.full_name);
-  if (!nameResult.success) { contactError.value = nameResult.error.issues[0].message; return; }
+  if (!nameResult.success) return fail('contact-full-name', nameResult.error.issues[0].message);
   const emailResult = emailSchema.safeParse(contactForm.value.email);
-  if (!emailResult.success) { contactError.value = emailResult.error.issues[0].message; return; }
+  if (!emailResult.success) return fail('contact-email', emailResult.error.issues[0].message);
+  if (contactForm.value.phone) {
+    const phoneResult = phoneSchema.safeParse(contactForm.value.phone);
+    if (!phoneResult.success) return fail('contact-phone', phoneResult.error.issues[0].message);
+  }
   const subjectResult = subjectSchema.safeParse(contactForm.value.subject);
-  if (!subjectResult.success) { contactError.value = subjectResult.error.issues[0].message; return; }
+  if (!subjectResult.success) return fail('contact-subject', subjectResult.error.issues[0].message);
   const messageResult = messageSchema.safeParse(contactForm.value.message);
-  if (!messageResult.success) { contactError.value = messageResult.error.issues[0].message; return; }
+  if (!messageResult.success) return fail('contact-message', messageResult.error.issues[0].message);
 
   contactLoading.value = true;
 
@@ -218,12 +266,13 @@ const handleContact = async () => {
 
 
   if (error && isInputError(error)) {
-    const firstFieldError = Object.values(error.fields).flat()[0];
-    contactError.value = firstFieldError ?? 'Revisa los datos ingresados e intenta de nuevo.';
+    const invalid = firstInvalidField(error.fields, 'contact');
+    if (invalid) return fail(invalid.id, invalid.message);
+    contactError.value = 'Revisa los datos ingresados e intenta de nuevo.';
     return;
   }
 
-  contactError.value = 'Error al enviar el mensaje. Por favor intenta de nuevo.';
+  contactError.value = `No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos o llámanos al ${CONTACT_PHONE_DISPLAY}.`;
 };
 
 </script>
@@ -240,30 +289,30 @@ const handleContact = async () => {
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Teléfono</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_PHONE_DISPLAY }}</p></div>
             </a>
             <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (CONTACT_EMAIL_HREF) -->
             <a :href="CONTACT_EMAIL_HREF" class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Correo</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_EMAIL }}</p></div>
             </a>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Dirección</p><p class="text-deep-800 font-medium text-sm mt-0.5">{{ CONTACT_ADDRESS_FULL }}</p></div>
             </div>
             <div class="flex gap-4 group">
               <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A017" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
-              <div><p class="text-deep-400 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
+              <div><p class="text-deep-500 text-xs uppercase tracking-wider font-medium">Horario</p><p class="text-deep-800 font-medium text-sm mt-0.5">Lun - Vie: 10:00 - 13:00 hrs | Sáb: 10:00 - 13:00 hrs</p></div>
             </div>
           </div>
                     <div class="mt-10 bg-gradient-to-br from-sage-50 to-brand-50 rounded-2xl p-6">
-            <h3 class="font-heading font-semibold text-deep-800 mb-1">Chakras y Días de Atención</h3>
+            <h3 class="font-heading font-semibold text-deep-800 mb-1">Chakras y días de atención</h3>
             <p class="text-deep-500 text-sm leading-relaxed mb-4">
               En la tradición védica cada día de la semana está regido por una energía sutil distinta.
               Nuestro instituto alinea su agenda con esta sabiduría para que puedas elegir el día
@@ -274,25 +323,29 @@ const handleContact = async () => {
                 type="button"
                 v-for="(c, i) in chakraDays"
                 :key="i"
-                class="flex-1 flex flex-col items-center gap-1 group focus:outline-none"
-                @mouseenter="activeChakra = i"
-                @mouseleave="activeChakra = null"
-                @click="activeChakra = activeChakra === i ? null : i"
+                class="flex-1 flex flex-col items-center gap-1 py-1 rounded-lg group"
+                :aria-label="`${c.day}: ${c.chakra}`"
+                :aria-expanded="activeChakra === i"
+                aria-controls="chakra-day-detail"
+                @pointerenter="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = i; }"
+                @pointerleave="(e: PointerEvent) => { if (e.pointerType === 'mouse') activeChakra = null; }"
+                @click="(e: MouseEvent) => toggleChakra(i, e)"
               >
                 <div
-                  class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-200 group-hover:scale-110 ring-2 ring-transparent"
-                  :style="`background-color: ${c.color}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40; ring-color: ${c.color}` : ''}`"
+                  class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 group-hover:scale-110"
+                  :style="`background-color: ${c.color}; color: ${readableTextOn(c.color)}; ${activeChakra === i ? `box-shadow: 0 0 0 3px ${c.color}40` : ''}`"
                 >{{ c.letter }}</div>
-                <span class="text-[9px] text-deep-400 leading-none hidden sm:block">{{ c.day.slice(0, 3) }}</span>
+                <span class="text-[11px] text-deep-500 leading-none hidden sm:block" aria-hidden="true">{{ c.day.slice(0, 3) }}</span>
               </button>
             </div>
 
             <!-- Detail panel -->
+            <div id="chakra-day-detail" aria-live="polite">
             <Transition name="chakra-detail">
               <div
                 v-if="activeChakra !== null"
-                class="mt-4 rounded-xl p-4 text-sm leading-relaxed border-l-4 bg-white/60"
-                :style="`border-color: ${chakraDays[activeChakra].color}`"
+                class="mt-4 rounded-xl p-4 text-sm leading-relaxed border bg-white/60"
+                :style="`border-color: ${chakraDays[activeChakra].color}55`"
               >
                 <div class="flex items-center gap-2 mb-1">
                   <span
@@ -304,17 +357,18 @@ const handleContact = async () => {
                 <p class="text-deep-500">{{ chakraDays[activeChakra].description }}</p>
               </div>
             </Transition>
+            </div>
           </div>
 
         </div>
 
         <div id="request-form-container" class="lg:col-span-2">
           <div class="flex border-b border-deep-200 mb-8">
-            <button type="button" @click="activeTab = 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar Terapia
+            <button type="button" @click="activeTab = 'appointment'" :aria-pressed="activeTab === 'appointment'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'appointment' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-500 hover:text-deep-600']">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Solicitar terapia
             </button>
-            <button type="button" @click="activeTab = 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-400 hover:text-deep-600']">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje General
+            <button type="button" @click="activeTab = 'contact'" :aria-pressed="activeTab === 'contact'" :class="['px-6 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2', activeTab === 'contact' ? 'border-brand-500 text-brand-600' : 'border-transparent text-deep-500 hover:text-deep-600']">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Mensaje general
             </button>
 
           </div>
@@ -322,7 +376,7 @@ const handleContact = async () => {
           <div v-if="activeTab === 'appointment'">
             <div v-if="appointmentSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
               <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
-              <h3 class="text-2xl font-heading font-bold text-deep-900">¡Cita agendada!</h3>
+              <h3 class="text-2xl font-heading font-bold text-deep-900">¡Solicitud recibida!</h3>
               <p class="mt-3 text-deep-500">Tu solicitud ha sido enviada. Nos pondremos en contacto contigo para acordar la fecha y hora de tu cita.</p>
 
               <!-- Escenario 1 del Test de Dosha: invitación tras agendar cita. -->
@@ -330,7 +384,7 @@ const handleContact = async () => {
                 <p class="font-heading font-semibold text-deep-800">🌿 Te invitamos a realizar tu Test Dosha gratuito</p>
                 <p class="mt-2 text-sm text-deep-500 leading-relaxed">
                   Evalúa tu situación actual antes de la cita: descubre tu constitución Ayurvédica
-                  (Vata, Pitta o Kapha) para que el especialista pueda ofrecerte un enfoque más personalizado..
+                  (Vata, Pitta o Kapha) para que el especialista pueda ofrecerte un enfoque más personalizado.
                 </p>
                 <!-- biome-ignore lint/a11y/useValidAnchor: href se resuelve dinámicamente vía v-bind (doshaInviteUrl) -->
                 <a :href="doshaInviteUrl" class="btn-primary inline-flex items-center gap-2 mt-4">
@@ -340,7 +394,8 @@ const handleContact = async () => {
               </div>
             </div>
 
-            <form v-else class="space-y-5" @submit.prevent="handleAppointment">
+            <form v-else class="space-y-5" @submit.prevent="handleAppointment" novalidate>
+              <p class="text-sm text-deep-500">Los campos marcados con * son obligatorios.</p>
               <!--
                 Honeypot anti-spam: campo invisible para humanos (fuera del
                 viewport, sin afectar el layout) pero visible para bots que
@@ -359,30 +414,31 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="appointment-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="appointment-full-name" type="text" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="appointment-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="appointment-full-name" :aria-invalid="appointmentErrorField === 'appointment-full-name' || undefined" :aria-describedby="appointmentErrorField === 'appointment-full-name' ? 'appointment-error' : undefined" type="text" autocomplete="name" required class="input-field" v-model="appointmentForm.full_name" placeholder="Tu nombre completo" /></div>
 
-                <div><label for="appointment-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="appointment-email" type="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="appointment-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="appointment-email" :aria-invalid="appointmentErrorField === 'appointment-email' || undefined" :aria-describedby="appointmentErrorField === 'appointment-email' ? 'appointment-error' : undefined" type="email" autocomplete="email" required class="input-field" v-model="appointmentForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="appointment-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="appointment-phone" type="tel" class="input-field" v-model="appointmentForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
+                <div><label for="appointment-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="appointment-phone" :aria-invalid="appointmentErrorField === 'appointment-phone' || undefined" :aria-describedby="appointmentErrorField === 'appointment-phone' ? 'appointment-error' : undefined" type="tel" autocomplete="tel" class="input-field" v-model="appointmentForm.phone" placeholder="33 1234 5678" /></div>
                 <div><label for="appointment-therapy" class="block text-sm font-medium text-deep-700 mb-1">Terapia *</label>
-                  <select id="appointment-therapy" required class="input-field" v-model="appointmentForm.therapy_id">
+                  <select id="appointment-therapy" :aria-invalid="appointmentErrorField === 'appointment-therapy' || undefined" :aria-describedby="appointmentErrorField === 'appointment-therapy' ? 'appointment-error' : undefined" required class="input-field" v-model="appointmentForm.therapy_id">
                     <option value="">Selecciona una terapia</option>
                     <option v-for="t in therapies" :key="t.id" :value="t.id">{{ t.name }} ({{ t.durationMinutes }} min)</option>
                   </select>
                 </div>
               </div>
-              <div><label for="appointment-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje</label><textarea id="appointment-message" class="input-field" rows="4" v-model="appointmentForm.message" placeholder="Cuéntanos sobre tu situación y nos comunicaremos contigo para acordar la fecha y hora de tu cita..."></textarea></div>
-              <div v-if="appointmentError" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ appointmentError }}</div>
-              <button type="submit" :disabled="appointmentLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ appointmentLoading ? 'Enviando...' : 'Enviar Solicitud' }}</button>
+              <div><label for="appointment-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje</label><textarea id="appointment-message" :aria-invalid="appointmentErrorField === 'appointment-message' || undefined" :aria-describedby="appointmentErrorField === 'appointment-message' ? 'appointment-error' : undefined" class="input-field" rows="4" v-model="appointmentForm.message" placeholder="Cuéntanos sobre tu situación y nos comunicaremos contigo para acordar la fecha y hora de tu cita..."></textarea></div>
+              <div v-if="appointmentError" id="appointment-error" role="alert" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ appointmentError }}</div>
+              <button type="submit" :disabled="appointmentLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ appointmentLoading ? 'Enviando...' : 'Enviar solicitud' }}</button>
             </form>
           </div>
 
           <div v-if="activeTab === 'contact'">
             <div v-if="contactSubmitted" class="bg-sage-50 rounded-2xl p-10 text-center animate-fade-in">
               <svg class="text-sage-500 mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m22 11-3-3"/></svg>
-              <h3 class="text-2xl font-heading font-bold text-deep-900">Mensaje Enviado</h3>
-              <p class="mt-3 text-deep-500">Recibido. Te confirmamos disponibilidad en breve. Gracias por tu paciencia.</p>
+              <h3 class="text-2xl font-heading font-bold text-deep-900">¡Mensaje recibido!</h3>
+              <p v-if="contactOrigin === 'consulta_general'" class="mt-3 text-deep-500">Te confirmaremos la disponibilidad para tu consulta en breve. Gracias por tu paciencia.</p>
+              <p v-else class="mt-3 text-deep-500">Te responderemos por correo o por teléfono lo antes posible.</p>
 
               <!-- Escenario 3 del Test de Dosha: invitación tras "Consulta General". -->
               <div v-if="contactOrigin === 'consulta_general'" class="mt-8 bg-gradient-to-br from-brand-50 to-spirit-50 rounded-2xl p-6 text-left">
@@ -408,7 +464,8 @@ const handleContact = async () => {
               </button>
             </div>
 
-            <form v-else class="space-y-5" @submit.prevent="handleContact">
+            <form v-else class="space-y-5" @submit.prevent="handleContact" novalidate>
+              <p class="text-sm text-deep-500">Los campos marcados con * son obligatorios.</p>
               <!--
                 Honeypot anti-spam: campo invisible para humanos (fuera del
                 viewport, sin afectar el layout) pero visible para bots que
@@ -427,17 +484,17 @@ const handleContact = async () => {
                 />
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="contact-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="contact-full-name" type="text" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
-                <div><label for="contact-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="contact-email" type="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
+                <div><label for="contact-full-name" class="block text-sm font-medium text-deep-700 mb-1">Nombre completo *</label><input id="contact-full-name" :aria-invalid="contactErrorField === 'contact-full-name' || undefined" :aria-describedby="contactErrorField === 'contact-full-name' ? 'contact-error' : undefined" type="text" autocomplete="name" required class="input-field" v-model="contactForm.full_name" placeholder="Tu nombre completo" /></div>
+                <div><label for="contact-email" class="block text-sm font-medium text-deep-700 mb-1">Correo electrónico *</label><input id="contact-email" :aria-invalid="contactErrorField === 'contact-email' || undefined" :aria-describedby="contactErrorField === 'contact-email' ? 'contact-error' : undefined" type="email" autocomplete="email" required class="input-field" v-model="contactForm.email" placeholder="tu@correo.com" /></div>
               </div>
               <div class="grid sm:grid-cols-2 gap-5">
-                <div><label for="contact-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="contact-phone" type="tel" class="input-field" v-model="contactForm.phone" :placeholder="CONTACT_PHONE_DISPLAY" /></div>
-                <div><label for="contact-subject" class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input id="contact-subject" type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
+                <div><label for="contact-phone" class="block text-sm font-medium text-deep-700 mb-1">Teléfono</label><input id="contact-phone" :aria-invalid="contactErrorField === 'contact-phone' || undefined" :aria-describedby="contactErrorField === 'contact-phone' ? 'contact-error' : undefined" type="tel" autocomplete="tel" class="input-field" v-model="contactForm.phone" placeholder="33 1234 5678" /></div>
+                <div><label for="contact-subject" class="block text-sm font-medium text-deep-700 mb-1">Asunto *</label><input id="contact-subject" :aria-invalid="contactErrorField === 'contact-subject' || undefined" :aria-describedby="contactErrorField === 'contact-subject' ? 'contact-error' : undefined" type="text" required class="input-field" v-model="contactForm.subject" placeholder="Asunto de tu mensaje" /></div>
               </div>
-              <div><label for="contact-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea id="contact-message" required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
+              <div><label for="contact-message" class="block text-sm font-medium text-deep-700 mb-1">Mensaje *</label><textarea id="contact-message" :aria-invalid="contactErrorField === 'contact-message' || undefined" :aria-describedby="contactErrorField === 'contact-message' ? 'contact-error' : undefined" required class="input-field" rows="5" v-model="contactForm.message" placeholder="Escribe tu mensaje aquí..."></textarea></div>
 
-              <div v-if="contactError" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ contactError }}</div>
-              <button type="submit" :disabled="contactLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ contactLoading ? 'Enviando...' : 'Enviar Mensaje' }}</button>
+              <div v-if="contactError" id="contact-error" role="alert" class="bg-chakra-root/10 border border-chakra-root text-chakra-root px-4 py-3 rounded-lg text-sm">{{ contactError }}</div>
+              <button type="submit" :disabled="contactLoading" class="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg> {{ contactLoading ? 'Enviando...' : 'Enviar mensaje' }}</button>
             </form>
           </div>
         </div>

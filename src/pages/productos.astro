@@ -4,30 +4,33 @@ export const prerender = true;
 import MainLayout from '../layouts/MainLayout.astro';
 import ProductShop from '../components/ProductShop.vue';
 import { getCollection } from 'astro:content';
+import { toResponsiveImage } from '../lib/images';
 
 const productEntries = (await getCollection('products'))
   .sort((a, b) => a.data.orderIndex - b.data.orderIndex);
 
-const products = productEntries.map((p) => ({
-  id: p.id,
-  ...p.data,
-  image: p.data.image?.src,
-}));
+const products = await Promise.all(
+  productEntries.map(async (p) => ({
+    id: p.id,
+    ...p.data,
+    // Tarjetas de 1 a 4 columnas: ≈300px en desktop, ancho completo en móvil.
+    image: await toResponsiveImage(p.data.image, [320, 480, 640, 960]),
+  }))
+);
 
 ---
 
 <MainLayout
-  title="Productos Holísticos - IMHDXEIN | Aceites, Flores de Bach, Velas y más"
-  description="Productos cuidadosamente seleccionados para complementar tu proceso de sanación holística. Aceites esenciales, Flores de Bach, velas aromáticas y más."
+  title="Productos holísticos y suplementos"
+  description="Productos seleccionados para complementar tu proceso de sanación: aceites esenciales, Flores de Bach, sinergias aromáticas y suplementos ayurvédicos."
 >
   <section class="relative py-24 overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-spirit-800 via-chakra-crown to-deep-900"></div>
     <div class="absolute inset-0 lotus-bg opacity-20"></div>
     <div class="container-custom px-4 relative z-10">
       <div class="max-w-3xl">
-        <span class="text-spirit-300 text-sm font-semibold tracking-wider uppercase">Tienda Holística</span>
-        <h1 class="mt-3 text-4xl md:text-5xl font-heading font-bold text-white">Productos <span class="chakra-gradient-text">para tu bienestar</span></h1>
-        <p class="mt-6 text-deep-200 text-lg leading-relaxed">Productos cuidadosamente seleccionados para complementar tu proceso de sanación holística.</p>
+        <h1 class="text-4xl md:text-5xl font-heading font-bold text-white">Productos <span class="headline-accent">para tu bienestar</span></h1>
+        <p class="mt-6 text-deep-100 text-lg leading-relaxed">Productos cuidadosamente seleccionados para complementar tu proceso de sanación holística.</p>
       </div>
     </div>
   </section>
@@ -40,7 +43,7 @@ const products = productEntries.map((p) => ({
 
     <section class="section-padding bg-white">
       <div class="container-custom">
-        <p class="text-center text-deep-400 py-12">Próximamente tendremos productos disponibles.</p>
+        <p class="text-center text-deep-500 py-12">Próximamente tendremos productos disponibles.</p>
       </div>
     </section>
   )}
